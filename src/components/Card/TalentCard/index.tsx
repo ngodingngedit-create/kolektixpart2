@@ -28,6 +28,7 @@ const TalentCard = ({ description, name, image, skills, id }: TalentCardProps) =
               w={48}
               h={48}
               className={`border border-[#d0d0d0]`}
+              alt={name}
             />
 
             <Stack gap={2}>

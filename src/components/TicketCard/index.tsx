@@ -131,6 +131,7 @@ const TicketCard = ({ data }: TicketCardProps) => {
               <Image
                 radius={10}
                 src={data.has_event.image_url}
+                alt={data.has_event.name}
               />
             </AspectRatio>
           )}

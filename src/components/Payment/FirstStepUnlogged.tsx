@@ -1311,7 +1311,7 @@
 // src/components/Payment/FirstStepUnlogged.tsx
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import useWindowSize from "@/utils/useWindowSize";
 import { useRouter } from "next/router";
 import { EventProps, TransactionProps } from "@/utils/globalInterface";
@@ -1642,7 +1642,7 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
     }
   }, [detail?.insurance_required]);
 
-  const fetchMerchProductsFromEvent = () => {
+  const fetchMerchProductsFromEvent = useCallback(() => {
     try {
       setLoadingMerch(true);
 
@@ -1692,7 +1692,7 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
     } finally {
       setLoadingMerch(false);
     }
-  };
+  }, [detail?.has_merches]);
 
   useEffect(() => {
     const hasBundlingMerchTickets = ticket.some((ticketItem) => {
@@ -1703,7 +1703,7 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
     if (hasBundlingMerchTickets) {
       fetchMerchProductsFromEvent();
     }
-  }, [detail?.has_event_ticket, ticket]);
+  }, [detail?.has_event_ticket, ticket, fetchMerchProductsFromEvent]);
 
   const computeTax = (detail: any, subtotalAfterVoucher: number) => {
     const d = normalizeDetail(detail);
@@ -1749,7 +1749,7 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
     }))
     : [];
 
-  const getBundlingInfo = (event_ticket_id: number) => {
+  const getBundlingInfo = useCallback((event_ticket_id: number) => {
     if (!detail.has_event_ticket) return { isBundling: false, bundlingQty: 0 };
 
     const ticket = detail.has_event_ticket.find((t) => t.id === event_ticket_id);
@@ -1757,7 +1757,7 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
       isBundling: ticket ? ticket.is_bundling === 1 : false,
       bundlingQty: ticket ? ticket.bundling_qty : 0,
     };
-  };
+  }, [detail.has_event_ticket]);
 
   const displayTotalCount = useMemo(() => {
     if (!ticket || ticket.length === 0) return 0;
@@ -1776,7 +1776,7 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
     });
 
     return count;
-  }, [ticket, allBundlingInfo]);
+  }, [ticket, getBundlingInfo]);
 
   const displayTotalSubtotalPrice = useMemo(() => {
     if (!ticket || ticket.length === 0) return 0;
@@ -1795,7 +1795,7 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
     });
 
     return total;
-  }, [ticket, allBundlingInfo]);
+  }, [ticket, getBundlingInfo]);
 
   const totalTicketFee = useMemo(() => {
     if (!ticket || ticket.length === 0) return 0;
@@ -1815,7 +1815,7 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
     });
 
     return totalFee;
-  }, [ticket, allBundlingInfo]);
+  }, [ticket, getBundlingInfo]);
 
   const adminFee = totalTicketFee;
 
@@ -1907,7 +1907,7 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
   const minutes = padToTwoDigits(targetDate.getMinutes());
   const formattedDate = `${dayName}, ${day} ${month} ${year} ${hours}:${minutes}`;
 
-  const formValidation = (data: Form) => {
+  const formValidation = useCallback((data: Form) => {
     return (
       (detail.is_noidentity == 1 ? Boolean(data.nik) : true) &&
       (detail.is_name == 1 ? Boolean(data.full_name) : true) &&
@@ -1915,7 +1915,7 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
       (detail.is_email == 1 ? data.email.includes("@") && data.email.includes(".") : true) &&
       (detail.is_phone_number == 1 ? Boolean(data.no_telp) : true)
     );
-  };
+  }, [detail]);
 
   const handleInput = (index: number, field: keyof Form, value: string) => {
     let newForm = [...form];
@@ -2039,14 +2039,14 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
 
   useEffect(() => {
     if (detail && detail.has_event_payment_method.length === 1) {
-      const ticketPriceTotal = ticket.reduce((e, n) => e + n.price * n.qty_ticket, 0);
+      // const ticketPriceTotal = ticket.reduce((e, n) => e + n.price * n.qty_ticket, 0);
       const paymentMethod = detail.has_event_payment_method[0].has_payment_method;
       if (paymentMethod.payment_name === "Xendit") {
         setPayment(paymentMethod.id.toString());
         setFormValid(form.every(formValidation));
       }
     }
-  }, [detail, form]);
+  }, [detail, form, formValidation, setFormValid]);
 
   const copyOrderer = (targetIndex: number) => {
     if (form.length > 0 && targetIndex > 0 && targetIndex < form.length) {

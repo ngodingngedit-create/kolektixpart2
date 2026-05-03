@@ -537,7 +537,7 @@ const PartnerKolektix = () => {
                     </div>
                   </div>
                   <div className="text-[13px] md:text-[15px] font-medium leading-relaxed text-gray-500 flex-1">
-                    "{review.quote}"
+                    &quot;{review.quote}&quot;
                   </div>
                   <div className="absolute top-6 md:top-8 right-6 md:right-8 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
                     <Icon icon="solar:quote-bold" className="w-6 md:w-10 h-6 md:h-10" />
