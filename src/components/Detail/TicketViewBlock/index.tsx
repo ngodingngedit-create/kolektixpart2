@@ -3,14 +3,15 @@ import DateTab from "@/components/DateTab";
 import { TicketProps } from "@/utils/globalInterface";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import { ActionIcon, Alert, Badge, Button, Card, Divider, Drawer, Flex, NumberFormatter, Stack, Text, Tooltip, UnstyledButton, Image } from "@mantine/core";
+import { ActionIcon, Badge, Button, Card, Divider, Drawer, Flex, NumberFormatter, Stack, Text, UnstyledButton, Image, ScrollArea, Box } from "@mantine/core";
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Context } from "@/pages/event/[slug]";
+import { EventContext } from "@/pages/event/[slug]";
 import { useTranslation } from "react-i18next";
 import config from "@/Config";
 import { Slide } from "react-slideshow-image";
 import "react-slideshow-image/dist/styles.css";
 import { Modal, ModalContent } from "@nextui-org/react";
+import { useMediaQuery } from "@mantine/hooks";
 
 interface Props {
   counts: { [key: number]: number | string[] };
@@ -33,300 +34,318 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
   const { t } = useTranslation();
   const [edit, setEdit] = useState(false);
   const [showVenue, setShowVenue] = useState(false);
-  const [venueID, setVenueID] = useState<number | null>(null);
   const [openDetail, setOpenDetail] = useState(false);
-  const { ticket, setTicket } = useContext(Context);
+  const [baseDate, setBaseDate] = useState<Date | null>(null);
+  const { ticket, setTicket, seatmapData } = useContext(EventContext);
+  const hasSeatmap = useMemo(() => seatmapData && seatmapData.length > 0, [seatmapData]);
+  const isMobile = useMediaQuery('(max-width: 768px)');
+  const router = useRouter();
 
   const { displayTotalCount, displayTotalSubtotalPrice } = useMemo(() => {
-    const result = data.reduce(
+    return data.reduce(
       (acc, item) => {
         const id = item.id;
         if (id == null) return acc;
-
         const rawCount = counts[id];
         const physicalTicketQty = typeof rawCount === "number" ? rawCount : Array.isArray(rawCount) ? rawCount.length : 0;
-
         if (physicalTicketQty <= 0) return acc;
-
         const isBundling = Number(item.is_bundling ?? 0) === 1;
         const bundlingQty = Number(item.bundling_qty ?? 0);
         const price = Number(item?.price ?? 0);
-
         if (isBundling && bundlingQty >= 2 && bundlingQty <= 99) {
-          // 💡 PERUBAHAN PENTING:
-          // physicalTicketQty = jumlah tiket fisik (misal: 2, 4, 6, ...)
-          // bundlingQty = 2/3/4 (berapa tiket per paket)
-          // packageCount = berapa paket yang dibeli.
           const packageCount = Math.ceil(physicalTicketQty / bundlingQty);
-
-          // Setiap paket = 1 tiket display
           acc.displayTotalCount += packageCount;
-          // Harga per paket (bukan per tiket fisik)
           acc.displayTotalSubtotalPrice += price * packageCount;
-
-          console.log(`Bundling item ${id}:`, {
-            physicalTicketQty,
-            bundlingQty,
-            packageCount,
-            price,
-            addedToCount: packageCount,
-            addedToPrice: price * packageCount,
-          });
         } else {
-          // Non-bundling: normal
           acc.displayTotalCount += physicalTicketQty;
           acc.displayTotalSubtotalPrice += price * physicalTicketQty;
         }
-
         return acc;
       },
       { displayTotalCount: 0, displayTotalSubtotalPrice: 0 }
     );
-
-    console.log("FINAL RESULT:", result);
-    return result;
   }, [data, counts]);
-
-  const router = useRouter();
-  const redirectLogin = () => {
-    Cookies.set("ticketCount", JSON.stringify(counts));
-    Cookies.set("prevPath", router.asPath);
-    selected && Cookies.set("selected", selected.toString());
-    router.push("/auth");
-  };
-
-  const total = useMemo(() => {
-    return ticket?.reduce((c, n) => c + n.subtotal_price, 0);
-  }, [ticket]);
 
   const handleDelete = (index: number) => {
     if (ticket && setTicket) {
       const id = ticket[index].event_ticket_id;
       const newCount = Object.keys(counts).reduce((acc, q) => {
-        if (parseInt(q) !== id) {
-          acc[parseInt(q)] = counts[parseInt(q)];
-        }
+        if (parseInt(q) !== id) acc[parseInt(q)] = counts[parseInt(q)];
         return acc;
       }, {} as { [key: number]: number | string[] });
-
       setCounts(newCount ?? {});
-
       setTicket(ticket?.filter((_, i) => i != index));
     }
   };
 
   const SummaryBody = () => (
-    <Stack gap={15}>
-      <Flex justify="space-between" gap={10} wrap="wrap" align="center" w="100%">
-        <Text size="sm" fw={600}>
+    <div className="flex flex-col h-full max-h-[70vh] md:max-h-none">
+      {/* 1. Header (Fixed) */}
+      <div className="flex justify-between items-center w-full mb-5 shrink-0 px-1">
+        <Text size="sm" fw={800} className="text-gray-900 tracking-widest">
           {t("selectedTicket")}
         </Text>
         <UnstyledButton onClick={() => setEdit(!edit)}>
-          <Flex align="center" className={`${edit ? "[&_*]:!text-grey" : "[&_*]:!text-primary-base"}`} gap={8}>
-            <Text fw={600} size="sm">
-              {edit ? t("selectedTicketEndEdit") : "Edit"}
+          <Flex align="center" className={`${edit ? "[&_*]:!text-grey" : "[&_*]:!text-[#194E9E]"}`} gap={8}>
+            <Text fw={700} size="xs" className="tracking-wider">
+              {edit ? t("selectedTicketEndEdit") : "Ubah"}
             </Text>
-            {!edit && <Icon icon="iconoir:edit" />}
+            {!edit && <Icon icon="solar:pen-bold-duotone" className="text-lg" />}
           </Flex>
         </UnstyledButton>
-      </Flex>
+      </div>
 
-      <Divider />
-
-      <Stack gap={15}>
+      {/* 2. Scrollable Ticket List */}
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent -mx-2 px-2 flex flex-col gap-3">
         {ticket?.map((e, i) => {
-          // Cari data original ticket untuk cek is_bundling
           const originalTicket = data.find((item) => item.id === e.event_ticket_id);
           const isBundling = Number(originalTicket?.is_bundling ?? 0) === 1;
           const bundlingQty = Number(originalTicket?.bundling_qty ?? 0);
-
-          // Tentukan display quantity: jika bundling 2-4, tampilkan 1
           const displayQty = isBundling && bundlingQty >= 2 && bundlingQty <= 99 ? 1 : e.seat_number?.length ?? e.qty_ticket;
-
-          // Tentukan display price: jika bundling 2-4, tampilkan price bukan subtotal_price
           const displayPrice = isBundling && bundlingQty >= 2 && bundlingQty <= 99 ? e.price : e.subtotal_price;
 
           return (
-            <Flex gap={10} wrap="wrap" justify="space-between" key={i}>
-              <Flex gap={10}>
-                <Icon icon="fa-solid:ticket-alt" className={`text-primary-base mt-[2px]`} />
+            <div key={i} className="flex items-center justify-between gap-4 bg-white p-4 rounded-[20px] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_30px_-10px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-500 group cursor-default">
+              <Flex gap={12} align="center">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1C41D6]/10 to-[#1C41D6]/5 flex items-center justify-center group-hover:from-[#1C41D6]/20 group-hover:to-[#1C41D6]/10 transition-all duration-500">
+                  <Icon icon={originalTicket?.icon || "solar:ticket-bold-duotone"} className="text-[#1C41D6] text-xl" />
+                </div>
                 <Stack gap={0}>
-                  <Text size="sm">
-                    Tiket {e.name}{" "}
-                    <Badge ml={5} className={`translate-y-[-3px]`} size="xs" color="red">
+                  <Text size="sm" fw={700} className="text-gray-900 line-clamp-1">
+                    {e.name}
+                    <Badge ml={8} variant="light" color="blue" size="xs" className="font-bold">
                       {displayQty}x
                     </Badge>
                   </Text>
                   {e.seat_number && (
-                    <Text size="xs" c="gray">
-                      Seat No: {e.seat_number.join(", ")}
+                    <Text size="xs" fw={500} className="text-gray-400 mt-0.5">
+                      Seat: {e.seat_number.join(", ")}
                     </Text>
                   )}
                 </Stack>
               </Flex>
 
-              <Text fw={600} ml="auto" size="sm">
-                <NumberFormatter value={displayPrice} />
-              </Text>
-
-              {edit && (
-                <Tooltip label="Hapus Tiket">
-                  <ActionIcon onClick={() => handleDelete(i)} variant="transparent" color="red" p={0} size="xs">
-                    <Icon icon="uiw:close" />
+              <div className="flex items-center gap-3">
+                <Text fw={700} size="sm" className="text-[#1C41D6]">
+                  <NumberFormatter prefix="Rp " thousandSeparator="." value={displayPrice} />
+                </Text>
+                {edit && (
+                  <ActionIcon onClick={() => handleDelete(i)} variant="subtle" color="red" radius="md" size="sm">
+                    <Icon icon="solar:trash-bin-minimalistic-bold-duotone" className="text-lg" />
                   </ActionIcon>
-                </Tooltip>
-              )}
-            </Flex>
+                )}
+              </div>
+            </div>
           );
         })}
 
-        {(ticket?.length ?? 0) == 0 && (
-          <Alert icon={<Icon icon="uiw:information-o" />} color="gray" variant="light" radius={10}>
-            {t("selectedTicketEmpty")}
-          </Alert>
+        {(ticket?.length ?? 0) === 0 && (
+          <div className="flex flex-col items-center justify-center py-10 px-6 bg-gray-50/30 rounded-[32px] border border-dashed border-[rgb(227,227,227)]">
+            <Icon icon="solar:ticket-broken" className="text-3xl text-gray-300 mb-2" />
+            <Text size="xs" fw={600} className="text-gray-400 text-center tracking-wider">
+              {t("selectedTicketEmpty")}
+            </Text>
+          </div>
         )}
+      </div>
 
-        {(ticket?.length ?? 0) > 0 && (
-          <>
-            <Divider />
-
-            <Flex gap={10} wrap="wrap" justify="space-between">
-              <Text size="sm">Total ({displayTotalCount} Tiket)</Text>
-              <Text fw={600} ml="auto" size="sm">
-                <NumberFormatter value={displayTotalSubtotalPrice} />
-              </Text>
-            </Flex>
-          </>
-        )}
-      </Stack>
-    </Stack>
+      {/* 3. Footer (Fixed) */}
+      {(ticket?.length ?? 0) > 0 && (
+        <div className="mt-8 mb-2 shrink-0 border-t border-[#e4e4e7] pt-6">
+          <div className="flex items-center justify-between gap-4 px-1">
+            <span className="text-[12px] font-bold text-gray-400 tracking-tight">Total ({totalCount}) Tiket</span>
+            <div className="text-[18px] font-bold text-gray-900 tracking-tight">
+              <NumberFormatter prefix="Rp " thousandSeparator="." value={displayTotalSubtotalPrice} />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 
-  useEffect(() => {
-    console.log("venue", venue);
-  }, [venue]);
-
   return (
-    <div className="text-dark my-5 ">
-      <Drawer opened={openDetail} onClose={() => setOpenDetail(!openDetail)} withCloseButton={false} position="bottom" radius="20px 20px 0 0" size="50vh">
-        <Stack gap={20} py={15} px={5} mih="calc(50vh - 30px)">
-          {/* <Text c="gray" ta="center" size="sm">Detail Pembayaran</Text> */}
-          <SummaryBody />
-          <Button
-            size="md"
-            mt="auto"
-            disabled={totalCount === 0}
-            onClick={() => {
-              if (isLogin) {
-                Cookies.remove("ticketCount", { path: "/" });
-                setStep(33);
-                scrollToTop();
-              } else storeLocalStorage();
-            }}
-          >
-            Beli Tiket
-          </Button>
-        </Stack>
+    <div className="text-dark font-inter">
+      <Drawer 
+        opened={openDetail} 
+        onClose={() => setOpenDetail(!openDetail)} 
+        withCloseButton={false} 
+        position="bottom" 
+        radius="32px 32px 0 0" 
+        size="75vh" 
+        className="[&_.mantine-Drawer-content]:bg-white [&_.mantine-Drawer-body]:p-0 [&_.mantine-Drawer-body]:h-full"
+      >
+        <div className="flex flex-col h-[75vh] font-inter">
+          {/* Top Handle */}
+          <div className="pt-4 pb-2 shrink-0">
+            <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto" />
+          </div>
+
+          {/* Main Body with Fixed/Scrollable logic inside SummaryBody */}
+          <div className="flex-1 overflow-hidden px-5 pb-4">
+            <SummaryBody />
+          </div>
+
+          {/* Fixed Bottom Action */}
+          <div className="p-5 pt-0 shrink-0">
+            <Button
+              size="lg"
+              radius="xl"
+              fullWidth
+              className="bg-[#194E9E] hover:bg-[#0b387c] transition-all h-14 shadow-lg shadow-blue-900/10 font-black text-sm active:scale-[0.98]"
+              disabled={totalCount === 0}
+              onClick={() => {
+                if (isLogin) {
+                  Cookies.remove("ticketCount", { path: "/" });
+                  setStep(33);
+                  scrollToTop();
+                } else storeLocalStorage();
+              }}
+            >
+              Lanjutkan ke Pembayaran
+            </Button>
+          </div>
+        </div>
       </Drawer>
 
-      <Flex gap={20}>
-        <div className="rounded-t-xl shadow-md p-4 w-full max-w-[700px] md:py-8 overflow-y-scroll h-100 border-2 border-primary-light-200 mb-[60px] md:mb-[90px]" id="ticket-picker">
-          <DateTab maxOrder={maxOrder} counts={counts} setCounts={setCounts} data={data} isLogin={isLogin} selected={selected} setSelected={setSelected} />
-          <button></button>
+      <div className="flex-1 flex flex-col md:flex-row bg-[#fafbfc]">
+        {/* MAIN CONTENT AREA: RESPONSIVE LAYOUT */}
+        <div className="flex-1 flex flex-col md:flex-row min-w-0">
+          {/* LEFT COLUMN: DATE + TICKET TYPES (Full width on mobile) */}
+          <div className="flex-1 md:flex-[2.2] flex flex-col bg-white shadow-none md:shadow-[30px_0_60px_-30px_rgba(0,0,0,0.04)] z-10 min-w-0">
+            {/* TOP: DATE STRIP (STICKY below sub-navbar) */}
+            <div id="date-strip" className="w-full bg-white/95 backdrop-blur-md z-30 shrink-0 shadow-sm transition-all duration-500 sticky top-[70px]">
+              <DateTab
+                maxOrder={maxOrder}
+                counts={counts}
+                setCounts={setCounts}
+                data={data}
+                isLogin={isLogin}
+                selected={selected}
+                setSelected={setSelected}
+                setStep={setStep}
+                scrollToTop={scrollToTop}
+                hideTicketList={true}
+                noShadow={true}
+                baseDate={baseDate}
+                setBaseDate={setBaseDate}
+              />
+            </div>
+
+            {/* BOTTOM: TICKET LIST */}
+            <div className="flex-1">
+              <div className="px-4 md:px-8 py-6">
+                <DateTab
+                  maxOrder={maxOrder}
+                  counts={counts}
+                  setCounts={setCounts}
+                  data={data}
+                  isLogin={isLogin}
+                  selected={selected}
+                  setSelected={setSelected}
+                  setStep={setStep}
+                  scrollToTop={scrollToTop}
+                  hideDateStrip={true}
+                  noShadow={false}
+                  baseDate={baseDate}
+                  setBaseDate={setBaseDate}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN: SUMMARY (Sticky Sidebar) */}
+          <div className="hidden md:flex md:w-[350px] lg:w-[400px] flex-col bg-[#fafbfc] p-6 pt-4 gap-6 min-w-0">
+            <div className="sticky top-[120px] self-start w-full bg-white rounded-[32px] shadow-[0_30px_100px_-20px_rgba(28,65,214,0.08)] p-6 transition-all duration-700 ease-out hover:shadow-[0_40px_120px_-20px_rgba(28,65,214,0.12)]">
+              <SummaryBody />
+            </div>
+          </div>
         </div>
 
-        <Stack>
-          <Card miw={320} withBorder className={`flex-grow h-fit md:max-w-[400px] md:!block !hidden !sticky top-[90px]`} radius={10} p={20}>
-            <SummaryBody />
-          </Card>
+        {/* GLOBAL BOTTOM BAR (MOBILE REDESIGN - COMFORTABLE) */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-[0_-20px_60px_-10px_rgba(0,0,0,0.1)] z-50 font-inter md:hidden pb-safe">
+          <div className="w-full px-6 py-3.5 flex flex-col gap-3">
+            {/* Row 1: Price & Detail Toggle */}
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col">
+                <span className="text-[10px] font-bold text-[#94a3b8] tracking-wider uppercase leading-none mb-1">Total Harga</span>
+                <span className="text-[18px] font-black text-[#1e293b] leading-none">Rp {displayTotalSubtotalPrice.toLocaleString("id-ID")}</span>
+              </div>
+              <button 
+                onClick={() => setOpenDetail(true)}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100/50 rounded-full active:scale-95 transition-all"
+              >
+                <span className="text-[11px] font-black text-[#194E9E]">({totalCount}) Detail</span>
+                <Icon icon="solar:alt-arrow-up-bold" className="text-[#194E9E] text-[11px]" />
+              </button>
+            </div>
 
-          {venue?.length > 0 && (
-            <Card miw={320} withBorder className={`flex-grow h-fit md:max-w-[400px] md:!block !hidden !sticky top-[90px]`} radius={10} p={20}>
-              <Stack gap={15}>
-                <Flex justify="space-between" gap={10} wrap="wrap" align="center" w="100%">
-                  <Text size="sm" fw={600}>
-                    Venue Layout
-                  </Text>
-                </Flex>
-                <Divider />
-                <Stack gap={15}>
-                  <Slide autoplay={false}>
-                    {venue?.map((e: { title: string; image: string }, i: number) => (
-                      <>
-                        <UnstyledButton
-                          key={i}
-                          onClick={() => {
-                            setShowVenue(!showVenue);
-                          }}
-                        >
-                          <Image src={`${config.assetUrl}event/${e.image}`} alt="image" radius={8} mt={-5} />
-                        </UnstyledButton>
-                      </>
-                    ))}
-                  </Slide>
-                </Stack>
-              </Stack>
-            </Card>
-          )}
-        </Stack>
-      </Flex>
-
-      <div className="flex justify-between items-center bg-[#eff5ff] px-5 py-3 rounded-b-xl shadow-md w-full fixed bottom-0 left-0 z-50">
-        <div>
-          <p>Total {displayTotalCount} Tiket</p>
-          <p className="font-semibold">Rp {displayTotalSubtotalPrice.toLocaleString("id-ID")}</p>
+            {/* Row 2: Main Action & Chat */}
+            <div className="flex items-center gap-3">
+              <button
+                className={`flex-1 ${totalCount > 0
+                  ? "bg-[#194E9E] active:scale-[0.98]"
+                  : "bg-gray-300 cursor-not-allowed"
+                  } text-white h-12 font-black text-[14px] rounded-2xl transition-all shadow-lg shadow-blue-900/5 flex items-center justify-center`}
+                onClick={() => {
+                  if (isLogin) {
+                    Cookies.remove("ticketCount", { path: "/" });
+                    setStep(33);
+                    scrollToTop();
+                  } else storeLocalStorage();
+                }}
+                disabled={totalCount === 0}
+              >
+                {isGratis ? "Registrasi Sekarang" : "Beli Tiket Sekarang"}
+              </button>
+              
+              <button className="w-12 h-12 bg-[#194E9E] rounded-2xl flex items-center justify-center active:scale-90 transition-all shadow-lg shadow-blue-900/5">
+                <Icon icon="solar:chat-round-dots-bold" className="text-white text-xl" />
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="flex gap-4 items-center">
-          <Button
-            onClick={() => setOpenDetail(true)}
-            rightSection={
-              <Flex gap={10} align="center">
-                <Badge color="red" size="sm">
-                  {totalCount}
-                </Badge>
-                <Icon icon="uiw:up" />
-              </Flex>
-            }
-            variant="transparent"
-            className={`md:!hidden !text-primary-base`}
-          >
-            Detail
-          </Button>
-          {isLogin ? (
+        {/* DESKTOP BOTTOM BAR (Original) */}
+        <div className="hidden md:block fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl shadow-[0_-20px_60px_-10px_rgba(0,0,0,0.08)] z-50 font-inter">
+          <div className="w-full px-8 py-3 flex justify-between items-center">
+            <div className="flex flex-col gap-1">
+              <p className="text-[10px] font-bold text-[#94a3b8] tracking-wider">Total ({totalCount}) Tiket</p>
+              <p className="text-[18px] font-black text-gray-900 leading-none">Rp {displayTotalSubtotalPrice.toLocaleString("id-ID")}</p>
+            </div>
+
             <button
-              className="bg-primary-base text-white px-4 py-2 font-semibold text-sm rounded-2xl disabled:bg-primary-disabled disabled:cursor-not-allowed"
+              className={`${totalCount > 0
+                ? "bg-[#194E9E] hover:bg-[#0b387c] shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:scale-95"
+                : "bg-primary-disabled cursor-not-allowed"
+                } text-white px-8 py-2.5 font-bold text-[13px] rounded-2xl transition-all duration-300 shadow-md`}
               onClick={() => {
-                Cookies.remove("ticketCount", { path: "/" });
-                setStep(33);
-                scrollToTop();
+                if (isLogin) {
+                  Cookies.remove("ticketCount", { path: "/" });
+                  setStep(33);
+                  scrollToTop();
+                } else storeLocalStorage();
               }}
               disabled={totalCount === 0}
             >
-              {isGratis ? "Registrasi" : "Beli"} Tiket {totalCount > 0 && `x${totalCount}`}
+              {isGratis ? "Registrasi" : "Beli Tiket"}
             </button>
-          ) : (
-            <button className="bg-primary-base text-white px-4 py-2 font-semibold text-sm rounded-2xl disabled:bg-primary-disabled disabled:cursor-not-allowed" onClick={storeLocalStorage} disabled={totalCount === 0}>
-              {isGratis ? "Registrasi" : "Beli"} Tiket {totalCount > 0 && `x${totalCount}`}
-            </button>
-          )}
+          </div>
         </div>
       </div>
-      <Modal isOpen={showVenue} onOpenChange={setShowVenue} placement="auto" size="4xl" closeButton aria-labelledby="modal-title" aria-describedby="modal-description">
+
+      <Modal isOpen={showVenue} onOpenChange={setShowVenue} placement="auto" size="4xl" closeButton>
         <ModalContent className="text-dark font-inter h-full">
-          {(onClose) => {
-            return (
-              <div className="flex flex-col w-full h-full overflow-auto">
-                <Slide autoplay={false}>
-                  {venue?.map((e: { title: string; image: string }, i: number) => (
-                    <>
-                      <Image src={`${config.assetUrl}event/${e.image}`} alt="image" radius={8} mt={-5} />
-                    </>
-                  ))}
-                </Slide>
-              </div>
-            );
-          }}
+          {() => (
+            <div className="flex flex-col w-full h-full overflow-auto">
+              <Slide autoplay={false}>
+                {venue?.map((e: { title: string; image: string }, i: number) => (
+                  <div key={i}>
+                    <Image src={`${config.assetUrl}event/${e.image}`} alt="image" radius={8} mt={-5} />
+                  </div>
+                ))}
+              </Slide>
+            </div>
+          )}
         </ModalContent>
       </Modal>
     </div>

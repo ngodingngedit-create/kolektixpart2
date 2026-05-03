@@ -510,6 +510,7 @@ import { useMediaQuery } from '@mantine/hooks';
 config.autoAddCss = false;
 
 const theme = createTheme({
+  fontFamily: "var(--font-inter)",
   colors: {
     "blue": [
       "#edf3fc",

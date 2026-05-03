@@ -9,21 +9,20 @@ export const Post = async (
   contentType: string = 'application/json'
 ) => {
   const token = Cookies.get('token');
+  const headers: any = {
+    'Content-Type': contentType,
+    Accept: 'application/json',
+  };
 
   if (token) {
-    Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    headers['Authorization'] = `Bearer ${token}`;
   }
 
   // Convert params to FormData if contentType is 'multipart/form-data'
   const data = contentType === 'multipart/form-data' ? convertToFormData(params) : JSON.stringify(params);
 
   return new Promise((resolve, reject) => {
-    Axios.post(`${Config.wsUrl}${url}`, data, {
-      headers: {
-        'Content-Type': contentType,
-        Accept: 'application/json',
-      },
-    })
+    Axios.post(`${Config.wsUrl}${url}`, data, { headers })
       .then(async (res: any) => {
         if (res.data !== undefined) {
           resolve(res.data);
@@ -76,8 +75,6 @@ export const Get = async (url: string, params: any) => {
   let stringParams: string = '';
   const token = Cookies.get('token');
 
-  if (!!token) Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
   if (Object.keys(params).length !== 0) {
     let paramsArr: string[] = [];
     Object.keys(params).forEach((key) => {
@@ -91,15 +88,16 @@ export const Get = async (url: string, params: any) => {
 
   return new Promise((resolve, reject) => {
     const token = Cookies.get('token');
+    const headers: any = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    };
 
-    if (!!token) Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
 
-    Axios.get(`${Config.wsUrl}${url}${stringParams}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    })
+    Axios.get(`${Config.wsUrl}${url}${stringParams}`, { headers })
       .then(async (res: any) => {
         if (res.data !== undefined) {
           resolve(res.data);
@@ -121,16 +119,17 @@ export const Get = async (url: string, params: any) => {
 
 export const Put = async (url: string, params: any) => {
   const token = Cookies.get('token');
+  const headers: any = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
 
-  if (!!token) Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
 
   return new Promise((resolve, reject) => {
-    Axios.put(`${Config.wsUrl}${url}`, JSON.stringify(params), {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    })
+    Axios.put(`${Config.wsUrl}${url}`, JSON.stringify(params), { headers })
       .then(async (res: any) => {
         if (res.data !== undefined) {
           resolve(res.data);
@@ -146,8 +145,6 @@ export const Delete = async (url: string, params: any) => {
   let stringParams: string = '';
   const token = Cookies.get('token');
 
-  if (!!token) Axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
   if (Object.keys(params).length !== 0) {
     let paramsArr: string[] = [];
     Object.keys(params).forEach((key) => {
@@ -160,12 +157,17 @@ export const Delete = async (url: string, params: any) => {
   }
 
   return new Promise((resolve, reject) => {
-    Axios.delete(`${Config.wsUrl}${url}${stringParams}`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    })
+    const token = Cookies.get('token');
+    const headers: any = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    Axios.delete(`${Config.wsUrl}${url}${stringParams}`, { headers })
       .then(async (res: any) => {
         if (res.data !== undefined) {
           resolve(res.data);

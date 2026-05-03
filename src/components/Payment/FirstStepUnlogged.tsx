@@ -1447,7 +1447,7 @@ interface StepPaymentProps {
   onSubmitVoucher?: (data: { name: string; amount: number }) => void;
 }
 
-type Detail = { ppn?: any; ppn_type?: any; [k: string]: any };
+type Detail = { ppn?: any; ppn_type?: any;[k: string]: any };
 
 const normalizeDetail = (detail: Detail) => {
   const normalized: Detail = { ...detail };
@@ -1743,10 +1743,10 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
 
   const allBundlingInfo = detail.has_event_ticket
     ? detail.has_event_ticket.map((ticket) => ({
-        id: ticket.id,
-        isBundling: ticket.is_bundling === 1,
-        bundlingQty: ticket.bundling_qty,
-      }))
+      id: ticket.id,
+      isBundling: ticket.is_bundling === 1,
+      bundlingQty: ticket.bundling_qty,
+    }))
     : [];
 
   const getBundlingInfo = (event_ticket_id: number) => {
@@ -2227,10 +2227,10 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
       vouchers:
         vouchers.length > 0
           ? vouchers.map((v) => ({
-              voucher_id: v.id,
-              voucher_code: v.name,
-              voucher_amount: v.amount,
-            }))
+            voucher_id: v.id,
+            voucher_code: v.name,
+            voucher_amount: v.amount,
+          }))
           : [],
       is_merch: hasMerch ? 1 : 0,
       merches: hasMerch ? merchPayload : undefined,
@@ -2505,14 +2505,13 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
 
               <div className="py-3 px-4 flex justify-between items-center">
                 <p>
-                  {`Jumlah (${displayTotalCount} ${
-                    ticket.some((item) => {
-                      const { isBundling, bundlingQty } = getBundlingInfo(item.event_ticket_id);
-                      return isBundling && bundlingQty >= 2 && bundlingQty <= 99;
-                    })
-                      ? "Paket"
-                      : "Tiket"
-                  })`}
+                  {`Jumlah (${displayTotalCount} ${ticket.some((item) => {
+                    const { isBundling, bundlingQty } = getBundlingInfo(item.event_ticket_id);
+                    return isBundling && bundlingQty >= 2 && bundlingQty <= 99;
+                  })
+                    ? "Paket"
+                    : "Tiket"
+                    })`}
                 </p>
                 <p className="font-semibold">{displayTotalSubtotalPrice > 0 ? <NumberFormatter value={displayTotalSubtotalPrice} /> : <Text>Free</Text>}</p>
               </div>
@@ -2541,23 +2540,23 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
 
               {detail?.ppn !== undefined
                 ? (() => {
-                    const subtotalTiket = displayTotalSubtotalPrice;
-                    const totalVoucher = vouchers.reduce((sum, v) => sum + (v?.amount || 0), 0);
-                    const subtotalAfterVoucher = Math.max(displayTotalSubtotalPrice - totalVoucher, 0);
+                  const subtotalTiket = displayTotalSubtotalPrice;
+                  const totalVoucher = vouchers.reduce((sum, v) => sum + (v?.amount || 0), 0);
+                  const subtotalAfterVoucher = Math.max(displayTotalSubtotalPrice - totalVoucher, 0);
 
-                    const { tax, label, ppnType } = computeTax(detail, subtotalAfterVoucher);
+                  const { tax, label, ppnType } = computeTax(detail, subtotalAfterVoucher);
 
-                    if (tax <= 0) return null;
+                  if (tax <= 0) return null;
 
-                    return (
-                      <div className="py-3 px-4 flex justify-between items-center">
-                        <p>{ppnType === "nominal" ? `Tax ${label}` : `Tax (${label})`}</p>
-                        <p className="font-semibold">
-                          <NumberFormatter value={tax} />
-                        </p>
-                      </div>
-                    );
-                  })()
+                  return (
+                    <div className="py-3 px-4 flex justify-between items-center">
+                      <p>{ppnType === "nominal" ? `Tax ${label}` : `Tax (${label})`}</p>
+                      <p className="font-semibold">
+                        <NumberFormatter value={tax} />
+                      </p>
+                    </div>
+                  );
+                })()
                 : null}
 
               {detail?.is_insurance === 1 && (
@@ -2702,9 +2701,8 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
                             <Label className="text-xs sm:text-sm font-base text-grey">Nomor Induk KTP</Label>
                             <Input
                               type="text"
-                              className={`${
-                                fieldErrors[index]?.nik ? "border-danger" : "border-primary-light"
-                              } [&::-webkit-inner-spin-button]:appearance-none mt-0.5 sm:mt-1 block w-full rounded-lg border bg-white/5 py-1 px-2 text-xs sm:text-sm/6 text-dark focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-primary-200`}
+                              className={`${fieldErrors[index]?.nik ? "border-danger" : "border-primary-light"
+                                } [&::-webkit-inner-spin-button]:appearance-none mt-0.5 sm:mt-1 block w-full rounded-lg border bg-white/5 py-1 px-2 text-xs sm:text-sm/6 text-dark focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-primary-200`}
                               placeholder="3277*************"
                               value={item.nik}
                               onChange={(e) => {
@@ -2779,9 +2777,8 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
                                 </select>
                               </form>
                               <Input
-                                className={`${
-                                  fieldErrors[index]?.phone ? "border-danger" : "border-primary-light"
-                                } mt-0.5 sm:mt-1 w-4/5 block rounded-lg border bg-white/5 py-1 sm:py-1.5 px-1.5 sm:px-2 text-xs sm:text-sm/6 text-dark focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-primary-200`}
+                                className={`${fieldErrors[index]?.phone ? "border-danger" : "border-primary-light"
+                                  } mt-0.5 sm:mt-1 w-4/5 block rounded-lg border bg-white/5 py-1 sm:py-1.5 px-1.5 sm:px-2 text-xs sm:text-sm/6 text-dark focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-primary-200`}
                                 placeholder="Contoh: 81234567890"
                                 value={displayValues[index] || ""}
                                 onChange={(e) => {
@@ -2907,11 +2904,13 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
             </div>
           </div>
         ) : (
-          <div className="bg-primary-light pb-8">
-            <div className="max-w-5xl mx-auto grid grid-cols-5 mt-8 gap-x-7 pt-20">
-              <h2 className="col-span-5 mb-4">Personal Informasi</h2>
+          <div className="bg-transparent pb-12">
+            <div className="max-w-6xl mx-auto grid grid-cols-12 mt-12 gap-x-10 pt-16">
+              <div className="col-span-12 mb-8">
+                <h1 className="text-[32px] font-bold text-[#0f172a]">Personal Informasi</h1>
+              </div>
 
-              <div className="col-span-3 flex flex-col gap-3">
+              <div className="col-span-12 lg:col-span-7 flex flex-col gap-6">
                 {form.map((item, index) => {
                   const ticketInfo = getTicketInfoForOwner(index);
 
@@ -2924,30 +2923,150 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
                   const availableVariants = selectedProduct ? getMerchVariants(item.merch_product_id!) : [];
 
                   return (
-                    <div className="border border-primary-light-200 rounded-lg bg-white shadow-sm" key={index}>
-                      <div className="border border-primary-light-200 px-5 py-3 flex items-center justify-between cursor-pointer" onClick={() => toggleCollapse(index)}>
-                        {index > 0 && <FontAwesomeIcon icon={faTicket} className="text-primary shrink-0 mr-[10px]" />}
-                        <Stack gap={0} className="flex-grow">
-                          <p className="font-semibold">{index > 0 ? `${index}. Pemilik Tiket ${ticketInfo.ticketName} ${ticketInfo.seatNumber ? `(Seat ${ticketInfo.seatNumber})` : ""}` : "Data Pemesan"}</p>
-                          {index > 0 && <p className="text-xs text-grey">1 Tiket x {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(ticketInfo.ticketPrice ?? 0)}</p>}
-                        </Stack>
-                        <button className="text-grey">
-                          <FontAwesomeIcon icon={faChevronUp} className={`${collapse[index] ? "rotate-0" : "rotate-180"} transition-transform duration-200`} />
-                        </button>
+                    <div className="bg-white rounded-[20px] shadow-smooth-low overflow-hidden" key={index}>
+                      <div
+                        className="px-6 py-5 flex items-center justify-between cursor-pointer hover:bg-gray-50/50 transition-colors"
+                        onClick={() => toggleCollapse(index)}
+                      >
+                        <div className="flex items-center gap-4">
+                          {index > 0 && (
+                            <div className="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center">
+                              <Icon icon="solar:ticket-bold" className="text-primary-base text-xl" />
+                            </div>
+                          )}
+                          <div>
+                            <p className="text-[16px] font-bold text-[#0f172a]">
+                              {index > 0 ? `${index}. Pemilik Tiket ${ticketInfo.ticketName} ${ticketInfo.seatNumber ? `(Seat ${ticketInfo.seatNumber})` : ""}` : "Data Pemesan"}
+                            </p>
+                            {index > 0 && (
+                              <p className="text-sm text-[#64748b] font-medium mt-0.5">
+                                1 Tiket x {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(ticketInfo.ticketPrice ?? 0)}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
+                          <FontAwesomeIcon icon={faChevronUp} className={`${collapse[index] ? "rotate-0" : "rotate-180"} transition-transform duration-300 text-xs`} />
+                        </div>
                       </div>
 
                       {index > 0 && (
-                        <div className="flex items-center justify-end gap-[8px] px-4 py-2 rounded-lg text-grey">
-                          <p className="text-xs md:text-sm text-end">Gunakan Data Pemesan</p>
-                          <Switch size="sm" onChange={(e: any) => (e.target.checked ? copyOrderer(index) : clearForm(index))} />
+                        <div className="flex items-center justify-between px-6 py-3 bg-gray-50/50 border-y border-[#e4e4e7]">
+                          <p className="text-sm font-semibold text-[#64748b]">Gunakan Data Pemesan</p>
+                          <Switch
+                            size="sm"
+                            color="primary"
+                            classNames={{
+                              wrapper: "group-data-[selected=true]:bg-primary-base",
+                            }}
+                            onChange={(e: any) => (e.target.checked ? copyOrderer(index) : clearForm(index))}
+                          />
                         </div>
                       )}
 
-                      <div className={`px-5 pt-3 pb-5 overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${collapse[index] ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"}`}>
-                        <div className={`${collapse[index] ? "block" : "hidden"} flex flex-col gap-3`}>
+                      <div className={`px-6 pb-6 overflow-hidden transition-all duration-300 ease-in-out ${collapse[index] ? "max-h-[2000px] opacity-100 mt-2" : "max-h-0 opacity-0"}`}>
+                        <div className="flex flex-col gap-5 pt-2">
+                          {/* Bagian Bundling Merchandise - TOP POSITION */}
+                          {index > 0 && ticketInfo.isBundlingMerch && (
+                            <div className="space-y-6 mb-4">
+                              <div className="space-y-4">
+                                <div>
+                                  <p className="text-[16px] font-bold text-[#0f172a]">Pilih Merchandise (Pilih 1)</p>
+                                  <p className="text-sm text-[#64748b] mt-1">Silakan pilih salah satu merchandise yang ingin Anda terima.</p>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                                  {merchProducts.map((product) => {
+                                    const isSelected = item.merch_product_id === product.id;
+                                    const variantSummary = product.varians?.map((v: any) => v.varian_name).join(", ");
+
+                                    return (
+                                      <div
+                                        key={product.id}
+                                        onClick={() => {
+                                          handleInput(index, "merch_product_id", product.id.toString());
+                                          handleInput(index, "merch_product_name", product.product.product_name);
+                                        }}
+                                        className={`relative border-2 rounded-2xl p-4 cursor-pointer transition-all duration-300 flex flex-col gap-3 h-full ${isSelected
+                                          ? "border-primary-base bg-primary-50/10 ring-4 ring-primary-50/30"
+                                          : "border-[#e4e4e7] bg-white hover:border-gray-300"
+                                          }`}
+                                      >
+                                        <div className="absolute top-4 left-4">
+                                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${isSelected ? "border-primary-base bg-primary-base" : "border-gray-300 bg-white"
+                                            }`}>
+                                            {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                                          </div>
+                                        </div>
+
+                                        <div className="w-full aspect-square flex items-center justify-center p-2 mt-2">
+                                          {product.product.product_image && product.product.product_image.length > 0 ? (
+                                            <Image
+                                              src={product.product.product_image[0].image_url}
+                                              alt={product.product.product_name}
+                                              width={160}
+                                              height={160}
+                                              className="max-w-full max-h-full object-contain"
+                                            />
+                                          ) : (
+                                            <Icon icon="solar:box-bold" className="text-gray-200 text-6xl" />
+                                          )}
+                                        </div>
+
+                                        <div className="mt-auto">
+                                          <p className="font-bold text-[14px] text-[#0f172a] line-clamp-1">{product.product.product_name}</p>
+                                          {variantSummary && (
+                                            <p className="text-[11px] text-[#64748b] mt-1 font-medium leading-relaxed">
+                                              {product.product.product_name.toLowerCase().includes("shirt") ? "Ukuran: " : product.product.product_name.toLowerCase().includes("tumbler") ? "" : "Varian: "}
+                                              <span className="text-[#0f172a]">{variantSummary}</span>
+                                            </p>
+                                          )}
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+
+                                {item.merch_product_id && availableVariants.length > 0 && (
+                                  <div className="bg-gray-50 rounded-2xl p-5 border border-[#e4e4e7] animate-in fade-in slide-in-from-top-2 duration-300 mt-4">
+                                    <label className="text-sm font-semibold text-[#64748b] mb-2 block px-0.5">Pilih Varian (Ukuran/Warna)</label>
+                                    <select
+                                      className="block w-full rounded-xl border border-[#e4e4e7] bg-white py-3 px-4 text-sm text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-base transition-all"
+                                      value={item.merch_variant_id?.toString() || ""}
+                                      onChange={(e) => {
+                                        const variantId = parseInt(e.target.value);
+                                        const selectedVariant = availableVariants.find((v: any) => v.id === variantId);
+                                        if (selectedVariant) {
+                                          const newForm = [...form];
+                                          newForm[index] = {
+                                            ...newForm[index],
+                                            merch_variant_id: variantId,
+                                            merch_variant_name: selectedVariant.varian_name,
+                                            merch_price: parseFloat(selectedVariant.price) || parseFloat(selectedProduct?.price?.toString() || "0"),
+                                          };
+                                          setForm(newForm);
+                                        }
+                                      }}
+                                    >
+                                      <option value="">Pilih Varian</option>
+                                      {availableVariants.map((variant: any) => (
+                                        <option key={variant.id} value={variant.id}>
+                                          {variant.varian_name} - {parseFloat(variant.price) > 0 ? `Rp ${parseFloat(variant.price).toLocaleString("id-ID")}` : "Gratis"}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="h-[1px] bg-[#e4e4e7] w-full" />
+                              <p className="text-[16px] font-bold text-[#0f172a]">Data Pemesan</p>
+                            </div>
+                          )}
+
                           {detail.is_noidentity ? (
-                            <div className="grid grid-cols-4 gap-3">
-                              <div>
+                            <div className="grid grid-cols-12 gap-4">
+                              <div className="col-span-12 md:col-span-4">
                                 <InputSelect
                                   label="Identitas"
                                   required
@@ -2961,33 +3080,77 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
                                   ]}
                                 />
                               </div>
-                              <div className="col-span-3">
+                              <div className="col-span-12 md:col-span-8">
                                 <div className="relative">
                                   <InputField
                                     fullWidth
                                     type="number"
                                     label="Nomor Identitas"
-                                    placeholder={`Contoh : 1234567890123456`}
+                                    placeholder="Contoh : 1234567890123456"
                                     value={item.nik}
                                     onChange={(e) => {
                                       const value = e.target.value.replace(/\D/g, "").slice(0, 16);
                                       handleInput(index, "nik", value);
                                     }}
                                   />
-                                  {fieldErrors[index]?.nik && <p className="text-[10px] mt-1 text-danger">{fieldErrors[index]?.nik}</p>}
-                                  {error.nik && item.nik.length < 16 && !fieldErrors[index]?.nik && <p className="text-[10px] mt-1 text-danger">Minimal NIK adalah 16 Digit</p>}
+                                  {fieldErrors[index]?.nik && <p className="text-xs mt-1 text-danger font-medium">{fieldErrors[index]?.nik}</p>}
+                                  {error.nik && item.nik.length < 16 && !fieldErrors[index]?.nik && <p className="text-xs mt-1 text-danger font-medium">Minimal NIK adalah 16 Digit</p>}
                                 </div>
                               </div>
                             </div>
                           ) : null}
 
                           {detail.is_name == 1 && <InputField fullWidth type="text" label="Nama Lengkap" placeholder="Nama Lengkap" value={item.full_name} onChange={(e) => handleInput(index, "full_name", e.target.value)} />}
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {detail.is_email == 1 && (
+                              <div className="col-span-1">
+                                <InputField fullWidth type="text" label="Email" placeholder="Contoh: example@example.com" value={item.email} onChange={(e) => handleInput(index, "email", e.target.value)} />
+                              </div>
+                            )}
+
+                            {detail.is_phone_number ? (
+                              <div className="col-span-1">
+                                <Field className="mb-1">
+                                  <Label className="text-sm font-semibold text-[#64748b] mb-1.5 block">No Telepon</Label>
+                                  <div className="flex gap-3 items-center">
+                                    <div className="w-24 flex-shrink-0">
+                                      <select
+                                        className="w-full bg-white border border-[#e4e4e7] text-[#0f172a] text-sm rounded-xl focus:ring-2 focus:ring-primary-100 focus:border-primary-base block py-2.5 px-3 transition-all outline-none"
+                                        value={item.countryCode}
+                                        onChange={(e) => handleInput(index, "countryCode", e.target.value)}
+                                      >
+                                        <option value="+62">+62</option>
+                                      </select>
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <Input
+                                        className={`${fieldErrors[index]?.phone ? "border-danger" : "border-[#e4e4e7]"
+                                          } w-full block rounded-xl border bg-white py-2.5 px-4 text-sm text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-base transition-all`}
+                                        placeholder="Contoh: 81234567890"
+                                        value={displayValues[index] || ""}
+                                        onChange={(e) => {
+                                          const value = e.target.value;
+                                          const numericValue = value.replace(/\D/g, "");
+                                          handleInput(index, "no_telp", numericValue);
+                                        }}
+                                        type="tel"
+                                        maxLength={13}
+                                      />
+                                    </div>
+                                  </div>
+                                  {fieldErrors[index]?.phone && <p className="text-xs mt-1.5 text-danger font-medium">{fieldErrors[index]?.phone}</p>}
+                                </Field>
+                              </div>
+                            ) : null}
+                          </div>
+
                           {detail.is_assistant == 1 && <InputField fullWidth type="text" label="Assistant" placeholder="Nama Assistant" value={item.is_assistant || ""} onChange={(e) => handleInput(index, "is_assistant", e.target.value)} />}
                           {detail.is_gender == 1 && (
-                            <Field className="mb-2">
-                              <Label className="text-sm font-base text-grey">Jenis Kelamin</Label>
+                            <Field className="mb-1">
+                              <Label className="text-sm font-semibold text-[#64748b] mb-1.5 block">Jenis Kelamin</Label>
                               <select
-                                className="mt-2 block w-full rounded-lg border border-primary-light-200 bg-white/5 py-1.5 px-3 text-sm text-dark focus:outline-none"
+                                className="block w-full rounded-xl border border-[#e4e4e7] bg-white py-2.5 px-4 text-sm text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-base transition-all"
                                 value={item.gender || ""}
                                 onChange={(e) => handleInput(index, "gender", e.target.value)}
                               >
@@ -3000,11 +3163,11 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
                           )}
 
                           {detail.is_birthdate == 1 && (
-                            <Field className="mb-2">
-                              <Label className="text-sm font-base text-grey">Tanggal Lahir</Label>
+                            <Field className="mb-1">
+                              <Label className="text-sm font-semibold text-[#64748b] mb-1.5 block">Tanggal Lahir</Label>
                               <Input
                                 type="date"
-                                className="mt-2 block w-full rounded-lg border border-primary-light-200 bg-white/5 py-1.5 px-3 text-sm text-dark focus:outline-none"
+                                className="block w-full rounded-xl border border-[#e4e4e7] bg-white py-2.5 px-4 text-sm text-[#0f172a] focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-base transition-all"
                                 value={item.birthdate || ""}
                                 onChange={(e) => handleInput(index, "birthdate", e.target.value)}
                               />
@@ -3025,140 +3188,6 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
                           {detail.is_company == 1 && (
                             <InputField fullWidth type="text" label="Perusahaan Atau Organisasi" placeholder="Nama perusahaan atau organisasi" value={item.is_company} onChange={(e) => handleInput(index, "is_company", e.target.value)} />
                           )}
-                          {detail.is_email == 1 && <InputField fullWidth type="text" label="Email" placeholder="Contoh: example@example.com" value={item.email} onChange={(e) => handleInput(index, "email", e.target.value)} />}
-
-                          {detail.is_phone_number ? (
-                            <Field className="mb-1.5 sm:mb-2">
-                              <Label className="text-xs sm:text-sm font-base text-grey">No Telepon</Label>
-                              <div className="flex gap-1 sm:gap-2 items-center">
-                                <form className="max-w-sm block mt-0.5 sm:mt-1">
-                                  <select
-                                    id="countries"
-                                    className="bg-gray-50 border border-primary-light text-dark text-xs sm:text-sm rounded-lg focus:ring-primary-base focus:border-primary-light block w-full py-1 sm:py-1.5 px-1.5 sm:px-2"
-                                    value={item.countryCode}
-                                    onChange={(e) => handleInput(index, "countryCode", e.target.value)}
-                                  >
-                                    <option value="+62">+62</option>
-                                  </select>
-                                </form>
-                                <Input
-                                  className={`${
-                                    fieldErrors[index]?.phone ? "border-danger" : "border-primary-light"
-                                  } mt-0.5 sm:mt-1 w-4/5 block rounded-lg border bg-white/5 py-1 sm:py-1.5 px-1.5 sm:px-2 text-xs sm:text-sm/6 text-dark focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-primary-200`}
-                                  placeholder="Contoh: 81234567890"
-                                  value={displayValues[index] || ""}
-                                  onChange={(e) => {
-                                    const value = e.target.value;
-                                    const numericValue = value.replace(/\D/g, "");
-                                    handleInput(index, "no_telp", numericValue);
-                                  }}
-                                  type="tel"
-                                  maxLength={13}
-                                />
-                              </div>
-                              {fieldErrors[index]?.phone && <p className="text-[8px] sm:text-[9px] mt-0.5 text-danger">{fieldErrors[index]?.phone}</p>}
-                            </Field>
-                          ) : null}
-
-                          {/* Bagian Bundling untuk desktop */}
-                          {index > 0 && ticketInfo.isBundlingMerch && (
-                            <div className="border-t pt-3 mt-3">
-                              <p className="font-semibold text-sm mb-2">Bundling Merchandise</p>
-
-                              <div className="space-y-2">
-                                {/* Product Name Dropdown dengan preview mini di samping */}
-                                {merchProducts.length > 0 && (
-                                  <div className="flex items-start gap-3">
-                                    <Field className="mb-2 flex-1">
-                                      <Label className="text-sm font-base text-grey">Nama Produk</Label>
-                                      <div className="flex gap-2 items-center">
-                                        <select
-                                          className="mt-1 flex-1 rounded-lg border border-primary-light-200 bg-white/5 py-1.5 px-3 text-sm text-dark focus:outline-none"
-                                          value={item.merch_product_name || ""}
-                                          onChange={(e) => handleInput(index, "merch_product_name", e.target.value)}
-                                        >
-                                          <option value="">Pilih Produk</option>
-                                          {merchProducts.map((product) => (
-                                            <option key={product.id} value={product.product_name}>
-                                              {product.product_name}
-                                            </option>
-                                          ))}
-                                        </select>
-
-                                        {/* Preview mini di samping dropdown */}
-                                        {item.merch_product_name && selectedProduct && (
-                                          <div
-                                            className="w-10 h-10 mt-1 rounded overflow-hidden border border-gray-300 bg-white flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
-                                            onClick={() => openProductImageModal(selectedProduct)}
-                                            title="Klik untuk preview"
-                                          >
-                                            {selectedProduct.product_image && selectedProduct.product_image.length > 0 && selectedProduct.product_image[0]?.image_url ? (
-                                              <Image src={selectedProduct.product_image[0].image_url} alt={selectedProduct.product_name} width={40} height={40} className="w-full h-full object-cover" />
-                                            ) : (
-                                              <Icon icon="mdi:tshirt-crew" className="text-gray-400 text-sm" />
-                                            )}
-                                          </div>
-                                        )}
-                                      </div>
-                                    </Field>
-                                  </div>
-                                )}
-
-                                {/* Variant Dropdown */}
-                                {item.merch_product_name && availableVariants.length > 0 && (
-                                  <Field className="mb-2">
-                                    <Label className="text-sm font-base text-grey">Variant</Label>
-                                    <select
-                                      className="mt-1 block w-full rounded-lg border border-primary-light-200 bg-white/5 py-1.5 px-3 text-sm text-dark focus:outline-none"
-                                      value={item.merch_variant_id?.toString() || ""}
-                                      onChange={(e) => {
-                                        const variantId = parseInt(e.target.value);
-                                        const selectedVariant = availableVariants.find((v: any) => v.id === variantId);
-                                        if (selectedVariant) {
-                                          const newForm = [...form];
-                                          newForm[index] = {
-                                            ...newForm[index],
-                                            merch_variant_id: variantId,
-                                            merch_variant_name: selectedVariant.varian_name,
-                                            merch_price: parseFloat(selectedVariant.price) || parseFloat(selectedProduct?.price || "0"),
-                                          };
-                                          setForm(newForm);
-                                        }
-                                      }}
-                                    >
-                                      <option value="">Pilih Variant</option>
-                                      {availableVariants.map((variant: any) => (
-                                        <option key={variant.id} value={variant.id}>
-                                          {variant.varian_name} - Rp {parseFloat(variant.price).toLocaleString("id-ID")}
-                                        </option>
-                                      ))}
-                                    </select>
-                                  </Field>
-                                )}
-
-                                {/* Informasi produk tambahan di bawah */}
-                                {item.merch_product_name && selectedProduct && (
-                                  <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-md">
-                                    <div className="flex-1 min-w-0">
-                                      <div className="space-y-1">
-                                        <p className="font-medium text-xs">{item.merch_product_name}</p>
-                                        {item.merch_price && item.merch_price > 0 && (
-                                          <p className="text-xs text-grey">
-                                            Harga: <span className="font-semibold">Rp {item.merch_price.toLocaleString("id-ID")}</span>
-                                          </p>
-                                        )}
-                                        {item.merch_variant_name && (
-                                          <p className="text-xs text-grey truncate">
-                                            Variant: <span className="font-medium">{item.merch_variant_name}</span>
-                                          </p>
-                                        )}
-                                      </div>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>
@@ -3166,249 +3195,249 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
                 })}
               </div>
 
-              <div className="col-span-2 flex flex-col gap-3">
-                <div className="border border-primary-light-200 rounded-lg bg-white shadow-sm">
-                  <div className="flex items-center gap-3 p-3">
-                    {detail?.image_url && <Image src={detail.image_url} width={1000} height={1000} alt="banner" className="w-10 h-10 object-cover rounded-md" />}
+              <div className="col-span-12 lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-10 h-fit">
+                {/* Section Creator */}
+                {detail?.has_creator && (
+                  <div className="bg-white rounded-2xl shadow-smooth-low overflow-hidden">
+
+                    {/* <div className="p-5 flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-50 border border-[#e4e4e7] flex-shrink-0">
+                        {detail.has_creator.image_url ? (
+                          <Image src={detail.has_creator.image_url} width={48} height={48} alt="creator" className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center bg-primary-50 text-primary-base font-bold text-lg">
+                            {detail.has_creator.name?.charAt(0)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-[15px] font-bold text-[#0f172a] truncate">{detail.has_creator.name}</p>
+                          {detail.has_creator.is_verified === 1 && (
+                            <Icon icon="solar:verified-check-bold" className="text-blue-500 text-base flex-shrink-0" />
+                          )}
+                        </div>
+                        <p className="text-xs text-[#64748b] font-medium mt-0.5">Penyelenggara Event</p>
+                      </div>
+                    </div> */}
+                  </div>
+                )}
+                <div className="bg-white rounded-2xl shadow-smooth-low overflow-hidden">
+                  <div className="flex items-center gap-4 p-4">
+                    {detail?.image_url && (
+                      <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
+                        <Image src={detail.image_url} width={100} height={100} alt="banner" className="w-full h-full object-cover" />
+                      </div>
+                    )}
                     <div>
-                      <p className="text-sm mb-1">{detail?.name}</p>
-                      <p className="text-xs text-grey">{formatDate(detail.start_date) === formatDate(detail.end_date) ? `${formatDate(detail.start_date)}` : `${formatDate(detail.start_date)} - ${formatDate(detail.end_date)}`}</p>
+                      <p className="text-[15px] font-bold text-[#0f172a] line-clamp-1">{detail?.name}</p>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <Icon icon="solar:calendar-bold" className="text-[#64748b] text-sm" />
+                        <p className="text-xs text-[#64748b] font-medium">
+                          {formatDate(detail.start_date) === formatDate(detail.end_date) ? `${formatDate(detail.start_date)}` : `${formatDate(detail.start_date)} - ${formatDate(detail.end_date)}`}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <Card withBorder radius={10} p={20}>
+                <div className="bg-white rounded-2xl shadow-smooth-low p-6">
                   <Stack gap={20}>
                     <Flex gap={10} align="center">
-                      <Icon icon="mdi:voucher-outline" className="text-primary-base text-[20px]" />
-                      <Text fw={600}>Voucher</Text>
+                      <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center">
+                        <Icon icon="solar:ticket-sale-bold" className="text-primary-base text-lg" />
+                      </div>
+                      <Text fw={700} size="md" c="#0f172a">Voucher</Text>
                     </Flex>
 
                     {voucherFields.map((field, i) => (
-                      <Group key={i}>
-                        <TextInput
-                          w="100%"
-                          value={field}
-                          onChange={(e) => {
-                            const newFields = [...voucherFields];
-                            newFields[i] = e.currentTarget.value;
-                            setVoucherFields(newFields);
-                          }}
-                          placeholder={`Masukan Kode Voucher ${i + 1}`}
-                        />
-                        <Button loading={loadings.includes(`getvoucher-${i}`)} disabled={field.length < 3} size="xs" onClick={() => handleGetVoucher(i)} className="shrink-0">
-                          Submit
-                        </Button>
+                      <div key={i} className="space-y-3">
+                        <div className="flex gap-2">
+                          <TextInput
+                            className="flex-1"
+                            styles={{
+                              input: {
+                                borderRadius: '12px',
+                                border: '1px solid #e4e4e7',
+                                height: '42px',
+                              }
+                            }}
+                            value={field}
+                            onChange={(e) => {
+                              const newFields = [...voucherFields];
+                              newFields[i] = e.currentTarget.value;
+                              setVoucherFields(newFields);
+                            }}
+                            placeholder={`Masukan Kode Voucher ${i + 1}`}
+                          />
+                          <Button
+                            loading={loadings.includes(`getvoucher-${i}`)}
+                            disabled={field.length < 3}
+                            onClick={() => handleGetVoucher(i)}
+                            className="bg-[#0f172a] hover:bg-[#1e293b] rounded-xl h-[42px] px-6 text-xs font-semibold"
+                          >
+                            Submit
+                          </Button>
+                        </div>
                         {vouchers[i] && (
-                          <>
-                            <Button variant="outline" size="xs" color="red" onClick={() => handleCancelVoucher(i)} className="shrink-0">
-                              Cancel
+                          <div className="flex items-center justify-between bg-green-50 p-2.5 rounded-xl border border-green-100">
+                            <div className="flex items-center gap-2">
+                              <Icon icon="solar:check-circle-bold" className="text-green-500 text-lg" />
+                              <p className="text-xs font-bold text-green-700">Voucher Berhasil Terpasang</p>
+                            </div>
+                            <Button variant="subtle" size="compact-xs" color="red" onClick={() => handleCancelVoucher(i)} className="font-bold">
+                              Hapus
                             </Button>
-                            <Icon icon="uiw:circle-check" className="text-green-500 text-[20px] shrink-0" />
-                          </>
+                          </div>
                         )}
-                      </Group>
+                      </div>
                     ))}
 
-                    <Button variant="outline" size="xs" onClick={handleAddVoucherField} className="mt-2">
-                      + Tambah Voucher
-                    </Button>
+                    <button
+                      onClick={handleAddVoucherField}
+                      className="w-full py-2.5 border-2 border-dashed border-[#e4e4e7] rounded-xl text-xs font-bold text-[#64748b] hover:border-primary-base hover:text-primary-base transition-all flex items-center justify-center gap-2"
+                    >
+                      <Icon icon="solar:add-circle-bold" className="text-sm" />
+                      Tambah Voucher
+                    </button>
                   </Stack>
-                </Card>
+                </div>
 
-                <div className="border border-primary-light-200 rounded-lg bg-white shadow-sm">
-                  <div className="border-b border-b-primary-light-200 p-3">
-                    <p className="font-semibold">Ringkasan Pesanan</p>
+                <div className="bg-white rounded-2xl shadow-smooth-low overflow-hidden">
+                  <div className="border-b border-[#e4e4e7] p-5 bg-gray-50/50">
+                    <p className="text-[16px] font-bold text-[#0f172a]">Ringkasan Pesanan</p>
                   </div>
 
-                  {ticket.map((item: FormTicket) => {
-                    const { isBundling, bundlingQty } = getBundlingInfo(item.event_ticket_id);
+                  <div className="divide-y divide-[#e4e4e7]">
+                    {ticket.map((item: FormTicket) => {
+                      const { isBundling, bundlingQty } = getBundlingInfo(item.event_ticket_id);
 
-                    let displayQty = item.qty_ticket;
-                    let packageCount = 1;
+                      let displayQty = item.qty_ticket;
+                      let packageCount = 1;
 
-                    if (isBundling && bundlingQty >= 2 && bundlingQty <= 99) {
-                      packageCount = Math.floor(item.qty_ticket / bundlingQty);
-                      displayQty = packageCount;
-                    }
+                      if (isBundling && bundlingQty >= 2 && bundlingQty <= 99) {
+                        packageCount = Math.floor(item.qty_ticket / bundlingQty);
+                        displayQty = packageCount;
+                      }
 
-                    const bundlingInfo = isBundling && bundlingQty >= 2 && bundlingQty <= 99 ? ` (paket ${bundlingQty} orang)` : "";
-                    const displaySubtotal = isBundling && bundlingQty >= 2 && bundlingQty <= 99 ? item.price * packageCount : item.price * item.qty_ticket;
+                      const bundlingInfo = isBundling && bundlingQty >= 2 && bundlingQty <= 99 ? ` (paket ${bundlingQty} orang)` : "";
+                      const displaySubtotal = isBundling && bundlingQty >= 2 && bundlingQty <= 99 ? item.price * packageCount : item.price * item.qty_ticket;
 
-                    return (
-                      <div className="border-b p-3 border-primary-light-200 flex gap-3" key={item.event_ticket_id}>
-                        <div className="px-3 flex items-center border rounded-md border-primary-light">
-                          <FontAwesomeIcon icon={faTicket} className="text-primary" />
+                      return (
+                        <div className="p-5 flex gap-4" key={item.event_ticket_id}>
+                          <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center border border-[#e4e4e7] flex-shrink-0">
+                            <Icon icon="solar:ticket-bold" className="text-primary-base text-lg" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-[#0f172a] leading-snug">
+                              {item.name}
+                              {bundlingInfo}
+                            </p>
+                            <div className="flex justify-between items-end mt-1">
+                              <p className="text-xs text-[#64748b] font-medium">
+                                {displayQty} {displayQty === 1 ? "Paket" : "Paket"} x {item.price.toLocaleString("id-ID")}
+                                {isBundling && bundlingQty >= 2 && bundlingQty <= 99 && <span className="text-[10px] text-gray-400 block font-normal">({item.qty_ticket} tiket fisik)</span>}
+                              </p>
+                              <p className="text-sm font-bold text-[#0f172a]">Rp {displaySubtotal.toLocaleString("id-ID")}</p>
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm mb-1 font-semibold">
-                            {item.name}
-                            {bundlingInfo}
-                          </p>
-                          <p className="text-xs text-grey">
-                            {displayQty} {displayQty === 1 ? "Paket" : "Paket"} x {item.price} = Rp {displaySubtotal.toLocaleString("id-ID")}
-                            {isBundling && bundlingQty >= 2 && bundlingQty <= 99 && <span className="text-[10px] text-gray-500 block">({item.qty_ticket} tiket fisik)</span>}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
 
-                  <div className="py-3 px-4 flex justify-between items-center">
-                    <p>
-                      {`Jumlah (${displayTotalCount} ${
-                        ticket.some((item) => {
+                  <div className="p-5 bg-gray-50/30 space-y-3">
+                    <div className="flex justify-between items-center">
+                      <p className="text-xs font-semibold text-[#64748b]">
+                        {`Jumlah (${displayTotalCount} ${ticket.some((item) => {
                           const { isBundling, bundlingQty } = getBundlingInfo(item.event_ticket_id);
                           return isBundling && bundlingQty >= 2 && bundlingQty <= 99;
                         })
                           ? "Paket"
                           : "Tiket"
-                      })`}
-                    </p>
-                    <p className="font-semibold">{displayTotalSubtotalPrice > 0 ? <NumberFormatter value={displayTotalSubtotalPrice} /> : <Text>Free</Text>}</p>
-                  </div>
-
-                  {vouchers.length > 0 && (
-                    <div className="py-3 px-4 flex justify-between items-center">
-                      <p>Total Voucher</p>
-                      <p className="font-semibold">
-                        -
-                        <NumberFormatter value={vouchers.reduce((sum, voucher) => sum + (voucher.amount || 0), 0)} />
+                          })`}
                       </p>
+                      <p className="text-sm font-bold text-[#0f172a]">{displayTotalSubtotalPrice > 0 ? <NumberFormatter value={displayTotalSubtotalPrice} /> : <Text>Free</Text>}</p>
                     </div>
-                  )}
 
-                  {(() => {
-                    const subtotalTiket = displayTotalSubtotalPrice;
-                    const totalVoucher = vouchers.reduce((sum, v) => sum + (v?.amount || 0), 0);
-                    const subtotalAfterVoucher = Math.max(displayTotalSubtotalPrice - totalVoucher, 0);
-
-                    return (
-                      <div className="py-3 px-4 flex justify-between items-center">
-                        <p>Subtotal</p>
-                        <p className="font-semibold">
-                          <NumberFormatter value={subtotalAfterVoucher} />
+                    {vouchers.length > 0 && (
+                      <div className="flex justify-between items-center">
+                        <p className="text-xs font-semibold text-[#64748b]">Total Voucher</p>
+                        <p className="text-sm font-bold text-green-600">
+                          -<NumberFormatter value={vouchers.reduce((sum, voucher) => sum + (voucher.amount || 0), 0)} />
                         </p>
                       </div>
-                    );
-                  })()}
+                    )}
 
-                  {detail?.is_insurance === 1 && (
-                    <>
-                      <div className="border-b p-3 border-primary-light-200 flex gap-3 items-center justify-between" key="asuransi">
-                        <div className="flex items-center gap-3">
-                          <div className="px-3 flex items-center border rounded-md border-primary-light">
-                            <Icon icon="mdi:shield-check" className="text-primary" />
-                          </div>
-                          <div>
-                            <button onClick={() => setInsuranceModalOpen(true)} className="text-sm mb-1 font-semibold hover:text-primary transition-colors text-left">
-                              Pakai Asuransi
-                            </button>
-                            <p className="text-xs text-grey">
-                              Rp {detail?.insurance_amount?.toLocaleString("id-ID") || "0"} per tiket
-                              {insuranceChecked && <span className="block text-xs text-blue-600">+Rp {calculateInsuranceTotal().toLocaleString("id-ID")}</span>}
-                            </p>
-                          </div>
+                    {(() => {
+                      const totalVoucher = vouchers.reduce((sum, v) => sum + (v?.amount || 0), 0);
+                      const subtotalAfterVoucher = Math.max(displayTotalSubtotalPrice - totalVoucher, 0);
+
+                      return (
+                        <div className="flex justify-between items-center border-t border-[#e4e4e7] pt-3">
+                          <p className="text-xs font-semibold text-[#64748b]">Subtotal</p>
+                          <p className="text-sm font-bold text-[#0f172a]">
+                            <NumberFormatter value={subtotalAfterVoucher} />
+                          </p>
                         </div>
+                      );
+                    })()}
 
-                        {detail?.insurance_required === 0 ? (
-                          <input
-                            type="checkbox"
-                            className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary focus:ring-2"
-                            checked={insuranceChecked}
-                            onChange={(e) => {
-                              setInsuranceChecked(e.target.checked);
-                            }}
-                          />
-                        ) : (
-                          <div className="text-xs text-primary font-semibold">Wajib</div>
-                        )}
+                    {detail?.is_insurance === 1 && (
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs font-semibold text-[#64748b]">Asuransi</p>
+                          <button onClick={() => setInsuranceModalOpen(true)} className="text-[10px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded font-bold hover:bg-blue-100">Detail</button>
+                        </div>
+                        <p className="text-sm font-bold text-[#0f172a]">
+                          {insuranceChecked ? `Rp ${calculateInsuranceTotal().toLocaleString("id-ID")}` : "Rp 0"}
+                        </p>
                       </div>
+                    )}
 
-                      <Modal opened={insuranceModalOpen} onClose={() => setInsuranceModalOpen(false)} title="Ketentuan Asuransi" size="lg" centered>
-                        <div className="flex flex-col sm:flex-row gap-4 p-4">
-                          <div className="w-full sm:w-1/4 flex flex-col items-center justify-center">
-                            <div className="bg-blue-50 p-4 rounded-full mb-3">
-                              <Icon icon="mdi:shield-check" className="text-blue-600 text-4xl" />
-                            </div>
-                            <p className="text-sm font-semibold text-center">Proteksi Tiket Anda</p>
+                    {detail?.ppn !== undefined && (() => {
+                      const totalVoucher = vouchers.reduce((sum, v) => sum + (v?.amount || 0), 0);
+                      const subtotalAfterVoucher = Math.max(displayTotalSubtotalPrice - totalVoucher, 0);
+                      const { tax, label, ppnType } = computeTax(detail, subtotalAfterVoucher);
+                      if (tax > 0) {
+                        return (
+                          <div className="flex justify-between items-center">
+                            <p className="text-xs font-semibold text-[#64748b]">{ppnType === "nominal" ? `Tax ${label}` : `Tax (${label})`}</p>
+                            <p className="text-sm font-bold text-[#0f172a]"><NumberFormatter value={tax} /></p>
                           </div>
+                        );
+                      }
+                      return null;
+                    })()}
 
-                          <div className="w-full sm:w-3/4">
-                            <div className="space-y-3">
-                              <div>
-                                <h4 className="font-semibold text-sm mb-1">{insuranceInfo.title}</h4>
-                                <p className="text-xs text-gray-600">{insuranceInfo.description}</p>
-                              </div>
+                    {adminFee > 0 && (
+                      <div className="flex justify-between items-center">
+                        <p className="text-xs font-semibold text-[#64748b]">Biaya Admin</p>
+                        <p className="text-sm font-bold text-[#0f172a]"><NumberFormatter value={adminFee} /></p>
+                      </div>
+                    )}
 
-                              <div className="pt-2">
-                                <p className="text-xs text-gray-500">
-                                  Biaya asuransi: <span className="font-semibold">Rp {detail?.insurance_amount?.toLocaleString("id-ID") || "2.000"} per tiket</span>
-                                </p>
-                                {detail?.insurance_required === 1 && <p className="text-xs text-red-500 mt-1">*Asuransi wajib untuk event ini</p>}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="mt-6 pt-4 border-t flex justify-end">
-                          <Button onClick={() => setInsuranceModalOpen(false)} size="xs">
-                            Mengerti
-                          </Button>
-                        </div>
-                      </Modal>
-                    </>
-                  )}
-
-                  {detail?.ppn !== undefined
-                    ? (() => {
-                        const subtotalTiket = displayTotalSubtotalPrice;
-                        const totalVoucher = vouchers.reduce((sum, v) => sum + (v?.amount || 0), 0);
-                        const subtotalAfterVoucher = Math.max(displayTotalSubtotalPrice - totalVoucher, 0);
-
-                        const { tax, label, ppnType } = computeTax(detail, subtotalAfterVoucher);
-
-                        if (tax > 0) {
-                          return (
-                            <div className="py-3 px-4 flex justify-between items-center">
-                              <p>{ppnType === "nominal" ? `Tax ${label}` : `Tax (${label})`}</p>
-                              <p className="font-semibold">
-                                <NumberFormatter value={tax} />
-                              </p>
-                            </div>
-                          );
-                        }
-                        return null;
-                      })()
-                    : null}
-
-                  {adminFee > 0 && (
-                    <div className="py-3 px-4 flex justify-between items-center">
-                      <p>Biaya Admin</p>
-                      <p className="font-semibold">
-                        <NumberFormatter value={adminFee} />
-                      </p>
+                    <div className="pt-4 border-t border-[#e4e4e7]">
+                      <div className="flex justify-between items-center">
+                        <p className="text-[15px] font-bold text-[#0f172a]">Total Pembayaran</p>
+                        <p className="text-xl font-black text-primary-base">
+                          {(() => {
+                            const grandTotal = calculateGrandTotal();
+                            return grandTotal > 0 ? <NumberFormatter value={grandTotal} /> : "Free";
+                          })()}
+                        </p>
+                      </div>
                     </div>
-                  )}
-
-                  <div className="py-3 px-4 flex justify-between items-center">
-                    <p>Total Pembayaran</p>
-                    <p className="font-semibold">
-                      {(() => {
-                        const grandTotal = calculateGrandTotal();
-                        return grandTotal > 0 ? <NumberFormatter value={grandTotal} /> : <Text>Free</Text>;
-                      })()}
-                    </p>
                   </div>
                 </div>
 
                 {detail && detail.has_event_payment_method.length > 1 ? (
-                  <div className="border border-primary-light-200 rounded-lg bg-white overflow-hidden">
-                    <div className="border-b border-b-primary-light-200 py-4 px-6">
-                      <p className="font-semibold">Metode Pembayaran</p>
+                  <div className="bg-white rounded-2xl shadow-smooth-low overflow-hidden">
+                    <div className="p-5 border-b border-[#e4e4e7]">
+                      <p className="text-[16px] font-bold text-[#0f172a]">Metode Pembayaran</p>
                     </div>
 
-                    <div className="px-3 py-4 border-b border-primary-light text-xs">
+                    <div className="p-2 text-xs">
                       <Accordion variant="splitted" itemClasses={classAcc}>
                         {detail.has_event_payment_method
                           .filter((e) => e.payment_method_id != 5)
@@ -3427,7 +3456,7 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
                                     <div key={item.id} className="flex items-center justify-between py-2">
                                       <div className="flex items-center gap-3">
                                         <Images type="logo" path={el.has_payment_method.logo} alt={el.has_payment_method.payment_name} className="w-8 h-8 object-contain" />
-                                        <p className="text-sm">{item.payment_channel}</p>
+                                        <p className="text-sm font-medium">{item.payment_channel}</p>
                                       </div>
                                       <Radio value={item.payment_channel} />
                                     </div>

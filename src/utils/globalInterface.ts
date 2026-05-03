@@ -46,6 +46,8 @@ export interface TicketProps {
   }[];
   is_bundling_merch: number;
   is_ots: number;
+  icon?: string;
+  valid_dates?: string[];
 }
 
 export type TicketPropsInputRequest = Pick<TicketProps, "event_id" | "name" | "qty" | "price" | "description" | "ticket_date" | "ticket_end">;

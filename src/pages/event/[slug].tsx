@@ -1484,8 +1484,6 @@ import { faArrowLeft, faCalendar, faCheck, faClock, faLocationDot, faShareNodes,
 import { faFacebook, faInstagram } from "@fortawesome/free-brands-svg-icons";
 import { Progress, Spinner } from "@nextui-org/react";
 import xendit from "../../assets/images/xendit.png";
-import DescriptionBlock from "@/components/Detail/DescriptionBlock";
-import TermsConditionBlock from "@/components/Detail/TermsConditionBlock";
 import TicketViewBlock from "@/components/Detail/TicketViewBlock";
 import useWindowSize from "@/utils/useWindowSize";
 import { toast } from "react-toastify";
@@ -1575,7 +1573,7 @@ const people = [
   { id: 5, name: "+4" },
 ];
 
-export const Context = createContext<{
+export const EventContext = createContext<{
   seatmapData?: SeatmapData[];
   seatmapOpen?: number;
   setSeatmapOpen?: Dispatch<SetStateAction<number | undefined>>;
@@ -1661,14 +1659,176 @@ const EventDetails = () => {
   const [seatmapOpen, setSeatmapOpen] = useState<number>();
   const [voucher, setVoucher] = useState<{ id: number; name: string; amount: number }[]>([]);
   const firstStepRef = useRef<any>(null);
-  
+
   // State untuk menyimpan data dari step 1
   const [step1FormData, setStep1FormData] = useState<Form[]>([]);
   const [step1TicketData, setStep1TicketData] = useState<FormTicket[]>([]);
   const [step1MerchData, setStep1MerchData] = useState<MerchPayload[]>([]);
   const [submittedPayload, setSubmittedPayload] = useState<any>(null);
 
+  // Data Dummy untuk Deskripsi dan FAQ
+  const dummyDescription = `
+    <div class="flex flex-col gap-6">
+      <div class="w-full h-48 rounded-2xl overflow-hidden shadow-md">
+        <img src="/car_reunion_event_1777754232642.png" alt="Event Reuni Mobil" class="w-full h-full object-cover" />
+      </div>
+      <div class="flex flex-col gap-4">
+        <h4 class="text-lg font-black text-gray-900 leading-tight">Ajang Silaturahmi Pecinta Otomotif Terbesar</h4>
+        <p class="text-gray-600 leading-relaxed">
+          <strong>Event Reuni Mobil</strong> adalah ajang pertemuan berkala bagi para pecinta dan pemilik mobil untuk berbagi informasi, pengalaman, serta mempererat tali persaudaraan antar sesama komunitas.
+        </p>
+        <div class="grid grid-cols-1 gap-3 mt-2">
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-[#194E9E]"></span>
+            <span class="text-[13px] font-bold text-gray-700">Pameran Mobil Modifikasi & Klasik</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-[#194E9E]"></span>
+            <span class="text-[13px] font-bold text-gray-700">Coaching Clinic dengan Pakar Otomotif</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="w-2 h-2 rounded-full bg-[#194E9E]"></span>
+            <span class="text-[13px] font-bold text-gray-700">Sesi Tanya Jawab Eksklusif</span>
+          </div>
+        </div>
+        <p class="text-gray-600 leading-relaxed mt-2">
+          Bergabunglah bersama kami untuk merayakan semangat otomotif dalam suasana yang akrab dan meriah. Berbagai hadiah menarik juga telah disiapkan untuk para peserta kegiatan!
+        </p>
+      </div>
+    </div>
+  `;
+
+  const dummyFaq = `
+    <div class="flex flex-col gap-8">
+      <!-- House Rules Container -->
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-3 px-1">
+          <div class="w-1.5 h-6 bg-red-500 rounded-full"></div>
+          <span class="text-[12px] font-black text-gray-900 uppercase tracking-widest">Larangan Utama</span>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4">
+          <!-- Item: Senjata Tajam -->
+          <div class="group flex items-center gap-5 p-5 bg-white border border-red-100 rounded-[28px] shadow-[0_8px_30px_rgb(255,241,241,0.5)] transition-all hover:shadow-[0_8px_30px_rgb(255,241,241,0.8)]">
+            <div class="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center shrink-0 border border-red-100 group-hover:scale-105 transition-transform">
+              <span class="text-2xl">⚔️</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-[14px] font-black text-gray-900 leading-none">DILARANG BAWA SENJATA</span>
+              <span class="text-[11px] font-bold text-gray-500 leading-relaxed">Keamanan adalah prioritas. Jangan membawa senjata tajam atau benda berbahaya.</span>
+            </div>
+          </div>
+
+          <!-- Item: Makanan Luar -->
+          <div class="group flex items-center gap-5 p-5 bg-white border border-red-100 rounded-[28px] shadow-[0_8px_30px_rgb(255,241,241,0.5)] transition-all hover:shadow-[0_8px_30px_rgb(255,241,241,0.8)]">
+            <div class="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center shrink-0 border border-red-100 group-hover:scale-105 transition-transform">
+              <span class="text-2xl">🥤</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-[14px] font-black text-gray-900 leading-none">TANPA MAKANAN LUAR</span>
+              <span class="text-[11px] font-bold text-gray-500 leading-relaxed">Nikmati beragam hidangan yang telah tersedia secara resmi di area Food & Beverage venue.</span>
+            </div>
+          </div>
+
+          <!-- Item: Kursi Pribadi -->
+          <div class="group flex items-center gap-5 p-5 bg-white border border-red-100 rounded-[28px] shadow-[0_8px_30px_rgb(255,241,241,0.5)] transition-all hover:shadow-[0_8px_30px_rgb(255,241,241,0.8)]">
+            <div class="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center shrink-0 border border-red-100 group-hover:scale-105 transition-transform">
+              <span class="text-2xl">🚫🪑</span>
+            </div>
+            <div class="flex flex-col gap-1">
+              <span class="text-[14px] font-black text-gray-900 leading-none">KURSI SUDAH TERSEDIA</span>
+              <span class="text-[11px] font-bold text-gray-500 leading-relaxed">Fasilitas duduk sudah sangat memadai. Mohon tidak membawa kursi lipat atau kursi pribadi.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="h-px bg-gray-100 w-full"></div>
+
+      <!-- General Guidelines -->
+      <div class="flex flex-col gap-4">
+        <div class="flex items-center gap-3 px-1">
+          <div class="w-1.5 h-6 bg-blue-500 rounded-full"></div>
+          <span class="text-[12px] font-black text-gray-900 uppercase tracking-widest">Panduan Umum</span>
+        </div>
+        
+        <div class="flex flex-col gap-3">
+          <div class="flex gap-4 p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+            <span class="flex-shrink-0 w-6 h-6 rounded-lg bg-white shadow-sm flex items-center justify-center text-[10px] font-black text-gray-400">01</span>
+            <p class="text-[12px] font-bold text-gray-600 leading-relaxed m-0">Patuhi segala aturan lalu lintas saat menuju dan meninggalkan lokasi acara demi keselamatan bersama.</p>
+          </div>
+          <div class="flex gap-4 p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+            <span class="flex-shrink-0 w-6 h-6 rounded-lg bg-white shadow-sm flex items-center justify-center text-[10px] font-black text-gray-400">02</span>
+            <p class="text-[12px] font-bold text-gray-600 leading-relaxed m-0">Dilarang melakukan atraksi berbahaya atau balap liar di area sekitar venue untuk menjaga ketertiban.</p>
+          </div>
+          <div class="flex gap-4 p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
+            <span class="flex-shrink-0 w-6 h-6 rounded-lg bg-white shadow-sm flex items-center justify-center text-[10px] font-black text-gray-400">03</span>
+            <p class="text-[12px] font-bold text-gray-600 leading-relaxed m-0">Panitia tidak bertanggung jawab atas kehilangan barang pribadi; harap amankan barang berharga Anda.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const sectionRefs = {
+    info: useRef<HTMLDivElement>(null),
+    faq: useRef<HTMLDivElement>(null),
+    lokasi: useRef<HTMLDivElement>(null),
+  };
+  const [activeSection, setActiveSection] = useState("info");
+  const [subNavSticky, setSubNavSticky] = useState(false);
+  const heroNavRef = useRef<HTMLDivElement>(null);
+  const [pendingScroll, setPendingScroll] = useState<string | null>(null);
+
   const user = useLoggedUser();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Sticky logic
+      if (heroNavRef.current) {
+        const trigger = heroNavRef.current.offsetTop - 64;
+        setSubNavSticky(window.scrollY > trigger);
+      }
+
+      // Detect active section
+      const sections = [
+        { id: "info", ref: sectionRefs.info },
+        { id: "lokasi", ref: sectionRefs.lokasi },
+        { id: "faq", ref: sectionRefs.faq },
+      ];
+
+      // Pengecekan jika sudah di paling bawah halaman
+      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
+
+      if (isAtBottom) {
+        setActiveSection("faq");
+      } else {
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const el = sections[i].ref.current;
+          if (el && el.getBoundingClientRect().top <= 120) {
+            setActiveSection(sections[i].id);
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Effect untuk menangani scroll otomatis setelah pindah ke menu Detail
+  useEffect(() => {
+    if (menu === 1 && pendingScroll) {
+      const timer = setTimeout(() => {
+        const ref = sectionRefs[pendingScroll as "info" | "lokasi" | "faq"];
+        if (ref?.current) {
+          ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
+          setPendingScroll(null);
+        }
+      }, 100); // Tunggu render sebentar
+      return () => clearTimeout(timer);
+    }
+  }, [menu, pendingScroll]);
 
   const clickOutsideChat = useClickOutside(() => {
     if (isLogin && openChat) {
@@ -1914,12 +2074,101 @@ const EventDetails = () => {
           ...res.data,
           seatmap: res?.data?.seatmap ? JSON.parse(res?.data?.seatmap) : undefined,
         });
-        setData(
-          res.data.has_event_ticket.map((e: any) => ({
-            ...e,
-            avaliable_seat_number: e?.avaliable_seat_number?.split(","),
-          })),
-        );
+        let fetchedTickets = res.data.has_event_ticket.map((e: any) => ({
+          ...e,
+          avaliable_seat_number: e?.avaliable_seat_number?.split(","),
+        }));
+
+        // Injection of new tickets for specific event (mobil-reuni)
+        if (slug === "mobil-reuni") {
+          const mockTickets: TicketProps[] = [
+            {
+              id: 9901,
+              event_id: res.data.id,
+              name: "Presale 1 - Festival (Day 1)",
+              qty: 100,
+              price: 120000, // Result in 138k after 1.15x
+              description: "",
+              ticket_date: "2025-12-14",
+              start_date: "2025-12-14",
+              ticket_end: "2025-12-14 23:59:59",
+              is_fullbook: 0,
+              is_soldout: 0,
+              is_finish: 0,
+              is_ready: 1,
+              is_promo: 1,
+              is_bundling: 0,
+              bundling_qty: 0,
+              promo_title: "PRESALE",
+              promo_price: 120000,
+              event_schedule_date: "2025-12-14",
+              valid_dates: ["2025-12-14"],
+              ticket_category: "Festival",
+              is_bundling_merch: 0,
+              is_ots: 0,
+              has_event: res.data,
+              created_by: null, updated_by: null, created_at: null, updated_at: null, deleted_at: null
+            },
+            {
+              id: 9902,
+              event_id: res.data.id,
+              name: "Presale 1 - Festival (2 Day Pass)",
+              qty: 50,
+              price: 217391, // Result in 250k after 1.15x
+              icon: "solar:tickets-bold",
+              description: "",
+              ticket_date: "2025-12-14",
+              start_date: "2025-12-14",
+              ticket_end: "2025-12-15 23:59:59",
+              is_fullbook: 0,
+              is_soldout: 0,
+              is_finish: 0,
+              is_ready: 1,
+              is_promo: 0,
+              is_bundling: 1,
+              bundling_qty: 2,
+              promo_title: "",
+              promo_price: 0,
+              event_schedule_date: "2025-12-14",
+              valid_dates: ["2025-12-14", "2025-12-15"],
+              ticket_category: "Festival",
+              is_bundling_merch: 0,
+              is_ots: 0,
+              has_event: res.data,
+              created_by: null, updated_by: null, created_at: null, updated_at: null, deleted_at: null
+            },
+            {
+              id: 9903,
+              event_id: res.data.id,
+              name: "Presale 2 - festival (Day 2)",
+              qty: 100,
+              price: 130435, // Result in ~150k after 1.15x
+              description: "",
+              ticket_date: "2025-12-15",
+              start_date: "2025-12-15",
+              ticket_end: "2025-12-15 23:59:59",
+              is_fullbook: 0,
+              is_soldout: 0,
+              is_finish: 0,
+              is_ready: 1,
+              is_promo: 0,
+              is_bundling: 0,
+              bundling_qty: 0,
+              promo_title: "",
+              promo_price: 0,
+              event_schedule_date: "2025-12-15",
+              valid_dates: ["2025-12-15"],
+              ticket_category: "Festival",
+              is_bundling_merch: 0,
+              is_ots: 0,
+              has_event: res.data,
+              created_by: null, updated_by: null, created_at: null, updated_at: null, deleted_at: null
+            }
+          ];
+          fetchedTickets = [...fetchedTickets, ...mockTickets];
+        }
+
+        setData(fetchedTickets);
         ticketCount && prevPath === router.asPath ? setCounts(JSON.parse(ticketCount)) : initializeCounts(res.data.has_event_ticket);
         ticketCount && setMenu(2);
         if (!triggered) {
@@ -1944,12 +2193,12 @@ const EventDetails = () => {
   const submitData = (merchPayload?: MerchPayload[]) => {
     console.log("submitData - called from StepPayment");
     console.log("Merch payload received:", merchPayload);
-    
+
     // Simpan data dari step 1 untuk step 3
     setStep1FormData([...form]);
     setStep1TicketData([...ticket]);
     setStep1MerchData(merchPayload || []);
-    
+
     setLoading(true);
     if (payment !== "") {
       getPaymentMethodById(payment);
@@ -1964,9 +2213,9 @@ const EventDetails = () => {
     const subtotalBeforeVoucher = totalSubtotalPrice;
     const voucherDiscount = voucher.reduce((sum, v) => sum + v.amount, 0);
     const subtotalAfterVoucher = Math.max(subtotalBeforeVoucher - voucherDiscount, 0);
-    
+
     const taxAmount = detail?.ppn ? Math.round(subtotalAfterVoucher * (detail.ppn / 100)) : 0;
-    
+
     const grandtotal = subtotalAfterVoucher + taxAmount;
 
     console.log("=== PAYMENT CALCULATION (Frontend) ===");
@@ -1978,11 +2227,11 @@ const EventDetails = () => {
 
     // Membersihkan data merchandise dari identities
     const cleanedIdentities = form.map((item) => {
-      const { 
-        merch_product_id, event_merch_id, merch_variant_id, 
-        merch_variant_name, merch_price, merch_note, 
+      const {
+        merch_product_id, event_merch_id, merch_variant_id,
+        merch_variant_name, merch_price, merch_note,
         merch_product_name,
-        ...cleanItem 
+        ...cleanItem
       } = item;
       return cleanItem;
     });
@@ -1993,7 +2242,7 @@ const EventDetails = () => {
     const ticketsWithBundling = ticket.map((e) => {
       const ticketDetail = detail?.has_event_ticket?.find(t => t.id === e.event_ticket_id);
       const isBundling = ticketDetail?.is_bundling === 1;
-      
+
       return {
         ...e,
         seatnumber_ticket: JSON.stringify(e.seat_number),
@@ -2060,7 +2309,7 @@ const EventDetails = () => {
           merches: res.merches || [],
           submittedPayload: payload
         };
-        
+
         setTransactionData(transactionWithMerch);
 
         if (res.xendit_invoice && res.xendit_invoice.va_number) {
@@ -2072,7 +2321,7 @@ const EventDetails = () => {
         console.log("Total price from backend:", res.data.total_price);
         console.log("Admin fee from backend:", res.data.admin_fee);
         console.log("Grandtotal from backend:", res.data.grandtotal);
-        
+
         if (res.merches && res.merches.length > 0) {
           console.log("Merches from backend:", res.merches);
         }
@@ -2134,7 +2383,7 @@ const EventDetails = () => {
 
     setTicket(newData);
   };
-  
+
   const triggerCounter = (id: string) => {
     if (data) {
       setFirstLoad(true);
@@ -2165,7 +2414,7 @@ const EventDetails = () => {
   ticket.forEach((item) => {
     totalSubtotalPrice += item.subtotal_price;
   });
-  
+
   useEffect(() => {
     if (slug) {
       getData();
@@ -2343,7 +2592,7 @@ const EventDetails = () => {
 
   return !firstLoad && detail ? (
     detail && (
-      <Context.Provider
+      <EventContext.Provider
         value={{
           seatmapData: detail.seatmap,
           seatmapOpen,
@@ -2355,7 +2604,7 @@ const EventDetails = () => {
           eventData: detail,
         }}
       >
-        <div className="text-dark w-full">
+        <div className="text-dark w-full font-inter">
           <div ref={clickOutsideChat} className={`${openChat ? "" : "hidden"}`}>
             <ChatBox toggleOpenTab={() => setOpenChat(!openChat)} openTab={openChat} creatorIdOpen={parseInt(detail.creator_id)} />
             <AuthModal visible={openChat && !isLogin} onClose={() => setOpenChat(false)} />
@@ -2368,7 +2617,7 @@ const EventDetails = () => {
             <meta name="googlebot" content="index, follow" />
             <title>Kolektix.com | {detail?.name}</title>
           </Head>
-          
+
           {/* PERBAIKAN: Render berdasarkan activeStep dengan kondisi eksklusif */}
           {!isInPaymentFlow && menu === 1 && (
             <>
@@ -2389,7 +2638,7 @@ const EventDetails = () => {
               </div>
             </>
           )}
-          
+
           {/* Progress bar hanya muncul saat dalam payment flow */}
           {isInPaymentFlow && step !== 2 && stepParams !== null && width && width < 768 && (
             <>
@@ -2432,18 +2681,18 @@ const EventDetails = () => {
                       onClick={
                         payment === "4" && transactionData.xendit_url
                           ? () => {
-                              setLoading(true);
-                              router.push(transactionData.xendit_url);
-                            }
+                            setLoading(true);
+                            router.push(transactionData.xendit_url);
+                          }
                           : payment === "3"
                             ? () => {
-                                setStep(3);
-                                scrollToTop();
-                              }
+                              setStep(3);
+                              scrollToTop();
+                            }
                             : () => {
-                                setStep(2);
-                                scrollToTop();
-                              }
+                              setStep(2);
+                              scrollToTop();
+                            }
                       }
                     />
                   ) : (
@@ -2459,7 +2708,7 @@ const EventDetails = () => {
               </div>
             </>
           )}
-          
+
           {isInPaymentFlow && step !== 2 && stepParams !== null && width && width >= 768 && (
             <div className="w-full fixed flex justify-between gap-3 bottom-0 bg-white border-t-2 border-t-primary-light-200 z-50 p-5">
               <div className="hidden lg:flex items-center gap-0 md:gap-3 bg-[#EA4D3E] text-white px-3 py-2 rounded-md">
@@ -2479,18 +2728,18 @@ const EventDetails = () => {
                     onClick={
                       payment === "4" && transactionData.xendit_url
                         ? () => {
-                            setLoading(true);
-                            router.push(transactionData.xendit_url);
-                          }
+                          setLoading(true);
+                          router.push(transactionData.xendit_url);
+                        }
                         : payment === "3"
                           ? () => {
-                              setStep(3);
-                              scrollToTop();
-                            }
+                            setStep(3);
+                            scrollToTop();
+                          }
                           : () => {
-                              setStep(2);
-                              scrollToTop();
-                            }
+                            setStep(2);
+                            scrollToTop();
+                          }
                     }
                   />
                 ) : (
@@ -2517,24 +2766,24 @@ const EventDetails = () => {
                   <>
                     {width && width > 768 ? (
                       <>
-                        <div className="bg-primary-dark">
-                          <div className="max-w-7xl mx-auto">
-                            <Flex justify="space-between" align="end" className="px-8 pt-20 pb-3">
+                        <div className={`${menu === 2 && detail?.seatmap && detail.seatmap.length > 0 ? "pt-12 pb-4" : "pt-20 pb-3"} bg-primary-dark transition-all duration-500`}>
+                          <div className="w-full mx-auto max-w-[1250px]">
+                            <Flex justify="space-between" align="end" className="px-4 md:px-6">
                               <div>
-                                <p className={`text-white/70 mb-[-10px]`}>{detail?.has_category_event?.name}</p>
-                                <h3 className="text-white font-bold my-4 text-2xl">{detail?.name}</h3>
+                                <p className={`text-white/70 mb-[-10px] text-xs uppercase tracking-widest`}>{detail?.has_category_event?.name}</p>
+                                <h3 className={`${menu === 2 && detail?.seatmap && detail.seatmap.length > 0 ? "text-xl my-2" : "text-2xl my-4"} text-white font-bold transition-all duration-500`}>{detail?.name}</h3>
                               </div>
 
                               {!isDatePassed(`${detail?.start_date} ${detail?.start_time}:00`) && (
-                                <Stack gap={12} align="end">
-                                  <Text size="xs" c="white">
+                                <Stack gap={8} align="end">
+                                  <Text size="xs" c="white" className="opacity-70 uppercase tracking-wider">
                                     {t("eventStartsIn")}
                                   </Text>
                                   <EventCountdown startdate={detail?.start_date} starttime={detail?.start_time} />
                                 </Stack>
                               )}
                             </Flex>
-                            <div className="flex justify-between px-8 gap-5 h-full items-stretch">
+                            <div className="flex justify-between gap-5 h-full items-stretch px-4 md:px-6">
                               <Stack w="100%">
                                 <Box pos="relative">
                                   {detail?.image ? (
@@ -2579,16 +2828,39 @@ const EventDetails = () => {
                                     )}
                                   </div>
                                 </div>
-                                <div className="flex gap-5 max-w-5xl pb-4 flex-grow">
-                                  <button onClick={() => setMenu(1)} className={`cursor-pointer ${menu === 1 ? "font-semibold text-[#82b3ff]" : "text-white"}`}>
-                                    {t("description")}
-                                  </button>
-                                  <button onClick={() => setMenu(2)} className={`cursor-pointer ${menu === 2 ? "font-semibold text-[#82b3ff]" : "text-white"}`}>
-                                    {t("ticket")}
-                                  </button>
-                                  <button onClick={() => setMenu(3)} className={`cursor-pointer ${menu === 3 ? "font-semibold text-[#82b3ff]" : "text-white"}`}>
-                                    {t("termAndCondition")}
-                                  </button>
+                                <div ref={heroNavRef} className="mt-4 md:mt-8 border-b border-white/10">
+                                  <div className="flex items-center gap-3 md:gap-8 overflow-x-auto scrollbar-hide">
+                                    {[
+                                      { id: "info", label: t("description") },
+                                      { id: "tiket", label: t("ticket"), type: "link" },
+                                      { id: "lokasi", label: "Lokasi" },
+                                      { id: "faq", label: t("termAndCondition") },
+                                    ].map((tab) => (
+                                      <button
+                                        key={tab.id}
+                                        onClick={() => {
+                                          if (tab.id === "tiket") {
+                                            setMenu(2);
+                                            window.scrollTo({ top: 0, behavior: "smooth" });
+                                          } else {
+                                            setActiveSection(tab.id);
+                                            if (menu !== 1) {
+                                              setPendingScroll(tab.id);
+                                              setMenu(1);
+                                            } else {
+                                              const ref = sectionRefs[tab.id as "info" | "lokasi" | "faq"];
+                                              ref?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                            }
+                                          }
+                                        }}
+                                        className={`pb-4 text-[13px] md:text-[14px] font-bold transition-all relative whitespace-nowrap shrink-0 ${(activeSection === tab.id && menu === 1) || (tab.id === "tiket" && menu === 2) ? "text-white" : "text-white/40 hover:text-white/70"
+                                          }`}
+                                      >
+                                        {tab.label}
+                                        {((activeSection === tab.id && menu === 1) || (tab.id === "tiket" && menu === 2)) && <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-white rounded-t-lg" />}
+                                      </button>
+                                    ))}
+                                  </div>
                                 </div>
                               </Stack>
 
@@ -2621,34 +2893,189 @@ const EventDetails = () => {
                                 </div>
 
                                 <Button label="Chat" color="secondary" className={`!text-[18px] !font-[600]`} onClick={() => setOpenChat(!openChat)} />
-                                <Button onClick={() => setMenu(2)} label={isGratis ? t("registrationTicketTab") : t("buyTicket")} color="secondary" className={`${menu === 2 && "hidden"} !text-[18px] !font-[600]`} />
+                                <Button
+                                  onClick={() => {
+                                    setMenu(2);
+                                    window.scrollTo({ top: 0, behavior: "smooth" });
+                                  }}
+                                  label={isGratis ? t("registrationTicketTab") : t("buyTicket")}
+                                  color="secondary"
+                                  className={`!text-[18px] !font-[600]`}
+                                />
                               </Stack>
                             </div>
                           </div>
                         </div>
-                        <div className="px-8 max-w-7xl mx-auto text-dark">
-                          {menu === 1 && <DescriptionBlock data={detail?.description} />}
-                          {menu === 2 && (
-                            <div id="ticket-view">
-                              <TicketViewBlock
-                                venue={venueLayout}
-                                maxOrder={detail.max_buy_ticket}
-                                isGratis={isGratis}
-                                selected={selectedDate}
-                                setSelected={setSelectedDate}
-                                counts={counts}
-                                setCounts={setCounts}
-                                data={data}
-                                isLogin={isLogin}
-                                totalCount={totalCount}
-                                storeLocalStorage={setLocalStorageValue}
-                                totalSubtotalPrice={totalSubtotalPrice}
-                                setStep={setStep}
-                                scrollToTop={scrollToTop}
-                              />
+                        {/* STICKY SUB-NAVBAR DESKTOP */}
+                        <div
+                          className={`fixed top-[64px] left-0 right-0 w-full bg-white z-40 transition-all duration-300 ${subNavSticky ? "translate-y-0 opacity-100 shadow-[0_4px_20px_-5px_rgba(0,0,0,0.12)]" : "-translate-y-full opacity-0 pointer-events-none"
+                            }`}
+                          style={{ borderBottom: "1px solid #f1f5f9" }}
+                        >
+                          <div className={`w-full mx-auto ${menu === 1 ? 'max-w-[1250px] px-4 md:px-6' : ''}`}>
+                            <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide">
+                              {[
+                                { id: "info", label: t("description") },
+                                { id: "tiket", label: t("ticket"), type: "link" },
+                                { id: "lokasi", label: "Lokasi" },
+                                { id: "faq", label: t("termAndCondition") },
+                              ].map((sec) => (
+                                <button
+                                  key={sec.id}
+                                  onClick={() => {
+                                    if (sec.id === "tiket") {
+                                      setMenu(2);
+                                      window.scrollTo({ top: 0, behavior: "smooth" });
+                                    } else {
+                                      setActiveSection(sec.id);
+                                      if (menu !== 1) {
+                                        setPendingScroll(sec.id);
+                                        setMenu(1);
+                                      } else {
+                                        const ref = sectionRefs[sec.id as "info" | "lokasi" | "faq"];
+                                        ref?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                      }
+                                    }
+                                  }}
+                                  className={`flex items-center justify-center relative px-5 py-3.5 text-[13px] font-bold transition-all duration-200 whitespace-nowrap shrink-0 ${(activeSection === sec.id && menu === 1) || (sec.id === "tiket" && menu === 2) ? "text-[#194e9e]" : "text-gray-500 hover:text-gray-800"
+                                    }`}
+                                >
+                                  {sec.label}
+                                  {((activeSection === sec.id && menu === 1) || (sec.id === "tiket" && menu === 2)) && <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#194e9e] rounded-t-lg" />}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className={`w-full text-dark flex flex-col gap-8 pt-8 ${menu === 2 ? 'pb-0' : 'pb-60'} bg-white`}>
+                          {menu === 1 ? (
+                            <div className="max-w-[1250px] mx-auto w-full flex flex-col gap-10 px-4 md:px-6">
+                              {/* SECTION DESKRIPSI */}
+                              <div ref={sectionRefs.info} className="w-full">
+                                <div className="flex items-center gap-2.5 mb-4 px-1">
+                                  <div className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-[10px] md:rounded-xl bg-[#194e9e] text-white shrink-0">
+                                    <Icon icon="solar:document-text-bold" className="text-white text-[13px] md:text-[14px]" />
+                                  </div>
+                                  <h3 className="text-[14px] md:text-[16px] font-bold text-gray-900 tracking-tight">{t("description")}</h3>
+                                </div>
+                                <div className="bg-white rounded-[32px] p-6 md:p-10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] border border-[#d1d1d1]">
+                                  <div className="text-gray-600 leading-relaxed whitespace-pre-line text-sm md:text-base" dangerouslySetInnerHTML={{ __html: detail?.description && detail.description.length > 20 ? detail.description : dummyDescription }} />
+                                </div>
+                              </div>
+
+                              {/* SECTION LOKASI */}
+                              <div ref={sectionRefs.lokasi} className="w-full">
+                                <div className="flex items-center gap-2.5 mb-4 px-1">
+                                  <div className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-[10px] md:rounded-xl bg-[#194e9e] text-white shrink-0">
+                                    <Icon icon="solar:map-point-bold" className="text-white text-[13px] md:text-[14px]" />
+                                  </div>
+                                  <h3 className="text-[14px] md:text-[16px] font-bold text-gray-900 tracking-tight uppercase">Lokasi & Pemandu Arah</h3>
+                                </div>
+                                <div className="bg-white rounded-[32px] p-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] border border-[#d1d1d1] flex flex-col md:flex-row gap-3 mb-8">
+                                  <div className="flex-[2] min-h-[260px] md:min-h-[450px] rounded-[24px] overflow-hidden">
+                                    <iframe
+                                      src={
+                                        detail?.location_map?.startsWith('http') ? detail?.location_map :
+                                          'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.239516341929!2d106.82918257586827!3d-6.232123761033168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e8cbb9e497%3A0xc9b90fc0ac3963bc!2sMenara%20Kadin%20Indonesia%2C%20Jl.%20H.%20R.%20Rasuna%20Said%20Blok%20X-5%20No.Kav.%202-3%2C%20RT.1%2FRW.2%2C%20Kuningan%2C%20Kuningan%20Tim.%2C%20Kecamatan%20Setiabudi%2C%20Kota%20Jakarta%20Selatan%2C%20Daerah%20Khusus%20Ibukota%20Jakarta%2012950!5e0!3m2!1sid!2sid!4v1721144578839!5m2!1sid!2sid'
+                                      }
+                                      width="100%"
+                                      height="100%"
+                                      style={{ border: 0, display: 'block', minHeight: '260px' }}
+                                      allowFullScreen={false}
+                                      loading="lazy"
+                                      referrerPolicy="no-referrer-when-downgrade"
+                                    ></iframe>
+                                  </div>
+
+                                  <div className="flex-1 p-5 lg:p-6 flex flex-col gap-6">
+                                    <div>
+                                      <h6 className="text-[14px] font-black text-gray-900 mb-2 uppercase tracking-widest text-[#194e9e]">Alamat Lengkap</h6>
+                                      <p className="text-[14px] text-gray-700 font-semibold leading-relaxed">
+                                        {detail?.location_name || "Kawasan Gelora Bung Karno, Jl. Pintu Satu Senayan, Jakarta Pusat"}
+                                      </p>
+                                    </div>
+
+                                    <div className="h-px bg-gray-100 w-full" />
+
+                                    <div className="flex-1">
+                                      <h6 className="text-[14px] font-black text-gray-900 mb-5 tracking-wide">Transportasi Umum Terdekat</h6>
+                                      <div className="flex flex-col gap-3">
+                                        {[
+                                          { name: "Kereta MRT / KRL / LRT", dist: "350m", type: "Stasiun Terdekat", icon: "solar:tram-bold", color: "text-blue-500", bg: "bg-blue-50" },
+                                          { name: "Busway / JakLingko", dist: "450m", type: "Halte Terdekat", icon: "solar:bus-bold", color: "text-green-500", bg: "bg-green-50" },
+                                          { name: "Kendaraan Pribadi", dist: "Lihat Rute", type: "Akses Jalan & Tol", icon: "mdi:car", color: "text-orange-500", bg: "bg-orange-50" },
+                                        ].map((transport, i) => (
+                                          <div key={i} className="flex flex-row items-center justify-between gap-3 p-3 md:p-4 rounded-xl bg-gray-50/50 hover:bg-gray-100/80 transition-all border border-[#d1d1d1] hover:border-[#999999]">
+                                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                                              <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 ${transport.bg}`}>
+                                                <Icon icon={transport.icon} className={`text-[20px] md:text-[24px] ${transport.color}`} />
+                                              </div>
+                                              <div className="flex flex-col min-w-0">
+                                                <h6 className="text-[13px] md:text-[15px] font-black text-gray-900 truncate">{transport.name}</h6>
+                                                <p className="text-[11px] md:text-[12px] text-gray-500 font-bold mt-0.5">{transport.type} • <span className="text-[#194e9e] font-black">{transport.dist}</span></p>
+                                              </div>
+                                            </div>
+                                            <button
+                                              onClick={() => window.open(detail?.location_map?.startsWith('http') ? detail.location_map : `https://google.com/maps/search/${encodeURIComponent((detail?.name || '') + ' ' + (detail?.location_name || ''))}`, '_blank')}
+                                              className="shrink-0 whitespace-nowrap flex items-center justify-center gap-1.5 px-3 md:px-5 py-2 md:py-2.5 text-[#194e9e] bg-[#194e9e]/5 hover:bg-[#194e9e]/15 rounded-[10px] md:rounded-[12px] text-[11px] md:text-[12px] font-black uppercase tracking-widest transition-all"
+                                            >
+                                              <Icon icon="solar:routing-2-bold" className="text-[15px] md:text-[18px]" />
+                                              Cek Rute
+                                            </button>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* SECTION FAQ */}
+
+                              <div ref={sectionRefs.faq} className="w-full">
+                                <div className="flex items-center gap-2.5 mb-4 px-1">
+                                  <div className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-[10px] md:rounded-xl bg-[#194e9e] text-white shrink-0">
+                                    <Icon icon="solar:question-square-bold" className="text-white text-[13px] md:text-[14px]" />
+                                  </div>
+                                  <h3 className="text-[14px] md:text-[16px] font-bold text-gray-900 tracking-tight uppercase">FaQ / {t("termAndCondition")}</h3>
+                                </div>
+                                <div className="bg-white rounded-[32px] p-6 md:p-10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] border border-[#d1d1d1] min-h-[350px] pb-20">
+                                  <div className="text-gray-600 leading-relaxed whitespace-pre-line text-sm md:text-base" dangerouslySetInnerHTML={{ __html: detail?.term_condition && detail.term_condition.length > 20 ? detail.term_condition : dummyFaq }} />
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            /* FULL TICKET PAGE VIEW */
+                            <div className="w-full flex flex-col gap-6 py-4 animate-fade-in">
+
+                              {/* <div className="flex items-center gap-2.5 mb-4 px-1">
+                                <div className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-[10px] md:rounded-xl bg-[#194e9e] text-white shrink-0">
+                                  <Icon icon="solar:ticket-bold" className="text-white text-[13px] md:text-[14px]" />
+                                </div> */}
+                              {/* <h3 className="text-[14px] md:text-[16px] font-bold text-gray-900 tracking-tight uppercase">{t("ticket")}</h3> */}
+                              {/* </div> */}
+
+                              <div className="w-full">
+                                <TicketViewBlock
+                                  venue={venueLayout}
+                                  maxOrder={detail.max_buy_ticket}
+                                  isGratis={isGratis}
+                                  selected={selectedDate}
+                                  setSelected={setSelectedDate}
+                                  counts={counts}
+                                  setCounts={setCounts}
+                                  data={data}
+                                  isLogin={isLogin}
+                                  totalCount={totalCount}
+                                  storeLocalStorage={setLocalStorageValue}
+                                  totalSubtotalPrice={totalSubtotalPrice}
+                                  setStep={setStep}
+                                  scrollToTop={scrollToTop}
+                                />
+                              </div>
                             </div>
                           )}
-                          {menu === 3 && <TermsConditionBlock data={detail?.term_condition} />}
                         </div>
                       </>
                     ) : (
@@ -2708,7 +3135,7 @@ const EventDetails = () => {
                             </p>
                           </Link>
                         </div>
-                        
+
                         <div className="p-5 border-primary-light-200 border-2 border-t-0 border-x-0 flex items-center gap-3">
                           <Image src={`${config.assetUrl}creator/${detail?.has_creator?.image}`} alt="image" className="w-10 h-10 border border-grey rounded-full object-contain" width={200} height={200} />
                           <div className={`w-full flex flex-col`}>
@@ -2728,40 +3155,268 @@ const EventDetails = () => {
                             <Icon icon="fluent:chat-12-regular" className={`!text-[30px]`} onClick={() => setOpenChat(!openChat)} />
                           </ActionIcon>
                         </div>
-                        <div className="flex bg-white items-center justify-center sticky mb-5 top-16 text-sm z-20">
-                          <div className="flex gap-5 w-full border-2 text-grey border-primary-light-200 border-x-0 border-t-0 px-8">
-                            <button onClick={() => setMenu(1)} className={` py-2 cursor-pointer ${menu === 1 && "font-semibold text-dark border-2 border-b-primary-base border-x-0 border-t-0 py-3"}`}>
-                              {t("description")}
-                            </button>
-                            <button onClick={() => setMenu(2)} className={`py-2 cursor-pointer ${menu === 2 && "font-semibold text-dark border-2 border-b-primary-base border-x-0 border-t-0 py-3"}`}>
-                              {isGratis ? t("ticketRegistration") : t("ticket")}
-                            </button>
-                            <button onClick={() => setMenu(3)} className={`py-2 cursor-pointer ${menu === 3 && "font-semibold text-dark border-2 border-b-primary-base border-x-0 border-t-0 py-3"}`}>
-                              {t("termAndCondition")}
-                            </button>
+                        {/* STICKY SUB-NAVBAR MOBILE */}
+                        <div
+                          className={`fixed top-[64px] left-0 right-0 w-full bg-white z-40 transition-all duration-300 ${subNavSticky ? "translate-y-0 opacity-100 shadow-[0_4px_15px_-5px_rgba(0,0,0,0.1)]" : "-translate-y-full opacity-0 pointer-events-none"
+                            }`}
+                          style={{ borderBottom: "1px solid #f1f5f9" }}
+                        >
+                          <div className="flex items-center gap-0 overflow-x-auto scrollbar-hide px-2">
+                            {[
+                              { id: "info", label: t("description") },
+                              { id: "tiket", label: t("ticket") },
+                              { id: "lokasi", label: "Lokasi" },
+                              { id: "faq", label: t("termAndCondition") },
+                            ].map((sec) => (
+                              <button
+                                key={sec.id}
+                                onClick={() => {
+                                  if (sec.id === "tiket") {
+                                    setMenu(2);
+                                    window.scrollTo({ top: 0, behavior: "smooth" });
+                                  } else {
+                                    setActiveSection(sec.id);
+                                    if (menu !== 1) {
+                                      setPendingScroll(sec.id);
+                                      setMenu(1);
+                                    } else {
+                                      const ref = sectionRefs[sec.id as "info" | "lokasi" | "faq"];
+                                      ref?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                    }
+                                  }
+                                }}
+                                className={`flex items-center justify-center relative px-4 py-3.5 text-[13px] font-bold transition-all duration-200 whitespace-nowrap shrink-0 ${(activeSection === sec.id && menu === 1) || (sec.id === "tiket" && menu === 2) ? "text-[#194e9e]" : "text-gray-500"
+                                  }`}
+                              >
+                                {sec.label}
+                                {((activeSection === sec.id && menu === 1) || (sec.id === "tiket" && menu === 2)) && <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#194e9e] rounded-t-lg" />}
+                              </button>
+                            ))}
                           </div>
                         </div>
-                        <div className="px-5 w-full text-dark">
-                          {menu === 1 && <DescriptionBlock data={detail?.description} />}
-                          {menu === 2 && (
-                            <TicketViewBlock
-                              venue={venueLayout}
-                              maxOrder={detail.max_buy_ticket}
-                              isGratis={isGratis}
-                              selected={selectedDate}
-                              setSelected={setSelectedDate}
-                              counts={counts}
-                              setCounts={setCounts}
-                              data={data}
-                              isLogin={isLogin}
-                              totalCount={totalCount}
-                              storeLocalStorage={setLocalStorageValue}
-                              totalSubtotalPrice={totalSubtotalPrice}
-                              setStep={setStep}
-                              scrollToTop={scrollToTop}
-                            />
+
+                        <div className="flex bg-white items-center justify-center sticky mb-5 top-[64px] text-sm z-20" ref={heroNavRef}>
+                          <div className="flex gap-4 w-full border-b border-gray-100 px-4 md:px-8 overflow-x-auto scrollbar-hide">
+                            {[
+                              { id: "info", label: t("description") },
+                              { id: "tiket", label: t("ticket") },
+                              { id: "lokasi", label: "Lokasi" },
+                              { id: "faq", label: t("termAndCondition") },
+                            ].map((tab) => (
+                              <button
+                                key={tab.id}
+                                onClick={() => {
+                                  if (tab.id === "tiket") {
+                                    setMenu(2);
+                                    window.scrollTo({ top: 0, behavior: "smooth" });
+                                  } else {
+                                    setActiveSection(tab.id);
+                                    if (menu !== 1) {
+                                      setPendingScroll(tab.id);
+                                      setMenu(1);
+                                    } else {
+                                      const ref = sectionRefs[tab.id as "info" | "lokasi" | "faq"];
+                                      ref?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                                    }
+                                  }
+                                }}
+                                className={`py-4 relative whitespace-nowrap shrink-0 text-[13px] font-bold transition-all ${(activeSection === tab.id && menu === 1) || (tab.id === "tiket" && menu === 2) ? "text-[#194e9e]" : "text-gray-500"}`}
+                              >
+                                {tab.label}
+                                {((activeSection === tab.id && menu === 1) || (tab.id === "tiket" && menu === 2)) && <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#194e9e] rounded-t-lg" />}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className="w-full text-dark flex flex-col gap-6 pt-5 pb-60 bg-white">
+                          {menu === 1 ? (
+                            <>
+                              {/* MOBILE SECTION DESKRIPSI */}
+                              <div ref={sectionRefs.info} className="w-full">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-[#194e9e] text-white">
+                                    <Icon icon="solar:document-text-bold" className="text-white text-[12px]" />
+                                  </div>
+                                  <h3 className="text-[13px] font-bold text-gray-900 uppercase tracking-tight">{t("description")}</h3>
+                                </div>
+                                <div className="bg-white rounded-[24px] p-0 shadow-sm border border-[#e2e8f0] overflow-hidden">
+                                  {/* Quick Info Grid */}
+                                  <div className="grid grid-cols-2 divide-x divide-gray-100 border-b border-gray-100 bg-gray-50/30">
+                                    <div className="p-4 flex flex-col gap-1">
+                                      <span className="text-[9px] font-bold text-[#94a3b8] uppercase tracking-widest leading-none">Mulai</span>
+                                      <span className="text-[12px] font-black text-[#1e293b]">{moment(detail?.start_date).format("DD MMM YYYY")}</span>
+                                    </div>
+                                    <div className="p-4 flex flex-col gap-1">
+                                      <span className="text-[9px] font-bold text-[#94a3b8] uppercase tracking-widest leading-none">Pukul</span>
+                                      <span className="text-[12px] font-black text-[#1e293b]">{moment(detail?.start_date).format("HH:mm")} WIB</span>
+                                    </div>
+                                  </div>
+
+                                  {/* Content Area */}
+                                  <div className="p-6">
+                                    <div className="flex flex-col gap-6">
+                                      {/* Event Highlights List */}
+                                      <div className="grid grid-cols-1 gap-4">
+                                        <div className="flex items-start gap-4 p-3.5 bg-blue-50/30 rounded-2xl border border-blue-100/50">
+                                          <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0">
+                                            <Icon icon="solar:star-bold-duotone" className="text-[#194E9E] text-xl" />
+                                          </div>
+                                          <div className="flex flex-col gap-0.5">
+                                            <span className="text-[12px] font-black text-[#1e293b]">Premium Experience</span>
+                                            <span className="text-[10px] font-bold text-gray-500 leading-relaxed">Nikmati fasilitas terbaik dan kenyamanan maksimal selama acara berlangsung.</span>
+                                          </div>
+                                        </div>
+                                        <div className="flex items-start gap-4 p-3.5 bg-green-50/30 rounded-2xl border border-green-100/50">
+                                          <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0">
+                                            <Icon icon="solar:ticket-sale-bold-duotone" className="text-green-600 text-xl" />
+                                          </div>
+                                          <div className="flex flex-col gap-0.5">
+                                            <span className="text-[12px] font-black text-[#1e293b]">Instan E-Ticket</span>
+                                            <span className="text-[10px] font-bold text-gray-500 leading-relaxed">Tiket langsung dikirim ke email Anda setelah pembayaran berhasil.</span>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div className="h-px bg-gray-100 w-full" />
+
+                                      {/* Main Text Content */}
+                                      <div className="flex flex-col gap-2">
+                                        <span className="text-[10px] font-black text-[#194E9E] uppercase tracking-[0.2em]">Tentang Acara</span>
+                                        <div className="text-gray-600 leading-relaxed text-[13px] font-medium whitespace-pre-line prose prose-sm max-w-none"
+                                          dangerouslySetInnerHTML={{ __html: detail?.description && detail.description.length > 20 ? detail.description : dummyDescription }}
+                                        />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* MOBILE SECTION LOKASI */}
+                              <div ref={sectionRefs.lokasi} className="w-full">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-[#194e9e] text-white">
+                                    <Icon icon="solar:map-point-bold" className="text-white text-[12px]" />
+                                  </div>
+                                  <h3 className="text-[13px] font-bold text-gray-900 uppercase tracking-tight">Lokasi & Pemandu Arah</h3>
+                                </div>
+                                <div className="bg-white rounded-[24px] p-2 shadow-sm border border-[#e2e8f0] flex flex-col gap-3 mb-6">
+                                  <div className="w-full rounded-[16px] overflow-hidden">
+                                    <iframe
+                                      src={
+                                        detail?.location_map?.startsWith('http') ? detail?.location_map :
+                                          'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.239516341929!2d106.82918257586827!3d-6.232123761033168!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e8cbb9e497%3A0xc9b90fc0ac3963bc!2sMenara%20Kadin%20Indonesia%2C%20Jl.%20H.%20R.%20Rasuna%20Said%20Blok%20X-5%20No.Kav.%202-3%2C%20RT.1%2FRW.2%2C%20Kuningan%2C%20Kuningan%20Tim.%2C%20Kecamatan%20Setiabudi%2C%20Kota%20Jakarta%20Selatan%2C%20Daerah%20Khusus%20Ibukota%20Jakarta%2012950!5e0!3m2!1sid!2sid!4v1721144578839!5m2!1sid!2sid'
+                                      }
+                                      width="100%"
+                                      height="200"
+                                      style={{ border: 0, display: 'block' }}
+                                      allowFullScreen={false}
+                                      loading="lazy"
+                                      referrerPolicy="no-referrer-when-downgrade"
+                                    ></iframe>
+                                  </div>
+
+                                  <div className="p-3 pb-4 flex flex-col gap-5">
+                                    <div>
+                                      <h6 className="text-[11px] font-black text-[#194e9e] mb-1 uppercase tracking-[0.15em]">Alamat Lengkap</h6>
+                                      <p className="text-[13px] text-gray-700 font-bold leading-relaxed">
+                                        {detail?.location_name || "Kawasan Gelora Bung Karno, Jl. Pintu Satu Senayan, Jakarta Pusat"}
+                                      </p>
+                                    </div>
+
+                                    <div className="h-px bg-gray-100 w-full" />
+
+                                    <div className="flex-1">
+                                      <h6 className="text-[13px] font-black text-gray-900 mb-3 tracking-wide">Transportasi Umum Terdekat</h6>
+                                      <div className="flex flex-col gap-2.5">
+                                        {[
+                                          { name: "Kereta MRT / KRL / LRT", dist: "350m", type: "Stasiun Terdekat", icon: "solar:tram-bold", color: "text-blue-500", bg: "bg-blue-50" },
+                                          { name: "Busway / JakLingko", dist: "450m", type: "Halte Terdekat", icon: "solar:bus-bold", color: "text-green-500", bg: "bg-green-50" },
+                                          { name: "Kendaraan Pribadi", dist: "Lihat Rute", type: "Akses Jalan & Tol", icon: "mdi:car", color: "text-orange-500", bg: "bg-orange-50" },
+                                        ].map((transport, i) => (
+                                          <div key={i} className="flex flex-row items-center justify-between gap-2 p-2.5 rounded-xl bg-gray-50/50 hover:bg-gray-100/80 transition-all border border-[#d1d1d1]">
+                                            <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                                              <div className={`w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 ${transport.bg}`}>
+                                                <Icon icon={transport.icon} className={`text-[18px] ${transport.color}`} />
+                                              </div>
+                                              <div className="flex flex-col min-w-0">
+                                                <h6 className="text-[12px] font-black text-gray-900 truncate">{transport.name}</h6>
+                                                <p className="text-[10px] text-gray-500 font-bold mt-0.5">{transport.type} • <span className="text-[#194e9e] font-black">{transport.dist}</span></p>
+                                              </div>
+                                            </div>
+                                            <button
+                                              onClick={() => window.open(detail?.location_map?.startsWith('http') ? detail.location_map : `https://google.com/maps/search/${encodeURIComponent((detail?.name || '') + ' ' + (detail?.location_name || ''))}`, '_blank')}
+                                              className="shrink-0 flex items-center justify-center px-3 py-2 text-[#194e9e] bg-[#194e9e]/5 hover:bg-[#194e9e]/15 rounded-[10px] transition-all"
+                                            >
+                                              <Icon icon="solar:routing-2-bold" className="text-[16px]" />
+                                            </button>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* MOBILE SECTION FAQ */}
+                              <div ref={sectionRefs.faq} className="w-full">
+                                <div className="flex items-center gap-2 mb-3">
+                                  <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-[#194e9e] text-white">
+                                    <Icon icon="solar:question-square-bold" className="text-white text-[12px]" />
+                                  </div>
+                                  <h3 className="text-[13px] font-bold text-gray-900 uppercase tracking-tight">FaQ / {t("termAndCondition")}</h3>
+                                </div>
+                                <div className="bg-white rounded-[24px] p-0 shadow-sm border border-[#e2e8f0] overflow-hidden mb-20">
+                                  {/* Policy Header */}
+                                  <div className="px-6 py-4 bg-gray-50/50 border-b border-gray-100 flex items-center gap-3">
+                                    <Icon icon="solar:shield-warning-bold-duotone" className="text-orange-500 text-xl" />
+                                    <span className="text-[12px] font-bold text-gray-900 uppercase tracking-tight">Kebijakan Tiket</span>
+                                  </div>
+
+                                  <div className="p-6">
+                                    <div className="text-gray-600 leading-relaxed text-[13px] whitespace-pre-line prose prose-sm max-w-none"
+                                      dangerouslySetInnerHTML={{ __html: detail?.term_condition && detail.term_condition.length > 20 ? detail.term_condition : dummyFaq }}
+                                    />
+
+                                    {/* Refund Policy Note */}
+                                    <div className="mt-8 p-4 bg-red-50/50 border border-red-100 rounded-2xl flex items-start gap-3">
+                                      <Icon icon="solar:info-circle-bold" className="text-red-600 text-lg mt-0.5" />
+                                      <div className="flex flex-col gap-0.5">
+                                        <span className="text-[11px] font-bold text-red-700">Kebijakan Pembatalan</span>
+                                        <span className="text-[10px] font-medium text-red-600/80 leading-relaxed">
+                                          Tiket yang sudah dibeli tidak dapat ditukar, dikembalikan, atau diuangkan kembali (Non-Refundable).
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </>
+                          ) : (
+                            /* MOBILE FULL TICKET PAGE VIEW */
+                            <div className="w-full flex flex-col gap-6 py-2 animate-fade-in">
+
+
+                              <div className="w-full">
+                                <TicketViewBlock
+                                  venue={venueLayout}
+                                  maxOrder={detail.max_buy_ticket}
+                                  isGratis={isGratis}
+                                  selected={selectedDate}
+                                  setSelected={setSelectedDate}
+                                  counts={counts}
+                                  setCounts={setCounts}
+                                  data={data}
+                                  isLogin={isLogin}
+                                  totalCount={totalCount}
+                                  storeLocalStorage={setLocalStorageValue}
+                                  totalSubtotalPrice={totalSubtotalPrice}
+                                  setStep={setStep}
+                                  scrollToTop={scrollToTop}
+                                />
+                              </div>
+                            </div>
                           )}
-                          {menu === 3 && <TermsConditionBlock data={detail?.term_condition} />}
                         </div>
                       </>
                     )}
@@ -2937,7 +3592,7 @@ const EventDetails = () => {
               </div>
             </div>
           )}
-          
+
           {step === 3 && transactionData && xenditInvoice && (
             <div className="bg-primary-light max-w-xl pt-16 mx-auto">
               {detail && detail.image_url && <Image src={detail?.image_url} width={1000} height={1000} alt="banner" className="w-full" />}
@@ -3015,7 +3670,7 @@ const EventDetails = () => {
             </div>
           )}
         </div>
-      </Context.Provider>
+      </EventContext.Provider>
     )
   ) : (
     <Spinner color="primary" size="lg" className="min-h-screen flex items-center justify-center" />

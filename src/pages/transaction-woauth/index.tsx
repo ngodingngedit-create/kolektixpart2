@@ -164,7 +164,7 @@ const TransactionWithoutAuth = () => {
 
   return (
     <>
-      <div className="text-dark min-h-screen px-4 md:px-2 lg:px-0 mb-52">
+      <div className="text-dark min-h-screen bg-[#f8fafc] px-4 md:px-2 lg:px-0 pb-32">
         {data && (
           <FirstStepUnlogged
             detail={data.detail}
@@ -181,19 +181,22 @@ const TransactionWithoutAuth = () => {
         )}
       </div>
       {step === 0 && (
-        <div className="w-full fixed gap-3 bottom-0 bg-white border-t-2 border-t-primary-light-200 z-50 p-5 px-4 md:px-2 lg:px-0">
-          <div className="max-w-5xl mx-auto flex md:flex-row flex-col justify-between md:gap-0 gap-3 items-center">
-            <div className="hidden lg:flex items-center gap-0 md:gap-3 bg-[#EA4D3E] text-white px-3 py-2 rounded-md">
-              {data?.countdowns && <Countdown date={new Date(data.countdowns)} renderer={renderer} />}
-              <div className="w-[1px] mx-1 md:mx-0 h-5 bg-primary-light-200"></div>
-              <p className="text-xs">Segera selesaikan pesananmu</p>
+        <div className="w-full fixed bottom-0 bg-white border-t border-[#e4e4e7] z-50 p-4 shadow-smooth-low">
+          <div className="max-w-5xl mx-auto flex justify-between items-center">
+            <div className="flex items-center gap-2 bg-[#EA4D3E] text-white px-4 py-1.5 rounded-full shadow-sm">
+              <div className="text-sm font-bold">
+                {data?.countdowns && <Countdown date={new Date(data.countdowns)} renderer={renderer} />}
+              </div>
+              <div className="w-[1px] h-3 bg-white/30"></div>
+              <p className="text-[11px] font-medium tracking-wide">Segera selesaikan pesananmu</p>
             </div>
-            <div className="flex lg:hidden md:hidden items-center fixed top-16 right-0 left-0 gap-0 md:gap-3 bg-[#EA4D3E] text-white px-3 py-2">
-              {data?.countdowns && <Countdown date={new Date(data.countdowns)} renderer={renderer} />}
-              <div className="w-[1px] mx-1 md:mx-0 h-5 bg-primary-light-200"></div>
-              <p className="text-xs">Segera selesaikan pesananmu</p>
-            </div>
-            <Button label="Selanjutnya" color="primary" disabled={!formValid} className="px-12 py-2 md:w-auto w-full" onClick={() => setIsOpen(true)} />
+            <Button 
+              label="Selanjutnya" 
+              color="primary" 
+              disabled={!formValid} 
+              className="px-10 py-2.5 rounded-xl font-semibold transition-all hover:opacity-90 active:scale-[0.98]" 
+              onClick={() => setIsOpen(true)} 
+            />
           </div>
         </div>
       )}

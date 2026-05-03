@@ -6,7 +6,7 @@ import moment from "moment";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { randomId, useDidUpdate, useInterval } from "@mantine/hooks";
-import { Context } from "@/pages/event/[slug]";
+import { EventContext } from "@/pages/event/[slug]";
 import { SeatmapData } from "@/utils/formInterface";
 import chunk from "@/utils/chunk";
 import { contrastColor } from "contrast-color";
@@ -28,55 +28,53 @@ interface OrderCounterProps {
   ticketData: TicketProps;
   maxOrder?: number;
   index: number;
+  isExpanded?: boolean;
+  onToggle?: () => void;
+  onOrder?: () => void;
 }
 
-const OrderCounter = ({ index, maxOrder, count: _count, ticketData: _ticketData, setCount, isSoldOut, isFullbook, title, price, isLogin, isFinish, isReady, description }: OrderCounterProps) => {
+const OrderCounter = ({
+  index,
+  maxOrder,
+  count: _count,
+  ticketData: _ticketData,
+  setCount,
+  isSoldOut,
+  isFullbook,
+  title,
+  price,
+  isLogin,
+  isFinish,
+  isReady,
+  description,
+  isExpanded = false,
+  onToggle,
+  onOrder
+}: OrderCounterProps) => {
   const { t, i18n } = useTranslation();
   const theme = useMantineTheme();
   const isMobile = useMediaQuery(`(max-width: ${theme.breakpoints.sm})`);
-  const isTablet = useMediaQuery(`(max-width: ${theme.breakpoints.md})`);
-  
+
   const count = useMemo(() => {
     if (!_count) return 0;
     return typeof _count == "number" ? _count : _count.length;
   }, [_count]);
-  const { seatmapData, seatmapOpen, setSeatmapOpen, ticket } = useContext(Context);
+
+  const { seatmapData, seatmapOpen, setSeatmapOpen, ticket, eventData } = useContext(EventContext);
 
   const selectedSeat = useMemo(() => {
     return ticket?.map((e) => e.seat_number).reduce((c, n) => [...(c ?? []), ...(n ?? [])], []);
   }, [ticket]);
 
-  const [isCurrent, setIsCurrent] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [timeoutHash, setTimeoutHash] = useState("");
   const interval = useInterval(() => {
-    if (!isCurrent) {
-      setTimeoutHash(randomId());
-    }
+    setTimeoutHash(randomId());
   }, 1000);
 
   useEffect(() => {
     interval.start();
+    return interval.stop;
   }, []);
-
-  function isCurrentTimeBetween(startDate: string, endDate: string): boolean {
-    const start = moment(startDate, "YYYY-MM-DD HH:mm:ss");
-    const end = moment(endDate, "YYYY-MM-DD HH:mm:ss");
-    const now = moment();
-    const status = now.isBetween(start, end, undefined, "[]");
-
-    if (status) {
-      setIsCurrent(true);
-      interval.stop();
-    }
-
-    return status;
-  }
-
-  function isDatePassed(dateString: string) {
-    const date = moment(dateString, "YYYY-MM-DD HH:mm:ss");
-    return date.isBefore(moment());
-  }
 
   const ticketData = useMemo(() => _ticketData, [_ticketData, timeoutHash]);
 
@@ -84,283 +82,384 @@ const OrderCounter = ({ index, maxOrder, count: _count, ticketData: _ticketData,
   const bundlingQty = Number(ticketData?.bundling_qty ?? 0);
   const step = bundlingEnabled && bundlingQty > 0 ? bundlingQty : 1;
   const max = maxOrder ?? 9999;
-  const canDecrement = count - step >= 0;
-  const canIncrement = count + step <= max;
 
-  const hasPromo = Number(ticketData?.is_promo ?? 0) > 0;
-  const hasPromoTitle = String(ticketData?.promo_title ?? "").length > 0;
-  const hasPromoPrice = Number(ticketData?.promo_price ?? 0) > 0;
+  const getTicketStatus = () => {
+    const now = moment();
+    const eventStatus = eventData?.has_event_status?.name?.toLowerCase();
 
-  const StatusComponent = () => {
-    if (isFullbook)
-      return (
-        <>
-          <Box></Box>
-          <Badge color="gray" className={`shrink-0`}>
-            Full Booked
-          </Badge>
-        </>
-      );
+    // SPECIAL OVERRIDE: Ticket OTS & VIP should always be ongoing, Reguler & Triple should be Sold Out
+    const ticketNameLower = ticketData?.name?.toLowerCase() || "";
+    if (ticketNameLower.includes('ots') || ticketNameLower.includes('vip') || ticketNameLower.includes('presale')) {
+      return {
+        label: "Penjualan Berlangsung",
+        status: "ongoing",
+        color: "#52BE80",
+        bg: "#E8F6EF",
+      };
+    }
 
-    if (isSoldOut)
-      return (
-        <>
-          <Box></Box>
-          <Badge color="red" className={`shrink-0`}>
-            {t("soldOut")}
-          </Badge>
-        </>
-      );
+    if (ticketNameLower.includes('reguler') || ticketNameLower.includes('triple')) {
+      return {
+        label: "TERJUAL HABIS",
+        status: "ended",
+        color: "#EF4444",
+        bg: "#FDEDEC",
+      };
+    }
 
-    if (isFinish)
-      return (
-        <>
-          <Box></Box>
-          <Badge color="gray" className={`shrink-0`}>
-            {t("eventDone")}
-          </Badge>
-        </>
-      );
+    const sDate = ticketData.start_date || ticketData.ticket_date;
+    const sTime = ticketData.starting_time || "00:00:00";
+    const eDate = ticketData.ticket_end || sDate;
+    const eTime = ticketData.ending_time || "23:59:59";
 
-    if (!isDatePassed(`${ticketData.ticket_date} ${ticketData?.starting_time ?? "00:00:00"}`))
-      return (
-        <>
-          <Box>
-            <Text size="sm" className={`!text-primary-base`}>
-              {price <= 0 ? t("registrationStarted") : t("ticketSalesStarted")}
-            </Text>
-            <Text size="xs" className={`!text-primary-base`}>
-              {moment(`${ticketData.ticket_date} ${ticketData?.starting_time ?? "00:00:00"}`).format("DD MMM YYYY")} - Jam {moment(`${ticketData.ticket_date} ${ticketData?.starting_time ?? "00:00:00"}`).format("HH:mm")} WIB
-            </Text>
-          </Box>
-          <Badge color="gray" className={`shrink-0`}>
-            {t("notStarted")}
-          </Badge>
-        </>
-      );
+    const start = moment(`${sDate} ${sTime}`, "YYYY-MM-DD HH:mm:ss");
+    const end = moment(`${eDate} ${eTime}`, "YYYY-MM-DD HH:mm:ss");
 
-    if (isDatePassed(`${ticketData.ticket_end} ${ticketData?.ending_time ?? "00:00:00"}`))
-      return (
-        <>
-          <Box></Box>
-          <Badge color="gray" className={`shrink-0`}>
-            {price <= 0 ? t("registrationDone") : t("salesDone")}
-          </Badge>
-        </>
-      );
+    if (eventStatus === "ended" || eventStatus === "finish" || isFinish || now.isAfter(end)) {
+      return {
+        label: "Terjual Habis",
+        color: "#7F8C8D",
+        status: "finished"
+      };
+    }
 
-    if (isCurrentTimeBetween(`${ticketData.ticket_date} ${ticketData?.starting_time ?? "00:00:00"}`, `${ticketData.ticket_end} ${ticketData?.ending_time ?? "00:00:00"}`))
-      return (
-        <>
-          <Box>
-            <Text size="sm" className={`!text-primary-base`}>
-              {price <= 0 ? t("registrationEnded") : t("ticketSalesEnded")}
-            </Text>
-            <Text size="xs" className={`!text-primary-base`}>
-              {moment(`${ticketData.ticket_end} ${ticketData?.ending_time ?? "00:00:00"}`).format("DD MMM YYYY")} - Jam {moment(`${ticketData.ticket_end} ${ticketData?.ending_time ?? "00:00:00"}`).format("HH:mm")} WIB
-            </Text>
-          </Box>
-          {ticketData.ticket_category == "Seated" ? (
-            <Button onClick={() => setSeatmapOpen && setSeatmapOpen(index)} className={`shrink-0`}>
-              {t("selectSeat")} {(count ?? 0) > 0 && `(x${count})`}
-            </Button>
-          ) : (
-            <Flex align="center" gap={15}>
-              <ActionIcon color="#194e9e" onClick={() => setCount(count - step)} disabled={!canDecrement}>
-                <Icon icon="uiw:minus" />
-              </ActionIcon>
+    if (isSoldOut) return {
+      label: "SOLD OUT",
+      color: "#D00E17",
+      status: "soldout"
+    };
+    if (isFullbook) return {
+      label: "FULL BOOKED",
+      color: "#E67E22",
+      status: "fullbooked"
+    };
+    if (now.isBefore(start)) return {
+      label: "BELUM DIMULAI",
+      subLabel: `DIMULAI: ${start.format("DD MMM, HH:mm")}`,
+      color: "#194E9E",
+      status: "upcoming"
+    };
 
-              <Text>{count}</Text>
-
-              <ActionIcon color="#194e9e" onClick={() => setCount(count + step)} disabled={!canIncrement}>
-                <Icon icon="uiw:plus" />
-              </ActionIcon>
-            </Flex>
-          )}
-        </>
-      );
-
-    return (
-      <>
-        <Box></Box>
-        <Badge color="gray" className={`shrink-0`}>
-          {t("eventDone")}
-        </Badge>
-      </>
-    );
+    return {
+      label: "PENJUALAN BERLANGSUNG",
+      subLabel: `BERAKHIR: ${end.format("DD MMM, HH:mm")}`,
+      color: "#27AE60",
+      status: "ongoing"
+    };
   };
 
+  const status = getTicketStatus();
+
+  const canDecrement = count - step >= 0;
+  const canIncrement = status.status === "ongoing" && count + step <= max;
+
+  const hasPromo = Number(ticketData?.is_promo ?? 0) > 0;
+
+  // Formatting currency safely
+  const formatIDR = (val: number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(val);
+  };
+
+  const cleanTicketName = (name: string) => {
+    return name?.replace(/budling/gi, "Bundling").replace(/budnling/gi, "Bundling");
+  };
+
+  const isCurrentlySoldOut = status.status === 'soldout' || status.status === 'ended' || isSoldOut || isFullbook || (ticketData.is_fullbook === 1);
+
   return (
-    <Card radius={10} withBorder p={{ base: 20, sm: 30 }} className={`!border-primary-disabled/35 !overflow-visible relative ${seatmapOpen == index ? "!pb-[150px]" : ""}`} bg={isSoldOut || isReady || isFinish ? "#fafafa" : undefined}>
-      {hasPromo && (
-        <Flex className="special-banner">
-          <Text className="side-text">Special</Text>
-          <Flex className="payday-pill">
-            <Text className="payday-text">{ticketData?.promo_title}</Text>
-          </Flex>
-          <Text className="side-text">Discount</Text>
-        </Flex>
-      )}
+    <div className={`relative rounded-[24px] shadow-[0_6px_20px_rgba(0,0,0,0.08)] overflow-hidden mb-5 group transition-all duration-500 font-inter ${isCurrentlySoldOut ? 'bg-gray-50/50' : 'bg-white'}`}>
+      {/* Side Notches - Left & Right (Enhanced with inset shadow for depth) */}
+      <div className="absolute left-[-12px] top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-[#fafbfc] z-10 shadow-[inset_-4px_0_6px_rgba(0,0,0,0.06)]" />
+      <div className="absolute right-[-12px] top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-[#fafbfc] z-10 shadow-[inset_4px_0_6px_rgba(0,0,0,0.06)]" />
 
-      <Box style={{ position: "relative" }}>
-        {seatmapOpen == index && typeof window !== "undefined" && window.innerWidth > 767 && !isFullscreen && (
-          <Card p={10} bg="gray.3" radius={10} className={`!hidden md:!block !absolute w-full h-full top-0 left-0 z-[40] !border-primary-disabled/35 !border`}>
-            <Button className={`!absolute z-[40] left-2 top-2 !text-primary-base`} size="xs" bg="white" leftSection={<Icon icon="uiw:left" />} onClick={() => setSeatmapOpen && setSeatmapOpen(undefined)}>
-              {t("back")}
-            </Button>
-            <Text className={`!absolute top-2 left-2/4 -translate-x-2/4 z-[40] !text-primary-base`} fw={600} size="sm">
-              {t("selectSeat")}
-            </Text>
-            <SeatmapViewer setIsFullscreen={setIsFullscreen} isFullscreen={isFullscreen} ticketData={ticketData} data={seatmapData} selectedSeat={selectedSeat} setSelectSeat={setCount} available={ticketData.available_seat_number} />
-          </Card>
-        )}
+      <div className="flex flex-col md:flex-row cursor-pointer" onClick={onToggle}>
+        {/* Left Section: Ticket Main Info */}
+        <div className={`flex-1 p-5 md:p-8 md:pr-12 border-b md:border-b-0 md:border-r border-dashed border-[rgb(227,227,227)] relative flex flex-col justify-center`}>
+          <h3 className={`text-[16px] md:text-[20px] font-black tracking-tight mb-2 leading-tight ${isCurrentlySoldOut ? 'text-gray-400 opacity-40' : 'text-[#1e293b]'}`}>
+            {cleanTicketName(ticketData.name)}
+          </h3>
 
-        {(typeof window !== "undefined" && window.innerWidth < 767) || isFullscreen ? (
-          <Drawer
-            p={10}
-            title={
-              <Stack gap={4}>
-                <Text>{`${t("selectSeat")} ${ticketData.name}`}</Text>
-                {(selectedSeat?.length ?? 0) > 0 && (
-                  <Text size="sm" c="gray">
-                    Seat No:{" "}
-                    {selectedSeat?.map((e, i) => (
-                      <Badge bg="#194e9e" key={i} size="sm" ml={5} className={`translate-y-[-3px]`}>
-                        {e}
-                      </Badge>
-                    ))}
-                  </Text>
-                )}
-              </Stack>
-            }
-            opened={seatmapOpen == index}
-            onClose={() => setSeatmapOpen && setSeatmapOpen(undefined)}
-            position="bottom"
-            radius={25}
-            size={isFullscreen ? "92vh" : "100vh"}
-            overlayProps={{ opacity: 0.3 }}
-          >
-            <Stack gap={20} align="end" pos="relative">
-              <Card bg="gray.3" w="100%" h={isFullscreen ? "70vh" : "calc(100vh - 170px)"} radius={10} className={`!border-primary-disabled/35 !border`}>
-                <SeatmapViewer setIsFullscreen={setIsFullscreen} isFullscreen={isFullscreen} ticketData={ticketData} data={seatmapData} selectedSeat={selectedSeat} setSelectSeat={setCount} available={ticketData.available_seat_number} />
-              </Card>
-              <Text className={`!absolute top-5 left-2/4 -translate-x-2/4 z-[40] !text-primary-base`} fw={600} size="sm">
-                {t("selectSeat")}
-              </Text>
-              <Button mt={8} size="md" fullWidth={!isFullscreen} onClick={() => (window?.innerWidth < 767 ? setSeatmapOpen && setSeatmapOpen(undefined) : setIsFullscreen(false))}>
-                {isFullscreen ? "Tutup Fullscreen" : "Selesai"}
-              </Button>
-            </Stack>
-          </Drawer>
-        ) : null}
-
-        <Stack gap={10}>
-          <Flex gap={{ base: 10, sm: 20 }} justify="space-between" align="flex-start" direction={{ base: "column", sm: "row" }}>
-            <Stack gap={0} style={{ flex: 1 }}>
-              <Flex align="center" gap={10} wrap="wrap">
-                <Text 
-                  // size={{ base: "md", sm: "lg" }} 
-                  className="uppercase" 
-                  style={{ wordBreak: "break-word" }}
-                >
-                  {ticketData.name}
-                </Text>
-                {ticketData.ticket_category == "Seated" && (
-                  <Badge 
-                    size={isMobile ? "sm" : "md"} 
-                    className="bg-primary-base"
-                  >
-                    Seated
-                  </Badge>
-                )}
-              </Flex>
-
-              {ticketData.description && (
-                <Text 
-                  // size={{ base: "xs", sm: "sm" }} 
-                  c="gray" 
-                  component="div" 
-                  style={{ whiteSpace: "pre-line", wordBreak: "break-word" }}
-                  mt={4}
-                >
-                  {ticketData.description}
-                </Text>
-              )}
-            </Stack>
-
-            {/* Bagian harga dengan ukuran responsif */}
-            <Box style={{ 
-              display: "flex", 
-              flexDirection: "column", 
-              alignItems: "flex-end",
-              flexShrink: 0,
-              width: isMobile ? "100%" : "auto",
-              marginTop: isMobile ? 8 : 0
-            }}>
-              {/* Harga utama */}
-              <Text 
-                component="div" 
-                size={isMobile ? "lg" : "xl"} 
-                fw={700}
-                style={{
-                  wordBreak: "break-word",
-                  textAlign: "right",
-                  lineHeight: 1.2,
-                  width: "100%"
-                }}
+          {/* Status Badge moved to main row for better visibility when collapsed */}
+          <div className="flex items-center gap-2 relative z-20">
+            <div
+              className="flex items-center gap-2 px-3 py-1 rounded-[6px] transition-all whitespace-nowrap"
+              style={{
+                backgroundColor: (status.status === 'ongoing' || status.status === 'live') ? '#E8F6EF' : (isCurrentlySoldOut || eventData?.slug?.includes('mobil-reuni')) ? '#FDEDEC' : '#f1f5f9'
+              }}
+            >
+              <Icon
+                icon="solar:clock-circle-bold"
+                className="text-[10px] shrink-0"
+                style={{ color: (status.status === 'ongoing' || status.status === 'live') ? '#52BE80' : (isCurrentlySoldOut || eventData?.slug?.includes('mobil-reuni')) ? '#EF4444' : '#64748b' }}
+              />
+              <span
+                className="text-[9px] font-black tracking-widest leading-none uppercase"
+                style={{ color: (status.status === 'ongoing' || status.status === 'live') ? '#52BE80' : (isCurrentlySoldOut || eventData?.slug?.includes('mobil-reuni')) ? '#EF4444' : '#64748b' }}
               >
-                {ticketData.price <= 0 ? (
-                  <Text c="green" component="span" fw={700}>
-                    FREE
-                  </Text>
-                ) : (
-                  <NumberFormatter 
-                    value={ticketData.price} 
-                    thousandSeparator="." 
-                    decimalSeparator=","
-                  />
-                )}
-              </Text>
+                {eventData?.slug?.includes('mobil-reuni') && (status.status === 'ended' || status.status === 'soldout') ? 'SOLD OUT' : isCurrentlySoldOut ? 'TERJUAL HABIS' : status.label}
+              </span>
+            </div>
+          </div>
+        </div>
 
-              {/* Harga promo (jika ada) */}
-              {hasPromoPrice && (
-                <Text
-                  component="div"
-                  size={isMobile ? "xs" : "sm"}
-                  c="red"
-                  fw={700}
-                  style={{
-                    textDecoration: "line-through",
-                    textDecorationColor: "red",
-                    marginTop: 4,
-                    wordBreak: "break-word",
-                    textAlign: "right",
-                    lineHeight: 1.2,
-                    width: "100%"
-                  }}
-                >
-                  <NumberFormatter 
-                    value={ticketData.promo_price} 
-                    thousandSeparator="." 
-                    decimalSeparator=","
-                  />
-                </Text>
+        {/* Right Section: Price & Chevron */}
+        <div className={`w-full md:w-[280px] p-5 md:p-8 flex flex-col justify-center items-start relative ${isCurrentlySoldOut ? 'bg-gray-50/10' : 'bg-white'}`}>
+          <div className={`flex flex-col items-start w-full ${isCurrentlySoldOut ? 'opacity-40' : ''}`}>
+            <span className={`text-[10px] font-bold tracking-[0.15em] mb-1 ${isCurrentlySoldOut ? 'text-gray-400' : 'text-[#94a3b8]'}`}>Harga</span>
+            {/* Main Price Display */}
+            <div className={`text-lg md:text-xl font-black tracking-tighter ${isCurrentlySoldOut ? 'text-gray-400' : 'text-[#1e293b]'}`}>
+              {formatIDR(ticketData.price * 1.15)}
+            </div>
+            {/* Strikethrough price BELOW (Only for explicit promos) */}
+            {ticketData.is_promo === 1 && (
+              <span className="text-[11px] font-bold text-red-500 line-through decoration-[1.5px] mt-[-2px] opacity-80">
+                {formatIDR(ticketData.price * 1.35)}
+              </span>
+            )}
+
+          </div>
+
+          {/* Chevron */}
+          <div className="absolute right-6 top-1/2 -translate-y-1/2">
+            <Icon
+              icon="solar:alt-arrow-down-linear"
+              className={`text-black transition-transform text-lg ${isExpanded ? "rotate-180" : ""}`}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* EXPANDED CONTENT */}
+      {isExpanded && (
+        <div className={`p-5 md:p-8 bg-[#f8fafc] border-t border-[#f1f5f9] animate-in fade-in slide-in-from-top-2 duration-500 ease-out ${isCurrentlySoldOut ? 'opacity-60 grayscale-[0.5]' : ''}`}>
+          <Stack gap={24}>
+            {/* 1. Date Section */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="flex flex-col gap-3">
+                <span className={`text-[9px] font-bold tracking-[0.15em] ${isCurrentlySoldOut ? 'text-gray-400' : 'text-[#94a3b8]'}`}>Tanggal Event</span>
+                <div className="flex items-center gap-2.5">
+                  {(ticketData.valid_dates || [ticketData.event_schedule_date || ticketData.ticket_date || ticketData.start_date]).map((date, idx) => (
+                    <React.Fragment key={idx}>
+                      <div className="flex flex-col items-center justify-center w-12 h-14 bg-white border border-[#e2e8f0] rounded-xl shadow-sm shrink-0">
+                        <span className="text-[9px] font-bold text-[#94a3b8] leading-none mb-1">
+                          {moment(date).format("ddd")}
+                        </span>
+                        <span className="text-sm font-black text-[#1e293b] leading-none mb-0.5">
+                          {moment(date).format("DD")}
+                        </span>
+                        <span className="text-[9px] font-bold text-[#94a3b8] leading-none">
+                          {moment(date).format("MMM")}
+                        </span>
+                      </div>
+                    </React.Fragment>
+                  ))}
+                  <div className="flex flex-col gap-1 ml-2">
+                    <div className="text-[13px] font-medium text-[#64748b]">
+                      Masa berlaku: <span className="font-bold text-[#1e293b]">
+                        {ticketData.valid_dates && ticketData.valid_dates.length > 1
+                          ? `${moment(ticketData.valid_dates[0]).format("DD MMM")} - ${moment(ticketData.valid_dates[ticketData.valid_dates.length - 1]).format("DD MMM YYYY")}`
+                          : moment(ticketData.event_schedule_date || ticketData.ticket_date || ticketData.start_date).format("DD MMM YYYY")}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Countdown for Upcoming Sales */}
+              {status.status === 'upcoming' && (
+                <div className="flex flex-col items-start md:items-end gap-1">
+                  <span className="text-[10px] font-bold text-[#94a3b8] tracking-[0.15em]">Penjualan Dimulai</span>
+                  <div className="px-3 py-1 bg-blue-50 rounded-lg">
+                    <span className="text-xs font-black text-[#194E9E]">{status.subLabel || 'Segera Hadir'}</span>
+                  </div>
+                </div>
               )}
-            </Box>
-          </Flex>
+            </div>
 
-          <Flex className="shrink-0 mx-[-20px] sm:mx-[-30px] relative z-10" align="center" gap={10}>
-            <Box className="bg-white border-r border-r-primary-disabled/35 w-[20px] h-[20px] rounded-full shrink-0" />
-            <Divider className="!border-dashed w-full" />
-            <Box className="bg-white border-l border-l-primary-disabled/35 w-[20px] h-[20px] rounded-full shrink-0" />
-          </Flex>
+            <div className="h-px bg-[#e2e8f0]/60 w-full" />
 
-          <Flex justify="space-between" gap={{ base: 10, sm: 20 }} align="center" className="shrink-0" wrap="wrap">
-            <StatusComponent />
-          </Flex>
-        </Stack>
-      </Box>
-    </Card>
+            {/* Ticket Description Section (Universal) */}
+            <div className="flex flex-col gap-3">
+              <span className={`text-[9px] font-bold tracking-[0.15em] ${isCurrentlySoldOut ? 'text-gray-400' : 'text-[#94a3b8]'}`}>Informasi Tiket</span>
+              <div className="flex flex-col gap-2.5">
+                {/* Standard Terms List */}
+                <div className="flex flex-wrap gap-x-6 gap-y-2">
+                  <div className="flex items-center gap-2">
+                    <Icon icon="solar:shield-cross-bold" className="text-[#64748b] text-[14px]" />
+                    <span className="text-[12px] font-medium text-[#64748b]">Tidak Bisa Refund</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icon icon="solar:check-circle-bold" className="text-[#64748b] text-[14px]" />
+                    <span className="text-[12px] font-medium text-[#64748b]">Konfirmasi Instan</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Icon icon="solar:bill-list-bold" className="text-[#64748b] text-[14px]" />
+                    <span className="text-[12px] font-medium text-[#64748b]">Termasuk Pajak 10%</span>
+                  </div>
+                </div>
+
+                {/* VIP Specific Benefits List */}
+                {ticketData.name?.toLowerCase()?.includes('vip') && (
+                  <div className="flex flex-wrap gap-x-6 gap-y-2 mt-1">
+                    <div className="flex items-center gap-2">
+                      <Icon icon="solar:cup-hot-bold" className="text-[#64748b] text-[14px]" />
+                      <span className="text-[12px] font-medium text-[#64748b]">Konsum Dapet Langsung</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Icon icon="solar:armchair-bold" className="text-[#64748b] text-[14px]" />
+                      <span className="text-[12px] font-medium text-[#64748b]">Tempat Duduk VIP</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Icon icon="solar:star-bold" className="text-[#64748b] text-[14px]" />
+                      <span className="text-[12px] font-medium text-[#64748b]">Akses Langsung ke Panggung</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Festival Specific Benefits List */}
+                {ticketData.name?.toLowerCase()?.includes('festival') && (
+                  <div className="flex flex-wrap gap-x-6 gap-y-2 mt-1">
+                    <div className="flex items-center gap-2">
+                      <Icon icon="solar:ticket-bold" className="text-[#64748b] text-[14px]" />
+                      <span className="text-[12px] font-medium text-[#64748b]">
+                        {ticketData.name?.toLowerCase()?.includes('2 day pass')
+                          ? "Akses penuh Festival untuk 2 hari (Day 1 & Day 2)"
+                          : ticketData.name?.toLowerCase()?.includes('day 1')
+                            ? "Akses Festival untuk Hari ke-1"
+                            : ticketData.name?.toLowerCase()?.includes('day 2')
+                              ? "Akses Festival untuk Hari ke-2"
+                              : "Akses Festival"}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Triple Specific Benefits List */}
+                {ticketData.name?.toLowerCase()?.includes('triple') && (
+                  <div className="flex flex-wrap gap-x-6 gap-y-2 mt-1">
+                    <div className="flex items-center gap-2">
+                      <Icon icon="solar:ticket-bold" className="text-[#64748b] text-[14px]" />
+                      <span className="text-[12px] font-medium text-[#64748b]">Mendapatkan 3 Tiket Masuk</span>
+                    </div>
+                  </div>
+                )}
+
+                {ticketData.description && (
+                  <div className="flex flex-col gap-2.5 mt-1">
+                    {(() => {
+                      let desc = ticketData.description;
+                      // Filter out common benefit strings for cleaner view
+                      desc = desc.replace(/Ticket Reguler Benefit\s*:\s*1\.\s*Mendapatkan Konsum/gi, "");
+                      desc = desc.replace(/Ticket VIP Benefit\s*:\s*1\.\s*Konsum Dapet Langsung\s*2\.\s*Tempat Duduk VIP\s*3\.\s*Akses Langsung ke Panggung/gi, "");
+                      desc = desc.replace(/--\s*dua\s*tiket/gi, "");
+                      desc = desc.replace(/--\s*tiga\s*tiket/gi, "");
+
+                      const points = desc.split('.').filter(p => p.trim().length > 2);
+                      return points.map((point, i) => (
+                        <div key={i} className="flex items-start gap-2.5">
+                          <Icon
+                            icon={
+                              point.toLowerCase().includes('akses') || point.toLowerCase().includes('tiket') ? "solar:ticket-star-bold" :
+                                point.toLowerCase().includes('pameran') || point.toLowerCase().includes('komunitas') ? "solar:users-group-rounded-bold" :
+                                  point.toLowerCase().includes('hemat') || point.toLowerCase().includes('paket') ? "solar:tag-price-bold" :
+                                    "solar:info-circle-bold"
+                            }
+                            className="text-[#64748b] text-[14px] mt-0.5 shrink-0"
+                          />
+                          <span className="text-[12px] font-medium text-[#64748b] leading-relaxed">
+                            {point.trim()}.
+                          </span>
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="h-px bg-[#e2e8f0]/60 w-full" />
+
+            {/* Benefit Tiket Section (ONLY for Merch) */}
+            {ticketData.name?.toLowerCase()?.includes('merch') && (
+              <>
+                <div className="flex flex-col gap-3">
+                  <span className={`text-[9px] font-bold tracking-[0.15em] ${isCurrentlySoldOut ? 'text-gray-400' : 'text-[#94a3b8]'}`}>Benefit Tiket</span>
+                  <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-100 rounded-lg w-fit">
+                    <Icon icon="solar:gift-bold-duotone" className="text-blue-600 text-sm" />
+                    <span className="text-[11px] font-bold text-blue-700">Tiket ini mendapatkan official merchandise</span>
+                  </div>
+                </div>
+                <div className="h-px bg-[#e2e8f0]/60 w-full" />
+              </>
+            )}
+
+            {/* 2. End Sale Section (Replaced Price Section) */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="flex flex-col gap-1">
+                <span className={`text-[9px] font-bold tracking-[0.15em] ${isCurrentlySoldOut ? 'text-gray-400' : 'text-[#94a3b8]'}`}>
+                  Berakhir Pada
+                </span>
+                <span className="text-base md:text-lg font-black text-[#1e293b]">
+                  {moment(ticketData.ticket_end).format("DD MMM YYYY, HH:mm")}
+                </span>
+              </div>
+
+              {(() => {
+                const isCurrentlySoldOut = status.status === 'soldout' || status.status === 'ended' || isSoldOut || isFullbook || (ticketData.is_fullbook === 1);
+                return (
+                  <div className="flex items-center justify-end gap-5 bg-white border border-[#e2e8f0] p-1.5 px-2 rounded-full shadow-sm w-fit ml-auto md:w-auto md:ml-0">
+                    <button
+                      onClick={() => setCount(count - step)}
+                      disabled={!canDecrement || isCurrentlySoldOut}
+                      className={`w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 ${count > 0 && !isCurrentlySoldOut ? "bg-[#194E9E] hover:bg-[#0b387c] shadow-sm" : "bg-[#f1f5f9] opacity-30 cursor-not-allowed"
+                        }`}
+                    >
+                      <Icon
+                        icon="fa6-solid:minus"
+                        className="text-[12px]"
+                        style={{ color: count > 0 && !isCurrentlySoldOut ? '#FFFFFF' : '#94a3b8' }}
+                      />
+                    </button>
+
+                    <span className={`text-base font-black min-w-[24px] text-center ${isCurrentlySoldOut ? 'text-gray-300' : 'text-[#1e293b]'}`}>
+                      {count}
+                    </span>
+
+                    <button
+                      onClick={() => setCount(count + step)}
+                      disabled={!canIncrement || isCurrentlySoldOut}
+                      className={`w-8 h-8 flex items-center justify-center rounded-full transition-all duration-300 ${!isCurrentlySoldOut ? "bg-[#194E9E] hover:bg-[#0b387c] shadow-sm" : "bg-[#f1f5f9] opacity-30 cursor-not-allowed"
+                        }`}
+                    >
+                      <Icon
+                        icon="fa6-solid:plus"
+                        className="text-[12px]"
+                        style={{ color: !isCurrentlySoldOut ? '#FFFFFF' : '#94a3b8' }}
+                      />
+                    </button>
+                  </div>
+                );
+              })()}
+            </div>
+
+            <div className="h-px bg-[#e2e8f0]/60 w-full" />
+
+            {/* 3. Total Section */}
+            <div className="flex flex-col items-end gap-1">
+              <span className="text-[9px] font-bold text-[#94a3b8] tracking-[0.15em] text-right">
+                Total ({count} pax)
+              </span>
+              <span className="text-xl md:text-2xl font-black text-[#1e293b] leading-none">
+                {formatIDR(ticketData.price * 1.15 * count)}
+              </span>
+            </div>
+          </Stack>
+        </div>
+      )}
+    </div>
   );
 };
 
@@ -381,13 +480,13 @@ const SeatmapViewer = ({ ticketData, data, selectedSeat, setSelectSeat, availabl
   const [scale, setScale] = useState(1);
   const [canvasPos, setCanvasPos] = useState<[number, number]>([0, 0]);
   const canvasWrap = useRef<HTMLDivElement>(null);
-  const { seatmapData, seatmapOpen } = useContext(Context);
+  const { seatmapData, seatmapOpen } = useContext(EventContext);
   const [lastTouch, setLastTouch] = useState<React.Touch>();
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (seatmapOpen !== undefined) {
-      const area = seatmapData?.filter((e) =>
+      const area = seatmapData?.filter((e: SeatmapData) =>
         Array((e.col ?? 1) * (e.row ?? 1))
           .fill(e.prefix)
           .map((_, i) => `${e.prefix}${i + 1}`)
@@ -396,7 +495,7 @@ const SeatmapViewer = ({ ticketData, data, selectedSeat, setSelectSeat, availabl
 
       if (area) {
         const [x, y]: [number, number] = area
-          .map((e) => e.position)
+          .map((e: SeatmapData) => e.position)
           .reduce<[number[], number[]]>(
             (c, n) => [
               [...c[0], n[0]],
@@ -404,7 +503,7 @@ const SeatmapViewer = ({ ticketData, data, selectedSeat, setSelectSeat, availabl
             ],
             [[], []]
           )
-          .map((e) => e.reduce((sum, num) => sum + num, 0) / e.length) as [number, number];
+          .map((e: number[]) => e.reduce((sum: number, num: number) => sum + num, 0) / e.length) as [number, number];
 
         setCanvasPos([x * -1, y * -1]);
       }
@@ -562,7 +661,7 @@ const SeatmapViewer = ({ ticketData, data, selectedSeat, setSelectSeat, availabl
         <Box className={`absolute top-2/4 left-2/4 w-[999vw] h-[2px] bg-grey/10 -translate-y-2/4 -translate-x-2/4`} />
 
         <Box className={`absolute z-20 top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4`}>
-          <SeatmapItem ticketData={ticketData} data={data} selectedSeat={selectedSeat} available={available} setSelectSeat={!isCanvasMove ? setSelectSeat : () => {}} />
+          <SeatmapItem ticketData={ticketData} data={data} selectedSeat={selectedSeat} available={available} setSelectSeat={!isCanvasMove ? setSelectSeat : () => { }} />
         </Box>
       </Card>
     </div>

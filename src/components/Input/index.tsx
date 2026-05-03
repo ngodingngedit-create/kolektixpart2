@@ -51,20 +51,20 @@ const InputField = ({
     }
   };
   return (
-    <div className={`text-dark ${className}`}>
+    <div className={`flex flex-col gap-1.5 ${className}`}>
       {label && (
-        <p className='mb-1 text-grey'>
+        <label className='text-sm font-semibold text-[#64748b] px-0.5'>
           {label}
-          {required && <span className='text-danger'> *</span>}{' '}
-        </p>
+          {required && <span className='text-danger'> *</span>}
+        </label>
       )}
       {type === 'number' && (
         <input
           autoFocus={autofocus}
           type='text'
-          className={`${error ? 'border-red-400' : 'border-primary-light-200'} ${
-            size === 'lg' ? 'py-2 px-3' : 'px-3 py-2 text-sm'
-          }  shadow-sm border focus:outline-primary-disabled rounded-lg ${
+          className={`${error ? 'border-red-400' : 'border-[#e4e4e7]'} ${
+            size === 'lg' ? 'py-3 px-4' : 'px-4 py-2.5 text-sm'
+          } shadow-smooth-low border focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-base rounded-xl transition-all ${
             fullWidth ? 'w-full' : 'w-80'
           }`}
           placeholder={placeholder}
@@ -78,9 +78,9 @@ const InputField = ({
         <input
           autoFocus={autofocus}
           type='number'
-          className={`${error ? 'border-red-400' : 'border-primary-light-200'} border-spacing-1 ${
-            size === 'lg' ? 'py-2 px-3' : 'px-3 py-2 text-sm'
-          }  shadow-sm border focus:outline-primary-disabled rounded-lg ${
+          className={`${error ? 'border-red-400' : 'border-[#e4e4e7]'} ${
+            size === 'lg' ? 'py-3 px-4' : 'px-4 py-2.5 text-sm'
+          } shadow-smooth-low border focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-base rounded-xl transition-all ${
             fullWidth ? 'w-full' : 'w-80'
           }`}
           placeholder={placeholder}
@@ -93,9 +93,9 @@ const InputField = ({
         <input
           autoFocus={autofocus}
           type='text'
-          className={`${error ? 'border-red-400' : 'border-primary-light-200'} ${
-            size === 'lg' ? 'py-2 px-3' : 'px-3 py-2 text-sm'
-          } shadow-sm border focus:outline-primary-disabled rounded-lg disabled:bg-light-grey ${
+          className={`${error ? 'border-red-400' : 'border-[#e4e4e7]'} ${
+            size === 'lg' ? 'py-3 px-4' : 'px-4 py-2.5 text-sm'
+          } shadow-smooth-low border focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-base rounded-xl transition-all disabled:bg-gray-50 ${
             fullWidth ? 'w-full' : 'w-80'
           }`}
           disabled={disabled}
@@ -113,20 +113,18 @@ const InputField = ({
           minValue={minDateVal ? parseDate(minDateVal) : today(getLocalTimeZone())}
           maxValue={maxDateVal ? parseDate(maxDateVal) : parseDate('9999-12-31')}
           variant='bordered'
-          radius='sm'
+          radius='lg'
           fullWidth={fullWidth}
-          dateInputClassNames={{
-            inputWrapper:
-              `py-2 border ${error ? 'border-red-400' : 'border-primary-light-200'} hover:border-primary-disabled focus:outline-primary-disabled`,
+          classNames={{
+            inputWrapper: `h-auto py-2.5 px-4 border ${error ? 'border-red-400' : 'border-[#e4e4e7]'} hover:border-primary-base focus-within:ring-2 focus-within:ring-primary-100 focus-within:border-primary-base transition-all rounded-xl shadow-smooth-low`,
           }}
-          // startContent={<FontAwesomeIcon icon={faCalendar} className='text-dark' />}
           onChange={onChange}
         />
       )}
       {type === 'textarea' && (
         <textarea
           autoFocus={autofocus}
-          className={`${error ? 'border-red-400' : 'border-primary-light-200'} px-3 py-2 border focus:outline-primary-disabled rounded-lg ${
+          className={`${error ? 'border-red-400' : 'border-[#e4e4e7]'} px-4 py-3 border focus:outline-none focus:ring-2 focus:ring-primary-100 focus:border-primary-base rounded-xl transition-all ${
             fullWidth ? 'w-full' : 'w-80'
           }`}
           placeholder={placeholder}
@@ -139,7 +137,7 @@ const InputField = ({
           autoFocus={autofocus}
           startContent={<FontAwesomeIcon icon={faClock} className='text-dark' />}
           classNames={{
-            inputWrapper: `border shadow-sm ${error ? 'border-red-400' : 'border-primary-light-200'} bg-white rounded-lg`,
+            inputWrapper: `h-auto py-2.5 border shadow-smooth-low ${error ? 'border-red-400' : 'border-[#e4e4e7]'} bg-white rounded-xl focus-within:ring-2 focus-within:ring-primary-100 focus-within:border-primary-base transition-all`,
           }}
           aria-label='time'
           fullWidth={fullWidth}

@@ -26,27 +26,30 @@ export default function InputSelect({
   multiple = false, // Default value is false
 }: InputSelectProps) {
   return (
-    <div className="border-primary-light-200 h-auto text-sm mb-4">
+    <div className="flex flex-col gap-1.5 mb-1">
       {label && (
-        <p className="mb-1 text-grey">
+        <label className="text-sm font-semibold text-[#64748b] px-0.5">
           {label}
           {required && <span className="text-danger"> *</span>}
-        </p>
+        </label>
       )}
 
       <Select
         size="sm"
         onChange={onChange}
-        selectionMode={multiple ? "multiple" : "single"} // Added selection mode
+        selectionMode={multiple ? "multiple" : "single"}
         defaultSelectedKeys={options[0].key}
         placeholder={placeholder}
+        variant="bordered"
+        radius="lg"
         classNames={{
-          mainWrapper: "border shadow-sm border-primary-light-200 bg-white rounded-lg",
-          trigger: "bg-white rounded-lg hover:bg-primary-light h-9",
+          trigger: "bg-white border-[#e4e4e7] hover:border-primary-base focus:ring-2 focus:ring-primary-100 transition-all h-[42px] rounded-xl shadow-smooth-low",
+          value: "text-sm text-[#0f172a] font-medium",
+          popoverContent: "rounded-xl border-[#e4e4e7] shadow-xl",
         }}
       >
         {options.map((item) => (
-          <SelectItem className="text-dark" key={item.key}>
+          <SelectItem className="text-[#0f172a] font-medium" key={item.key}>
             {item.label}
           </SelectItem>
         ))}

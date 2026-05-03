@@ -23,6 +23,9 @@ const config: Config = {
       borderColor: {
         'custom-gray': 'rgba(107, 114, 128, 0.5)',
       },
+      boxShadow: {
+        'smooth-low': '0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04)',
+      }
     },
     screens: {
       xs: "320px",

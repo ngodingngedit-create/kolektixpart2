@@ -9,15 +9,16 @@ const FooterData = [
     title: 'Tentang Kolektix',
     item: [
       { id: 1, name: 'Masuk', link: '/auth' },
-      { id: 2, name: 'Biaya', link: '/' },
+      { id: 2, name: 'Biaya', link: '/pricing' },
       { id: 3, name: 'Event', link: '/event' },
       { id: 4, name: 'Kebijakan Privasi', link: '/privacy' },
       { id: 5, name: 'Syarat & Ketentuan', link: '/terms' },
       { id: 6, name: 'Prosedur Pembatalan', link: '/terms/return-policy' },
       { id: 7, name: 'Syarat Pengembalian Dana', link: '/terms/refund' },
-      { id: 7, name: 'Tiket Gelang', link: '/wristband' },
-      { id: 8, name: 'Laporan', link: '/' },
-      { id: 9, name: 'Setting', link: '/' },
+      { id: 8, name: 'Tiket Gelang', link: '/wristband' },
+      { id: 9, name: 'Cara Menjadi Partner', link: '/partner' },
+      { id: 10, name: 'Laporan', link: '/' },
+      { id: 11, name: 'Setting', link: '/' },
     ],
   },
   {
@@ -30,6 +31,7 @@ const FooterData = [
       { id: 4, name: 'Cara Menjadi Talent' },
       { id: 5, name: 'Syarat & Ketentuan' },
       { id: 6, name: 'Cara Mempromosikan' },
+      { id: 7, name: 'Metode Pembayaran', link: '/metode-pembayaran' },
     ],
   },
   {
@@ -76,7 +78,7 @@ const Footer = () => {
             {el.item.map((items) => {
               if ('link' in items) {
                 return (
-                  <Link key={items.id} href={items.link} className='text-sm hover:underline'>
+                  <Link key={items.id} href={items.link ?? '#'} className='text-sm hover:underline'>
                     {items.name}
                   </Link>
                 );

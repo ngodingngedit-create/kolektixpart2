@@ -1250,6 +1250,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { AppMainContext } from "@/pages/_app";
 import { modals } from "@mantine/modals";
 import { useTranslation } from "react-i18next";
+import CartDrawer from "./CartDrawer";
 
 // Helper function untuk deteksi domain di server-side
 const getInitialDomainState = () => {
@@ -1287,6 +1288,7 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
   const [isLogin, setIsLogin] = useState<boolean>(false);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [hasNotification, setHasNotification] = useState<boolean>(false);
+  const [showCartDrawer, setShowCartDrawer] = useState<boolean>(false);
   const { cartCount } = useContext(AppMainContext);
   const { t, i18n } = useTranslation();
   
@@ -1534,7 +1536,7 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
 
                   {(route.startsWith("/merch-order") || route.startsWith("/merch-cart") || route.startsWith("/merchandise")) && (
                     <Indicator label={String(cartCount)} size="lg" offset={8} color="red">
-                      <button type="button" className="mr-2 relative rounded-full bg-gray-800 p-1 text-white hover:text-white mt-1" onClick={() => router.push("/merch-cart")}>
+                      <button type="button" className="mr-2 relative rounded-full bg-gray-800 p-1 text-white hover:text-white mt-1" onClick={() => setShowCartDrawer(true)}>
                         <Icon icon={"ant-design:shopping-cart-outlined"} className={`text-[26px]`} />
                       </button>
                     </Indicator>
@@ -1765,6 +1767,15 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
                 />
                 <NavLink href="/event" c="gray.1" label="Event" leftSection={<Icon icon="tabler:calendar-event" className="text-[24px]" />} />
                 <NavLink href="/merchandise" c="gray.1" label="Merchandise" leftSection={<Icon icon="tabler:shopping-bag" className="text-[24px]" />} />
+                <NavLink 
+                  c="gray.1" 
+                  label={`Keranjang (${cartCount})`} 
+                  onClick={() => {
+                    setShowSideBar(false);
+                    setShowCartDrawer(true);
+                  }}
+                  leftSection={<Icon icon="tabler:shopping-cart" className="text-[24px]" />} 
+                />
                 <NavLink href="/tracking" c="gray.1" label="Tracking" leftSection={<Icon icon="tabler:truck" className="text-[24px]" />} />
                 {showTalentVenue && (
                   <>
@@ -1791,6 +1802,8 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
         <Fade isShowing={showFilter}>
           <FilterMenu />
         </Fade>
+        
+        <CartDrawer opened={showCartDrawer} onClose={() => setShowCartDrawer(false)} />
       </nav>
       
       <main>
