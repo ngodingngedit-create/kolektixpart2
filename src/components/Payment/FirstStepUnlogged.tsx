@@ -3389,7 +3389,7 @@ const FirstStepUnlogged = ({ onSubmitVoucher, detail, ticket, totalCount, totalS
                           <div className="flex-1">
                             <p className="text-xs font-semibold text-[#0f172a] mb-1.5">Line Up</p>
                             <div className="flex flex-col gap-1.5">
-                              <p className="text-[11px] text-[#64748b] flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> <span className="font-semibold">MALIQ & D'Essentials</span></p>
+                              <p className="text-[11px] text-[#64748b] flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> <span className="font-semibold">MALIQ & D&apos;Essentials</span></p>
                               <p className="text-[11px] text-[#64748b] flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> <span className="font-semibold">Feel Koplo</span></p>
                               <p className="text-[11px] text-[#64748b] flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> <span className="font-semibold">Perunggu</span></p>
                               <p className="text-[11px] text-[#64748b] flex items-center gap-1.5"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> <span className="font-semibold">Hanif</span></p>

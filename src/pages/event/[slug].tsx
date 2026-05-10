@@ -1582,6 +1582,8 @@ export const EventContext = createContext<{
   eventData?: EventProps;
   counts?: { [key: string]: number | string[] };
   setCounts?: Dispatch<SetStateAction<{ [key: string]: number | string[] }>>;
+  merchSelections?: { [key: string]: { merchId: string | null; size: string | null } };
+  setMerchSelections?: Dispatch<SetStateAction<{ [key: string]: { merchId: string | null; size: string | null } }>>;
 }>({});
 
 // Fungsi untuk mendapatkan zona waktu
@@ -1665,6 +1667,7 @@ const EventDetails = () => {
   const [step1TicketData, setStep1TicketData] = useState<FormTicket[]>([]);
   const [step1MerchData, setStep1MerchData] = useState<MerchPayload[]>([]);
   const [submittedPayload, setSubmittedPayload] = useState<any>(null);
+  const [merchSelections, setMerchSelections] = useState<{ [key: string]: { merchId: string | null; size: string | null } }>({});
 
   // Data Dummy untuk Deskripsi dan FAQ
   const dummyDescription = `<h4 style="margin-bottom: 12px;">Ajang Silaturahmi Pecinta Otomotif Terbesar</h4><p style="margin-bottom: 16px;"><strong>Event Reuni Mobil</strong> adalah ajang pertemuan berkala bagi para pecinta dan pemilik mobil untuk berbagi informasi, pengalaman, serta mempererat tali persaudaraan antar sesama komunitas.</p><p>Bergabunglah bersama kami untuk merayakan semangat otomotif dalam suasana yang akrab dan meriah. Berbagai hadiah menarik juga telah disiapkan untuk para peserta kegiatan!</p>`;
@@ -2503,6 +2506,8 @@ const EventDetails = () => {
           counts,
           setCounts,
           eventData: detail,
+          merchSelections,
+          setMerchSelections,
         }}
       >
         <div className="text-dark w-full font-inter">

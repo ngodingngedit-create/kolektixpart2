@@ -140,6 +140,18 @@ export default function Invoice() {
         has_user: {} as any,
         countryCode: 62,
         no_telp: 8123456789,
+        has_transaction_status: {
+          id: 1,
+          name: "PAID",
+          description: "Pembayaran Berhasil",
+          bgcolor: "green",
+          created_by: null,
+          updated_by: null,
+          created_at: moment().toISOString(),
+          updated_at: moment().toISOString(),
+          deleted_at: null
+        },
+        has_transaction_voucher: [],
         insurance_amount: 0,
         is_insurance: 0,
         insurance_required: 0
