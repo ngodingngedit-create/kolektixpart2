@@ -187,7 +187,7 @@
 //         link: "/dashboard/my-event/report",
 //         role: "Staff",
 //       },
-      
+
 //     ],
 //   },
 //   {
@@ -611,7 +611,7 @@
 //             <>
 //               {filteredSidebarData.map((el) => (
 //                 <Tooltip label={el.name} position="right" bg="white" c="gray.8" className={`shadow-lg ${collapse ? "!opacity-0" : ""}`} key={el.id}>
-//                   <li key={el.id} className={`${router.pathname === el.link ? "bg-[#1b3a6a] border-l-3 border-white text-white" : "pl-[3px]  text-primary-light-200"} list-none transition-transform-colors`}>
+//                   <li key={el.id} className={`${router.pathname === el.link ? "bg-[#1b3a6a] border-l-3 border-white text-white" : "pl-[3px]  text-white"} list-none transition-transform-colors`}>
 //                     {el.link ? (
 //                       <Link href={el.link} className="" onClick={handleItemClick}>
 //                         <div className="flex px-5 items-center hover:bg-[#1b3a6a] py-3">
@@ -650,7 +650,7 @@
 //                             <li
 //                               key={i}
 //                               className={`list-none ${openMenu[el.id] && visible ? "visible opacity-100" : "invisible opacity-0"} ${
-//                                 router.pathname === subEl.link ? "bg-[#1b3a6a] border-l-3 border-white text-white" : "pl-[3px] hover:bg-[#1b3a6a] text-primary-light-200"
+//                                 router.pathname === subEl.link ? "bg-[#1b3a6a] border-l-3 border-white text-white" : "pl-[3px] hover:bg-[#1b3a6a] text-white"
 //                               } py-3 transition-transform-colors-opacity`}
 //                             >
 //                               <Link href={subEl.link ?? "#"} onClick={handleItemClick}>
@@ -670,7 +670,7 @@
 //               ))}
 //             </>
 //           </ul>
-//           <button onClick={() => setCollapse(!collapse)} className="sticky bottom-0 pl-[3px] bg-[#031f4d] hover:bg-[#1b3a6a] text-primary-light-200 py-4 text-sm transition-transform-colors w-full">
+//           <button onClick={() => setCollapse(!collapse)} className="sticky bottom-0 pl-[3px] bg-[#031f4d] hover:bg-[#1b3a6a] text-white py-4 text-sm transition-transform-colors w-full">
 //             <div className="flex items-center justify-center px-5">
 //               {visible && <p className={`${collapse ? "w-full" : "w-0 hidden"} overflow-hidden transition-all delay-700`}>Persingkat Menu </p>}
 //               <FontAwesomeIcon icon={faChevronLeft} className={`${collapse ? "rotate-0" : "rotate-180"} transition-all ease-in-out`} />
@@ -1348,7 +1348,7 @@
 //                 .filter((el) => isMenuAllowed(el))
 //                 .map((el) => (
 //                   <Tooltip label={el.name} position="right" bg="white" c="gray.8" className={`shadow-lg ${collapse ? "!opacity-0" : ""}`} key={`${el.name}-${el.id}`}>
-//                     <li key={`${el.name}-${el.id}`} className={`${router.pathname === el.link ? "bg-[#1b3a6a] border-l-3 border-white text-white" : "pl-[3px]  text-primary-light-200"} list-none transition-transform-colors`}>
+//                     <li key={`${el.name}-${el.id}`} className={`${router.pathname === el.link ? "bg-[#1b3a6a] border-l-3 border-white text-white" : "pl-[3px]  text-white"} list-none transition-transform-colors`}>
 //                       {el.link ? (
 //                         <Link href={el.link} className="" onClick={handleItemClick}>
 //                           <div className="flex px-5 items-center hover:bg-[#1b3a6a] py-3">
@@ -1390,7 +1390,7 @@
 //                               <li
 //                                 key={`${subEl.name}-${i}`}
 //                                 className={`list-none ${openMenu[el.id] && visible ? "visible opacity-100" : "invisible opacity-0"} ${
-//                                   router.pathname === subEl.link ? "bg-[#1b3a6a] border-l-3 border-white text-white" : "pl-[3px] hover:bg-[#1b3a6a] text-primary-light-200"
+//                                   router.pathname === subEl.link ? "bg-[#1b3a6a] border-l-3 border-white text-white" : "pl-[3px] hover:bg-[#1b3a6a] text-white"
 //                                 } py-3 transition-transform-colors-opacity`}
 //                               >
 //                                 <Link href={subEl.link ?? "#"} onClick={handleItemClick}>
@@ -1411,7 +1411,7 @@
 //             </>
 //           </ul>
 
-//           <button onClick={() => setCollapse(!collapse)} className="sticky bottom-0 pl-[3px] bg-[#031f4d] hover:bg-[#1b3a6a] text-primary-light-200 py-4 text-sm transition-transform-colors w-full">
+//           <button onClick={() => setCollapse(!collapse)} className="sticky bottom-0 pl-[3px] bg-[#031f4d] hover:bg-[#1b3a6a] text-white py-4 text-sm transition-transform-colors w-full">
 //             <div className="flex items-center justify-center px-5">
 //               {visible && <p className={`${collapse ? "w-full" : "w-0 hidden"} overflow-hidden transition-all delay-700`}>Persingkat Menu </p>}
 //               <FontAwesomeIcon icon={faChevronLeft} className={`${collapse ? "rotate-0" : "rotate-180"} transition-all ease-in-out`} />
@@ -1764,7 +1764,7 @@ const sidebarData: SidebarData = [
         link: "/dashboard/my-event/report",
         role: "Staff",
       },
-      
+
     ],
   },
   {
@@ -2168,12 +2168,12 @@ const SidebarComponent = ({ children }: { children: ReactNode }) => {
             </li>
 
             <>
-              {filteredSidebarData.map((el) => (
+              {filteredSidebarData.map((el, idx, array) => (
                 <Tooltip label={el.name} position="right" bg="white" c="gray.8" className={`shadow-lg ${collapse ? "!opacity-0" : ""}`} key={el.id}>
-                  <li key={el.id} className={`${router.pathname === el.link ? "bg-[#1b3a6a] border-l-3 border-white text-white" : "pl-[3px]  text-primary-light-200"} list-none transition-transform-colors`}>
+                  <li key={el.id} className={`${router.pathname === el.link ? "bg-[#1b3a6a] border-l-3 border-white text-white" : "pl-[3px] text-white"} list-none transition-transform-colors`}>
                     {el.link ? (
                       <Link href={el.link} className="" onClick={handleItemClick}>
-                        <div className="flex px-5 items-center hover:bg-[#1b3a6a] py-3">
+                        <div className="flex px-5 items-center hover:bg-[#154184ff] rounded-[4px] mx-2 py-3 transition-all duration-200">
                           <div className="w-5 h-5 flex justify-center items-center">{el.iconify ? <Icon icon={el.iconify ?? ""} className={`h-5 w-5`} /> : el.icon && <FontAwesomeIcon icon={el.icon} className="w-5 h-5" />}</div>
                           {visible && <p className={`text-sm ml-3 ${collapse ? "opacity-100 " : "opacity-0 "} transition-opacity delay-700`}>{el.name}</p>}
                         </div>
@@ -2186,7 +2186,7 @@ const SidebarComponent = ({ children }: { children: ReactNode }) => {
                         }}
                         className="cursor-pointer"
                       >
-                        <div className="flex px-5 items-center justify-between hover:bg-[#1b3a6a] py-3">
+                        <div className="flex px-5 items-center justify-between hover:bg-[#154184ff] rounded-[4px] mx-2 py-3 transition-all duration-200">
                           <div className="flex items-center">
                             <div className="w-5 h-5 flex justify-center items-center">
                               <div className="w-5 h-5 flex justify-center items-center">{el.iconify ? <Icon icon={el.iconify ?? ""} className={`h-5 w-5`} /> : el.icon && <FontAwesomeIcon icon={el.icon} className="w-5 h-5" />}</div>
@@ -2208,9 +2208,8 @@ const SidebarComponent = ({ children }: { children: ReactNode }) => {
                           .map((subEl, i) => (
                             <li
                               key={i}
-                              className={`list-none ${openMenu[el.id] && visible ? "visible opacity-100" : "invisible opacity-0"} ${
-                                router.pathname === subEl.link ? "bg-[#1b3a6a] border-l-3 border-white text-white" : "pl-[3px] hover:bg-[#1b3a6a] text-primary-light-200"
-                              } py-3 transition-transform-colors-opacity`}
+                              className={`list-none ${openMenu[el.id] && visible ? "visible opacity-100" : "invisible opacity-0"} ${router.pathname === subEl.link ? "bg-[#1b3a6a] border-l-3 border-white text-white" : "pl-[3px] hover:bg-[#154184ff] rounded-[4px] mx-2 text-white"
+                                } py-3 transition-all duration-200`}
                             >
                               <Link href={subEl.link ?? "#"} onClick={handleItemClick}>
                                 <div className="flex px-5 items-center">
@@ -2229,12 +2228,26 @@ const SidebarComponent = ({ children }: { children: ReactNode }) => {
               ))}
             </>
           </ul>
-          <button onClick={() => setCollapse(!collapse)} className="sticky bottom-0 pl-[3px] bg-[#031f4d] hover:bg-[#1b3a6a] text-primary-light-200 py-4 text-sm transition-transform-colors w-full">
-            <div className="flex items-center justify-center px-5">
-              {visible && <p className={`${collapse ? "w-full" : "w-0 hidden"} overflow-hidden transition-all delay-700`}>Persingkat Menu </p>}
-              <FontAwesomeIcon icon={faChevronLeft} className={`${collapse ? "rotate-0" : "rotate-180"} transition-all ease-in-out`} />
+          <div className="sticky bottom-0 w-full mt-auto">
+            <div
+              onClick={() => setCollapse(!collapse)}
+              className="bg-primary-darker hover:bg-[#1b3a6a] text-white py-4 text-sm transition-all w-full border-t border-white/10 cursor-pointer"
+            >
+              <div className="flex items-center justify-between px-5">
+                <div className="flex-1 flex justify-center">
+                  {visible && (
+                    <span className={`${collapse ? "opacity-100" : "opacity-0 hidden"} transition-opacity duration-300`}>
+                      Persingkat Menu
+                    </span>
+                  )}
+                </div>
+                <FontAwesomeIcon
+                  icon={faChevronLeft}
+                  className={`${collapse ? "rotate-0" : "rotate-180"} transition-transform duration-300`}
+                />
+              </div>
             </div>
-          </button>
+          </div>
         </nav>
         <div className="w-full overflow-x-hidden">
           <div className={`transition-all ease-in-out delay-150 overflow-y-auto max-h-[100vh] max-w-[100%]`}>
@@ -2352,13 +2365,13 @@ const SidebarComponent = ({ children }: { children: ReactNode }) => {
                               role === "Creator" ? Cookies.set("hasCreator", "false") : Cookies.set("hasCreator", "true");
                               role === "Creator"
                                 ? toast.success("Beralih ke dashboard pembeli", {
-                                    autoClose: 2000,
-                                    hideProgressBar: true,
-                                  })
+                                  autoClose: 2000,
+                                  hideProgressBar: true,
+                                })
                                 : toast.success("Beralih ke dashboard creator", {
-                                    autoClose: 2000,
-                                    hideProgressBar: true,
-                                  });
+                                  autoClose: 2000,
+                                  hideProgressBar: true,
+                                });
                             }}
                             tabIndex={-1}
                             id="user-menu-item-0"

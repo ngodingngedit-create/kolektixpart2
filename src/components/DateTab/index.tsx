@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import { SeatmapData } from "@/utils/formInterface";
 import { EventContext } from "@/pages/event/[slug]";
 import { notifications } from "@mantine/notifications";
-import { Flex, Text, Box, ActionIcon, Popover } from "@mantine/core";
+import { Flex, Text, Box, ActionIcon, Popover, UnstyledButton } from "@mantine/core";
 import { Icon } from "@iconify/react";
 import { DatePicker } from "@mantine/dates";
 
@@ -33,15 +33,26 @@ interface Props {
   noShadow?: boolean;
   baseDate?: Date | null;
   setBaseDate?: (date: Date | null) => void;
+  hideTitle?: boolean;
 }
 
 const monthsId = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+const monthsIdShort = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 const daysIdShort = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+const daysIdLong = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
-export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, selected, setSelected, setStep, scrollToTop, hideDateStrip, hideTicketList, noShadow, baseDate: propsBaseDate, setBaseDate: propsSetBaseDate }: Props) {
+export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, selected, setSelected, setStep, scrollToTop, hideDateStrip, hideTicketList, noShadow, baseDate: propsBaseDate, setBaseDate: propsSetBaseDate, hideTitle }: Props) {
   const { eventData } = useContext(EventContext);
   const [expandedId, setExpandedId] = React.useState<number | null>(null);
   const [internalBaseDate, setInternalBaseDate] = React.useState<Date | null>(null);
+  const [collapsedCategories, setCollapsedCategories] = React.useState<{ [key: string]: boolean }>({});
+
+  const toggleCategory = (category: string) => {
+    setCollapsedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
+  };
 
   const baseDate = propsBaseDate !== undefined ? propsBaseDate : internalBaseDate;
   const setBaseDate = propsSetBaseDate !== undefined ? propsSetBaseDate : setInternalBaseDate;
@@ -79,7 +90,7 @@ export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, se
     const combineTicketsByDate = (tickets: TicketProps[]): GroupTicket[] => {
       const groupedByDate = tickets.reduce((acc: { [key: string]: TicketProps[] }, item) => {
         const dates = item.valid_dates || [item.event_schedule_date || item.ticket_date || item.start_date];
-        
+
         dates.forEach(date => {
           if (date != null) {
             const dateStr = moment(date).format("YYYY-MM-DD");
@@ -91,7 +102,7 @@ export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, se
       }, {});
 
       if (tickets.length === 0 && !baseDate) return [];
-      
+
       const referenceDate = baseDate ? moment(baseDate) : moment(tickets[0].event_schedule_date || tickets[0].ticket_date || tickets[0].start_date);
       const startOfMonth = referenceDate.clone().startOf('month');
       const endOfMonth = referenceDate.clone().endOf('month');
@@ -129,10 +140,10 @@ export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, se
   const groupByCategory = (tickets: TicketProps[]) => {
     return tickets.reduce((acc: { [key: string]: TicketProps[] }, ticket) => {
       const isBundling = ticket.is_bundling === 1;
-      const category = isBundling 
-        ? "Bundling" 
+      const category = isBundling
+        ? "Bundling"
         : (ticket as any).has_category_ticket?.name || ticket.ticket_category || "Tiket";
-        
+
       if (!acc[category]) acc[category] = [];
       acc[category].push(ticket);
       return acc;
@@ -145,34 +156,14 @@ export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, se
   }, [groupedTickets, selected]);
 
   return (
-    <div className={`flex flex-col bg-white overflow-hidden ${hideDateStrip && hideTicketList ? 'hidden' : ''} font-inter`}>
+    <div className={`flex flex-col overflow-hidden ${hideDateStrip && hideTicketList ? 'hidden' : ''} font-inter`}>
       <TabGroup manual selectedIndex={selected} onChange={setSelected}>
         {/* 1. Header Section (Date Strip) */}
         {!hideDateStrip && (
-          <div className="px-5 sm:px-7 pt-2 pb-0">
-            <div className="flex items-center justify-between mb-2 px-1">
-              <div className="flex items-center gap-3">
-                <h2 className="text-[13px] font-extrabold text-gray-900 tracking-tight leading-none">
-                  Jadwal Event
-                </h2>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white shadow-[0_4px_15px_-3px_rgba(0,0,0,0.08)] transition-all duration-500 hover:shadow-[0_10px_25px_-5px_rgba(0,0,0,0.12)] hover:-translate-y-0.5 group cursor-default">
-                  <Icon icon="solar:calendar-minimalistic-bold-duotone" className="text-[14px] text-primary-base group-hover:scale-110 transition-transform" />
-                  <span className="text-[10px] font-bold text-gray-700 tracking-widest leading-none">
-                    {monthsId[selectedDateObj.getMonth()]} {selectedDateObj.getFullYear()}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 w-full mt-2 relative group/scroll">
-              <TabList className="flex-1 flex items-center gap-2.5 overflow-x-auto pb-4 pt-1.5 scroll-smooth pr-16 select-none
-                [&::-webkit-scrollbar]:h-[5px]
-                [&::-webkit-scrollbar-track]:bg-gray-50
-                [&::-webkit-scrollbar-track]:rounded-full
-                [&::-webkit-scrollbar-thumb]:bg-gray-200
-                [&::-webkit-scrollbar-thumb]:rounded-full
-                hover:[&::-webkit-scrollbar-thumb]:bg-gray-300
-                transition-all duration-300
+          <div className="px-4 pt-2 pb-2">
+            <div className="flex items-center gap-4 w-full relative">
+              <TabList className="flex-1 flex items-center gap-4 sm:gap-6 overflow-x-auto pb-2 scroll-smooth select-none scrollbar-hide
+                [&::-webkit-scrollbar]:hidden
               ">
                 {groupedTickets.map(({ date, tickets }, idx) => {
                   const d = new Date(date);
@@ -183,33 +174,31 @@ export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, se
                     <Tab
                       key={date}
                       disabled={!hasTickets}
-                      className={`min-w-[42px] sm:min-w-[50px] h-[44px] sm:h-[48px] rounded-lg flex flex-col items-center justify-center transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] focus:outline-none
+                      className={`min-w-[56px] md:min-w-[64px] h-[48px] md:h-[56px] rounded-[8px] flex flex-col items-center justify-center transition-all duration-300 focus:outline-none shrink-0
                         ${isSelected
-                          ? 'bg-gradient-to-br from-[#194E9E] to-[#0b387c] shadow-[0_10px_20px_-5px_rgba(25,78,158,0.3)] -translate-y-0.5'
+                          ? 'bg-[#194E9E] shadow-[0_6px_12px_-4px_rgba(25,78,158,0.4)]'
                           : hasTickets
-                            ? 'bg-white hover:bg-blue-50/50 shadow-sm hover:shadow-md hover:-translate-y-0.5 active:scale-95'
-                            : 'bg-gray-50/50 opacity-40 cursor-not-allowed'
+                            ? 'bg-transparent hover:bg-gray-100'
+                            : 'bg-transparent opacity-30 cursor-not-allowed'
                         }
                       `}
                     >
-                      <span className={`text-[6.5px] font-bold tracking-widest leading-none mb-1 ${isSelected ? 'text-white/70' : 'text-gray-400'}`}>
-                        {daysIdShort[d.getDay()]}
+                      <span className={`text-[8px] md:text-[9px] font-medium leading-none mb-1 ${isSelected ? 'text-white/90' : 'text-gray-400'}`}>
+                        {daysIdLong[d.getDay()].substring(0, 3)}
                       </span>
-                      <span className={`text-[12px] sm:text-[14px] font-bold leading-none ${isSelected ? 'text-white' : 'text-gray-900'}`}>
-                        {d.getDate()}
+                      <span className={`text-[11px] md:text-[12px] font-bold leading-none ${isSelected ? 'text-white' : 'text-gray-800'}`}>
+                        {d.getDate()} {monthsIdShort[d.getMonth()]}
                       </span>
                     </Tab>
                   );
                 })}
               </TabList>
 
-              {/* Fixed Calendar Icon on the right of the strip */}
-              <div className="absolute right-0 top-0 bottom-4 flex items-center bg-gradient-to-l from-white via-white to-transparent pl-12 pr-1 z-20 pointer-events-none">
-                <div className="pointer-events-auto">
+              <div className="shrink-0 pl-3 md:pl-4 border-l border-[#6c6c6c]">
                 <Popover position="bottom-end" shadow="xl" radius="xl" withArrow offset={10}>
                   <Popover.Target>
-                    <div className="min-w-[42px] sm:min-w-[50px] h-[44px] sm:h-[48px] rounded-lg flex items-center justify-center cursor-pointer bg-white shadow-md hover:shadow-lg hover:-translate-y-1 active:scale-95 transition-all duration-300 group -translate-y-[1px]">
-                      <Icon icon="solar:calendar-bold-duotone" className="text-[20px] text-[#194E9E] group-hover:scale-110 transition-transform" />
+                    <div className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-lg bg-white shadow-sm hover:shadow-md transition-all cursor-pointer">
+                      <Icon icon="solar:calendar-minimalistic-linear" className="text-[18px] md:text-[22px] text-[#6c6c6c]" />
                     </div>
                   </Popover.Target>
                   <Popover.Dropdown p={10}>
@@ -225,8 +214,9 @@ export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, se
                     />
                   </Popover.Dropdown>
                 </Popover>
-                </div>
               </div>
+
+              {/* Fixed Calendar Icon removed and merged into Header Pill */}
             </div>
           </div>
         )}
@@ -236,9 +226,9 @@ export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, se
 
         {/* 4. Ticket Category Selection Section (Ticket List) */}
         {!hideTicketList && (
-          <div className={`pt-2 ${hideDateStrip ? 'p-0' : 'p-5 sm:p-7'}`}>
+          <div className={`pt-2 ${hideDateStrip ? 'p-0' : 'p-5'}`}>
             {!hideDateStrip && (
-              <h2 className="text-[15px] sm:text-[17px] font-black text-gray-900 tracking-tight leading-none mb-6 px-1">
+              <h2 className="text-[12px] font-black text-gray-400 tracking-[0.1em] leading-none uppercase mb-6 px-1">
                 Pilih Tiket
               </h2>
             )}
@@ -246,16 +236,22 @@ export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, se
             {groupedTickets[selected] && (
               <Stack gap={24}>
                 {Object.entries(groupByCategory(sortedTicket(groupedTickets[selected].tickets))).map(([category, catTickets]) => (
-                  <div key={category} className="bg-white rounded-[24px] shadow-sm hover:shadow-md transition-all duration-500 overflow-hidden mb-4">
+                  <div key={category} className="bg-[#F3F4F6] rounded-[8px] p-6 md:p-8 mb-6 ml-1 md:ml-2 shadow-[0px_8px_30px_rgba(0,0,0,0.05)]">
                     {/* Category Title - Shown for all categories */}
-                    <div className="px-6 py-4 bg-gray-50/10">
-                      <Text fw={900} size="sm" className="tracking-widest text-[#194E9E]">
+                    <div className="flex items-center justify-between px-1 py-2 mb-4">
+                      <Text fw={900} size="md" className="tracking-[0.15em] text-[#194E9E] uppercase md:text-lg">
                         {category}
                       </Text>
+                      <UnstyledButton onClick={() => toggleCategory(category)} className="p-1">
+                        <Icon
+                          icon={collapsedCategories[category] ? "solar:alt-arrow-down-linear" : "solar:alt-arrow-up-linear"}
+                          className="text-gray-400 text-[20px] hover:text-gray-600 transition-all duration-300"
+                        />
+                      </UnstyledButton>
                     </div>
 
                     {/* Ticket Items */}
-                    <div className="flex flex-col gap-3 p-3">
+                    <div className={`flex flex-col gap-4 transition-all duration-500 overflow-hidden ${collapsedCategories[category] ? 'max-h-0 opacity-0' : 'max-h-[5000px] opacity-100'}`}>
                       {(catTickets as TicketProps[]).map((item, index) => (
                         <OrderCounter
                           key={item.id}

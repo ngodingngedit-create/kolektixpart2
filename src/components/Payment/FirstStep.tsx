@@ -3467,7 +3467,7 @@ const StepPayment = forwardRef(
         setLoadingMerch(true);
 
         if (detail?.has_merches && Array.isArray(detail.has_merches)) {
-          const filteredMerches = detail.has_merches.filter((merch: EventMerchandise) => merch.is_active === 1 && merch.stock_qty > 0);
+          const filteredMerches = detail.has_merches.filter((merch: EventMerchandise) => merch.is_active === 1);
 
           const convertedProducts: any[] = filteredMerches.map((merch: EventMerchandise) => ({
             id: merch.product_id,
@@ -3552,6 +3552,47 @@ const StepPayment = forwardRef(
         fetchMerchProductsFromEvent();
       }
     }, [detail?.has_event_ticket, ticket]);
+
+    // Auto-map pre-filled merch from Step 1 (OrderCounter)
+    useEffect(() => {
+      if (merchProducts.length > 0 && form.some(item => item.merch_product_name && !item.merch_product_id)) {
+        console.log("🛠️ Auto-mapping pre-filled merch products...");
+        const newForm = [...form];
+        let hasChanges = false;
+
+        newForm.forEach((item, index) => {
+          if (item.merch_product_name && !item.merch_product_id) {
+            // Find product by name (it might be the pure name or with stock info)
+            const product = merchProducts.find(p => 
+              p.product_name === item.merch_product_name ||
+              item.merch_product_name === `${p.product_name} ${p.qty > 0 ? `(Stok: ${p.qty})` : "(Habis)"}`
+            );
+
+            if (product) {
+              console.log(`✅ Mapped product for form ${index}: ${product.product_name}`);
+              item.merch_product_id = product.id;
+              item.event_merch_id = product.event_merch_data?.event_merch_id;
+              item.merch_price = parseFloat(product.price) || 0;
+              
+              if (item.merch_variant_name && !item.merch_variant_id) {
+                const variants = product.event_merch_data?.varians || [];
+                const variant = variants.find((v: any) => v.varian_name === item.merch_variant_name);
+                if (variant) {
+                  console.log(`✅ Mapped variant for form ${index}: ${variant.varian_name}`);
+                  item.merch_variant_id = variant.id;
+                  item.merch_price = parseFloat(variant.price) || item.merch_price;
+                }
+              }
+              hasChanges = true;
+            }
+          }
+        });
+
+        if (hasChanges) {
+          setForm(newForm);
+        }
+      }
+    }, [merchProducts, form]);
 
     const calculateInsuranceTotal = () => {
       if (!insuranceChecked || !detail?.insurance_amount || displayTotalCount === 0) return 0;
@@ -3657,7 +3698,10 @@ const StepPayment = forwardRef(
           }
         }
       } else if (field === "merch_product_name") {
-        const selectedProduct = merchProducts.find((product) => product.product_name === value);
+        const selectedProduct = merchProducts.find((product) => 
+          value === `${product.product_name} ${product.qty > 0 ? `(Stok: ${product.qty})` : "(Habis)"}` || 
+          product.product_name === value
+        );
         if (selectedProduct) {
           newForm[index] = {
             ...newForm[index],
@@ -4530,8 +4574,8 @@ const StepPayment = forwardRef(
                                       >
                                         <option value="">Pilih Produk</option>
                                         {merchProducts.map((product) => (
-                                          <option key={product.id} value={product.product_name}>
-                                            {product.product_name}
+                                          <option key={product.id} value={product.product_name} disabled={product.qty <= 0}>
+                                            {product.product_name} {product.qty > 0 ? `(Stok: ${product.qty})` : "(Habis)"}
                                           </option>
                                         ))}
                                       </select>
@@ -4577,8 +4621,8 @@ const StepPayment = forwardRef(
                                   >
                                     <option value="">Pilih Variant</option>
                                     {availableVariants.map((variant: any) => (
-                                      <option key={variant.id} value={variant.id}>
-                                        {variant.varian_name}
+                                      <option key={variant.id} value={variant.id} disabled={variant.stock_qty <= 0}>
+                                        {variant.varian_name} {variant.stock_qty > 0 ? `- Stok: ${variant.stock_qty}` : "(Habis)"}
                                       </option>
                                     ))}
                                   </select>
@@ -4970,8 +5014,8 @@ const StepPayment = forwardRef(
                                           >
                                             <option value="">Pilih Produk</option>
                                             {merchProducts.map((product) => (
-                                              <option key={product.id} value={product.product_name}>
-                                                {product.product_name}
+                                              <option key={product.id} value={product.product_name} disabled={product.qty <= 0}>
+                                                {product.product_name} {product.qty > 0 ? `(Stok: ${product.qty})` : "(Habis)"}
                                               </option>
                                             ))}
                                           </select>
@@ -5017,8 +5061,8 @@ const StepPayment = forwardRef(
                                       >
                                         <option value="">Pilih Variant</option>
                                         {availableVariants.map((variant: any) => (
-                                          <option key={variant.id} value={variant.id}>
-                                            {variant.varian_name} - Rp {parseFloat(variant.price).toLocaleString("id-ID")}
+                                          <option key={variant.id} value={variant.id} disabled={variant.stock_qty <= 0}>
+                                            {variant.varian_name} - Rp {parseFloat(variant.price).toLocaleString("id-ID")} {variant.stock_qty > 0 ? `(Stok: ${variant.stock_qty})` : "(Habis)"}
                                           </option>
                                         ))}
                                       </select>

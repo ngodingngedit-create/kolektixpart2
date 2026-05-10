@@ -1,81 +1,151 @@
 import { Icon } from "@iconify/react/dist/iconify.js";
-import { Alert, AspectRatio, Box, Button, Card, Container, Divider, Flex, Image, NumberFormatter, ScrollArea, SimpleGrid, Stack, Table, Text, Title } from "@mantine/core";
+import { Alert, AspectRatio, Box, Button, Card, Container, Divider, Flex, Image, NumberFormatter, ScrollArea, SimpleGrid, Stack, Table, Text, Title, Badge, Group, Paper, Grid } from "@mantine/core";
 import _ from "lodash";
 import Link from "next/link";
-import React, { use, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import fetch from "@/utils/fetch";
 import { useListState } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import moment from "moment";
-import { City, Province } from "../dashboard/profile/address";
 import { TransactionProps } from "@/utils/globalInterface";
 import { formatDate, formatYear } from "@/utils/useFormattedDate";
 import { TransactionStatusResponse } from "../dashboard/my-event/type";
 import config from "@/Config";
 import { modals } from "@mantine/modals";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTicket } from "@fortawesome/free-solid-svg-icons";
-
-interface FormTicket {
-  event_id: number;
-  event_ticket_id: number;
-  name: string;
-  price: number;
-  subtotal_price: number;
-  qty_ticket: number;
-  payment_status: string;
-  seat_number?: string[];
-  ticket_fee?: number;
-  is_insurance?: number;
-  insurance_amount?: number;
-  insurance_require?: number;
-}
+import QrCode from "@/components/QrCode";
+import Logo from "@images/logo.png";
 
 export default function Invoice() {
-  const [isr, setIsr] = useState(false);
   const [data, setData] = useState<TransactionProps>();
   const [loading, setLoading] = useListState<string>();
   const router = useRouter();
   const { invoice } = router.query;
-  const [city, setCity] = useState<City>();
-  const [province, setProvince] = useState<Province>();
   const [transactionStatus, setTransactionStatus] = useState<TransactionStatusResponse[]>();
-  const [ticket, setTicket] = useState<FormTicket>();
-
-  useEffect(() => {
-    getData();
-  }, [invoice]);
-
-  // Di dalam component Invoice, tambahkan useEffect untuk mengecek data ticket
-  useEffect(() => {
-    if (data?.tickets && data.tickets.length > 0) {
-      console.log("=== DATA TICKET ===");
-
-      data.tickets.forEach((ticket, index) => {
-        console.log(`Ticket ${index + 1}:`, {
-          name: ticket.has_event_ticket?.name,
-          qty: ticket.qty_ticket,
-          price: ticket.has_event_ticket?.price,
-          is_insurance: ticket.is_insurance,
-          insurance_amount: ticket.insurance_amount,
-          insurance_require: ticket.insurance_require,
-        });
-      });
-
-      // Atau jika hanya butuh satu ticket (contoh: ticket pertama)
-      if (data.tickets[0]) {
-        console.log("Detail ticket pertama:", {
-          is_insurance: data.tickets[0].is_insurance,
-          insurance_amount: data.tickets[0].insurance_amount,
-          insurance_require: data.tickets[0].insurance_require,
-        });
-      }
-    }
-  }, [data]);
 
   const getData = async () => {
-    if (!invoice) {
-      console.error("Invoice is missing");
+    if (!invoice) return;
+
+    if (invoice === "SAMPLE-INV") {
+      const mockData: TransactionProps = {
+        id: 1,
+        invoice_no: "KL-1749624050YGBAHJ7",
+        created_at: moment("2025-06-11 13:40").toISOString(),
+        total_qty: 2,
+        total_price: 500000,
+        grandtotal: 510000,
+        transaction_status_id: 1,
+        payment_method: {
+          id: 1,
+          payment_name: "Virtual Account BCA",
+          logo: "",
+          payment_type_id: 1,
+          account_no: "123456789",
+          account_name: "KOLEKTIX",
+          account_branch: "Jakarta",
+          description: null,
+          has_payment_link: [],
+          type: null,
+          created_by: null,
+          updated_by: null,
+          created_at: null,
+          updated_at: null,
+          deleted_at: null
+        },
+        has_event: {
+          id: 1,
+          name: "Konser Harmoni Alam 2024",
+          image_url: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800&auto=format&fit=crop&q=60",
+          start_date: moment("2026-05-11").toISOString(),
+          location_name: "Gelora Bung Karno",
+          location_address: "Jl. Pintu Satu Senayan, Jakarta Pusat",
+          starting_price: 150000,
+          creator_id: "1",
+          category_id: "1",
+          slug: "konser-harmoni-alam-2024",
+          image: null,
+          image_thumbnail: null,
+          end_date: moment().add(7, 'days').toISOString(),
+          start_time: "19:00",
+          end_time: "22:00",
+          zone_time: "WIB",
+          location_city: "Jakarta",
+          location_map: "",
+          activity_status: "active",
+          admin_fee: 10000,
+          ppn: 0,
+          ppn_type: "exclude",
+          max_buy_ticket: 5,
+          one_email_ticket: "1",
+          one_id_one_ticket: "1",
+          description: "Nikmati konser musik alam terbuka yang spektakuler.",
+          term_condition: "1. Tiket tidak dapat dipindahtangankan.<br/>2. Dilarang membawa senjata tajam.<br/>3. Wajib membawa e-TTP asli.",
+          save_as_draft: "0",
+          event_status_id: 1,
+          has_creator: { id: 1, name: "Kolektix Organizer", image: "", user_id: "1", category_id: "1", status: "active", created_by: "1", updated_by: null, created_at: new Date(), updated_at: new Date(), deleted_at: null, verified: new Date(), email: "org@kolektix.com", phone_number: "08123456789", location: "Jakarta", longitude: "", latitude: "", website: "", description: null, event_coordinator_name: "", event_cordinator_phone: "" },
+          has_event_status: { id: 1, name: "Active", description: "", created_by: "1", updated_by: null, created_at: null, updated_at: null, deleted_at: null, status: "active" },
+          has_event_payment_method: [],
+          has_event_social_meida: { id: 1, event_id: 1, status: "active", website: "", facebook: "", twitter: "", instagram: "", youtube: "", tiktok: "", ig_name: "", created_by: "1", updated_by: null, created_at: null, updated_at: null, deleted_at: null },
+          upcoming: 0,
+          created_by: "1",
+          updated_by: "1",
+          created_at: new Date(),
+          updated_at: new Date(),
+          deleted_at: null,
+          is_birthdate: 0,
+          is_email: 1,
+          is_gender: 0,
+          is_name: 1,
+          is_profession: 0,
+          is_company: 0,
+          is_noidentity: 0,
+          is_phone_number: 1,
+          is_kelas: 0,
+          is_assistant: 0,
+          is_insurance: 0,
+          insurance_required: 0,
+          insurance_amount: 0,
+          grand_total: 0,
+          transaction_saldo_by_event: { event_id: 1, event_slug: "slug", creator_id: 1, creator_name: "name", total_saldo_event: "0" }
+        },
+        identities: [
+          { id: 1, transaction_id: "1", nik: "1234567890", full_name: "Budi Santoso", email: "budi.santoso@example.com", no_telp: "081234567890", created_at: new Date(), updated_at: new Date(), deleted_at: null, is_pemesan: 1, countryCode: 62 }
+        ],
+        tickets: [
+          { 
+            id: 1, 
+            transaction_id: "1", 
+            event_id: "1", 
+            event_ticket_id: "1", 
+            price: 250000, 
+            subtotal_price: 500000, 
+            qty_ticket: 2, 
+            payment_status: "PAID", 
+            has_event_ticket: { id: 1, name: "VIP Festival", price: 250000, qty: 2, description: "", event_id: "1", ticket_date: "", ticket_end: "", is_fullbook: 0, is_soldout: 0, is_finish: 0, is_ready: 1, is_promo: 0, is_bundling: 0, bundling_qty: 0, promo_title: "", promo_price: 0, created_by: null, updated_by: null, created_at: null, updated_at: null, deleted_at: null, has_event: {} as any, is_bundling_merch: 0, is_ots: 0, start_date: "", event_schedule_date: "" },
+            created_by: null, updated_by: null, created_at: new Date(), updated_at: new Date(), deleted_at: null, code: "TIX-12345"
+          }
+        ],
+        transaction_merches: [
+          { id: 1, transaction_id: 1, event_merch_id: 1, product_variant_id: 1, qty: 1, price: 50000, subtotal: 50000, noted: "Kaos Event Limited Edition" }
+        ],
+        date: moment().toISOString(),
+        user_id: 1,
+        event_id: "1",
+        payment_status: "PAID",
+        updated_at: moment().toISOString(),
+        ppn: 0,
+        voucher_code: "",
+        voucher_amount: 0,
+        admin_fee: 10000,
+        xendit_url: "",
+        has_user: {} as any,
+        countryCode: 62,
+        no_telp: 8123456789,
+        insurance_amount: 0,
+        is_insurance: 0,
+        insurance_required: 0
+      };
+      setData(mockData);
+      setTransactionStatus([{ id: 1, name: "PAID", description: "", bgcolor: "green" }]);
       return;
     }
 
@@ -86,9 +156,7 @@ export default function Invoice() {
         data: {},
         before: () => setLoading.append("getdata"),
         success: ({ data }) => {
-          if (data) {
-            setData(data);
-          }
+          if (data) setData(data);
         },
         complete: () => setLoading.filter((e) => e !== "getdata"),
         error: () => {
@@ -99,14 +167,7 @@ export default function Invoice() {
             children: (
               <Stack gap={10}>
                 <Text ta="center">Data tidak ditemukan</Text>
-                <Button
-                  onClick={() => {
-                    modals.closeAll();
-                    router.push("/");
-                  }}
-                >
-                  Ke Halaman Utama
-                </Button>
+                <Button onClick={() => { modals.closeAll(); router.push("/"); }}>Ke Halaman Utama</Button>
               </Stack>
             ),
           });
@@ -118,9 +179,7 @@ export default function Invoice() {
         method: "GET",
         success: (_data) => {
           const data = _data as TransactionStatusResponse[];
-          if ((data?.length ?? 0) > 0 && data) {
-            setTransactionStatus(data);
-          }
+          if (data?.length > 0) setTransactionStatus(data);
         },
       });
     } catch (err) {
@@ -128,372 +187,232 @@ export default function Invoice() {
     }
   };
 
-  const iconStatus: { [key: string]: string } = {
-    FAILED: "ooui:alert",
-    EXPIRED: "ooui:alert",
-    Pending: "icon-park-solid:time",
-    PAID: "uiw:circle-check",
-  };
-
-  // const summaryPrice = useMemo(() => {
-  //     const admin = 2000;
-  //     const totalProductPrice = data?.detail.reduce((q, n) => q + (Boolean(n.product_varian_id) ? parseInt(n.variant.price) : parseInt(n.product.price)), 0);
-  //     const courier = parseInt(data?.courier.price ?? '0');
-  //     const ppn = (courier + admin + (totalProductPrice ?? 0)) * 0.11;
-
-  //     return { ppn, admin, courier }
-  // }, [data]);
-
-  //const dataPemesan = useMemo(() => {
-  //  return undefined;
-  //  // return data?.identities.find(e => e.);
-  //}, [data]);
+  useEffect(() => {
+    getData();
+  }, [invoice]);
 
   const transStatus = useMemo(() => {
     return transactionStatus ? transactionStatus.find((e) => e.id == data?.transaction_status_id) : null;
   }, [data, transactionStatus]);
 
-  useEffect(() => {
-    if (data) {
-      console.log("Data:", data);
-    }
-  }, [data]);
+  const isPaid = transStatus?.name === "PAID";
 
-  const [createdAtText, setCreatedAtText] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
-  const [insuranceChecked, setInsuranceChecked] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  useEffect(() => {
-    // Jika ada asuransi di transaction atau event
-    if (data?.is_insurance === 1 || data?.has_event?.insurance_required === 1) {
-      setInsuranceChecked(true);
-    } else {
-      setInsuranceChecked(false);
-    }
-  }, [data?.is_insurance, data?.has_event?.insurance_required]);
-
-  useEffect(() => {
-    if (data?.created_at && isMounted) {
-      setCreatedAtText(moment(data.created_at).format("HH:mm, DD MMMM YYYY"));
-    }
-  }, [data, isMounted]);
-
-  // Hitung total asuransi berdasarkan semua ticket
-  const calculateInsuranceTotal = () => {
-    // Cek apakah ada asuransi di transaction
-    if (data?.is_insurance === 1 && data?.insurance_amount && data?.total_qty) {
-      return data.insurance_amount * data.total_qty;
-    }
-    return 0;
-  };
-
-  // Cek apakah ada asuransi di salah satu ticket
-  const hasInsurance = (data?.insurance_amount ?? 0) > 0;
+  const cardShadowStyle = { boxShadow: '0 10px 40px rgba(0,0,0,0.06)', border: 'none' };
+  const borderLineColor = 'rgb(227, 227, 227)';
 
   return (
-    <div className={`bg-primary-light mt-[-10px] pt-[20px] pb-[30px] mb-[-20px]`}>
-      <Container px={0} className={`py-[44px] md:py-[100px]`}>
-        <Card p={0} radius={8} className={`!shadow-lg`}>
-          <Card className={`!bg-gradient-to-bl from-primary-base to-primary-dark !overflow-visible`} p={30} c="white" radius={0}>
-            <Stack gap={30}>
-              <Flex justify="space-between" align="center" wrap="wrap" gap={20}>
-                <Flex gap={15} align="center">
-                  <Icon icon="iconamoon:invoice-light" className={`text-[48px]`} />
-                  <Stack gap={0}>
-                    <Title order={1} className={`uppercase !text-[20px] md:!text-[1.8rem]`}>
-                      Invoice Pesanan
-                    </Title>
-                    <Text size="sm">{invoice}</Text>
-                  </Stack>
-                </Flex>
+    <div className="bg-[#F8FAFC] min-h-screen py-6 px-4 md:py-10 font-inter">
+      <Container size="md" p={0} className="max-w-[850px]">
+        <Paper shadow="none" radius={0} bg="white" className="overflow-hidden">
+          {/* Header */}
+          <div className="px-6 py-8 md:px-10 flex justify-start items-center">
+            <Image src={Logo.src} alt="Kolektix Logo" w={150} />
+          </div>
 
-                <Stack gap={5} className={`items-start md:!items-end`}>
-                  <Card px={15} py={5} radius={10} withBorder className={`!overflow-visible`}>
-                    <Flex align="center" gap={10}>
-                      <Text size="sm" c="gray.8">
-                        Status Pembayaran :
-                      </Text>
-                      <Flex gap={5} align="center">
-                        <Icon
-                          icon={iconStatus[transStatus?.name ?? "Pending"]}
-                          className={`
-                                                        text-[18px]
-                                                    `}
-                          style={{
-                            color: transStatus?.bgcolor,
-                          }}
-                        />
-                        <Text size="md" fw={400} c={transStatus?.bgcolor} className={`capitalize`}>
-                          {transStatus?.name}
-                        </Text>
-                      </Flex>
-                    </Flex>
-                  </Card>
-                </Stack>
-              </Flex>
-            </Stack>
-          </Card>
-
-          <Stack py={25} gap={30} className={`px-[20px] md:!px-[30px]`}>
-            <Flex gap={20} className={`[&>*]:flex-grow flex-col md:flex-row`}>
-              <Stack className={`min-w-[250px]`}>
-                <AspectRatio ratio={16 / 5}>
-                  <Image src={data?.has_event.image_url} alt={data?.has_event.name || "Event Image"} bg="gray" radius={10} />
-                </AspectRatio>
+          {/* Blue Invoice Header Section */}
+          <div className="mx-6 md:mx-10 bg-[#002D84] rounded-lg p-6 md:p-8 flex flex-col md:flex-row justify-between items-center text-white">
+            <Flex align="center" gap="lg">
+              <div className="bg-white/10 p-3 rounded-lg border border-white/20">
+                <Icon icon="solar:bill-list-bold" className="text-3xl" />
+              </div>
+              <Stack gap={2}>
+                <Title order={3} className="uppercase tracking-wide font-bold" style={{ fontSize: '20px' }}>Invoice Pesanan</Title>
+                <Text size="xs" className="opacity-80 font-medium tracking-widest">{invoice || "KL-1749624050YGBAHJ7"}</Text>
               </Stack>
+            </Flex>
+            
+            <div className="mt-4 md:mt-0 bg-white rounded-md px-6 py-2.5 flex items-center gap-3 shadow-sm">
+              <Text size="xs" className="text-black font-normal">Status Pembayaran :</Text>
+              <Flex align="center" gap={4}>
+                <Icon icon="solar:check-circle-bold" className="text-green-500 text-lg" />
+                <Text size="xs" className="text-green-500 font-normal uppercase">PAID</Text>
+              </Flex>
+            </div>
+          </div>
 
-              <Card withBorder className={`!border-dashed shrink-0 md:max-w-[250px]`} radius={10}>
-                <Stack gap={10}>
-                  <Text fw={600} size="lg">
-                    {data?.has_event.name}
-                  </Text>
+          {/* Event Banner */}
+          <div className="px-6 md:px-10 mt-8">
+            <div className="rounded-xl overflow-hidden">
+              <Image 
+                src={data?.has_event?.image_url || "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1200&auto=format&fit=crop&q=60"} 
+                alt="Event Banner" 
+                className="w-full h-[320px] object-cover"
+              />
+            </div>
+          </div>
 
-                  <Flex align="center" gap={10}>
-                    <Icon icon="solar:calendar-bold" className={`shrink-0 text-primary-base text-[20px]`} />
-                    <Text size="sm" c="gray">
-                      {data?.has_event && `${formatDate(data?.has_event.start_date)} ${data?.has_event.start_date !== data?.has_event.end_date ? "- " + formatDate(data?.has_event.end_date) : ""} ${formatYear(data?.has_event.end_date)}`}
-                    </Text>
+          {/* 3 Column Information Grid */}
+          <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="lg" className="px-6 md:px-10 mt-10">
+             {/* Card Pemesan */}
+             <Card shadow="none" radius="md" p="xl" style={cardShadowStyle}>
+                <Title order={6} className="text-[#002D84] font-bold mb-8" style={{ fontSize: '11px' }}>Informasi Pemesan</Title>
+                <Stack gap="xl">
+                  <Flex gap="md" align="center">
+                    <div className="bg-blue-50 p-2 rounded-full"><Icon icon="solar:user-bold" className="text-[#002D84] text-md" /></div>
+                    <Stack gap={1}>
+                      <Text size="10px" c="gray.5" fw={500}>Nama Pemesan</Text>
+                      <Text fw={600} size="xs" className="text-gray-900">{data?.identities.find(e => e.is_pemesan === 1)?.full_name || "Budi Santoso"}</Text>
+                    </Stack>
                   </Flex>
-
-                  <Flex align="center" gap={10}>
-                    <Icon icon="tabler:clock-filled" className={`shrink-0 text-primary-base text-[20px]`} />
-                    <Text size="sm" c="gray">
-                      {data?.has_event?.start_time.toString()} - {data?.has_event?.end_time.toString()}
-                    </Text>
+                  <Flex gap="md" align="center">
+                    <div className="bg-blue-50 p-2 rounded-full"><Icon icon="solar:letter-bold" className="text-[#002D84] text-md" /></div>
+                    <Stack gap={1}>
+                      <Text size="10px" c="gray.5" fw={500}>Email Pemesan</Text>
+                      <Text fw={600} size="xs" className="text-gray-900 break-all">{data?.identities.find(e => e.is_pemesan === 1)?.email || "budi.santoso@example.com"}</Text>
+                    </Stack>
                   </Flex>
-
-                  <Flex align="start" gap={10}>
-                    <Icon icon="tdesign:location-filled" className={`shrink-0 text-primary-base text-[20px]`} />
-                    <Text size="sm" c="gray">
-                      {data?.has_event.location_name}
-                    </Text>
+                  <Flex gap="md" align="center">
+                    <div className="bg-blue-50 p-2 rounded-full"><Icon icon="solar:calendar-bold" className="text-[#002D84] text-md" /></div>
+                    <Stack gap={1}>
+                      <Text size="10px" c="gray.5" fw={500}>Tanggal Pemesanan</Text>
+                      <Text fw={600} size="xs" className="text-gray-900">{data?.created_at ? moment(data.created_at).format("DD MMM YYYY HH:mm") : "11 June 2025 13:40"} WIB</Text>
+                    </Stack>
                   </Flex>
+                </Stack>
+             </Card>
 
-                  <Alert radius={10} mt={10} className={`md:hidden`}>
-                    {transStatus?.description}
-                  </Alert>
+             {/* Card Tiket */}
+             <Card shadow="none" radius="md" p="xl" style={cardShadowStyle}>
+                <Title order={6} className="text-[#002D84] font-bold mb-8" style={{ fontSize: '11px' }}>Informasi Tiket</Title>
+                <Stack gap="lg">
+                  {data?.tickets.map((t, i) => (
+                    <Flex key={i} gap="md" align="center">
+                      <div className="bg-blue-50 p-2 rounded-lg"><Icon icon="solar:ticket-bold" className="text-[#002D84] text-lg" /></div>
+                      <Stack gap={1}>
+                        <Text fw={600} size="xs" className="text-gray-900">{t.has_event_ticket.name}</Text>
+                        <Text size="10px" c="gray.5" fw={500}>{t.qty_ticket} Tiket × <NumberFormatter value={t.has_event_ticket.price} prefix="Rp " /></Text>
+                      </Stack>
+                    </Flex>
+                  ))}
+                </Stack>
+             </Card>
 
-                  {transStatus?.name == "PAID" && (
-                    <Button component={Link} href={`${config.wsUrl}transaction-document/${invoice}`} target="_blank" mt={5} rightSection={<Icon icon="uiw:download" />}>
-                      Unduh Tiket
-                    </Button>
+             {/* Card Merchandise */}
+             <Card shadow="none" radius="md" p="xl" style={cardShadowStyle}>
+                <Title order={6} className="text-[#002D84] font-bold mb-8" style={{ fontSize: '11px' }}>Informasi Merchandise</Title>
+                <Stack gap="lg">
+                  {data?.transaction_merches && data.transaction_merches.length > 0 ? (
+                    data.transaction_merches.map((m, i) => (
+                      <Flex key={i} gap="md" align="center">
+                        <div className="bg-blue-50 p-2 rounded-full"><Icon icon="solar:box-bold" className="text-[#002D84] text-lg" /></div>
+                        <Stack gap={1}>
+                          <Text fw={600} size="xs" className="text-gray-900">{m.noted || "Kaos Event Limited Edition"}</Text>
+                          <Text size="10px" c="gray.5" fw={500}>{m.qty} Item × <NumberFormatter value={m.price} prefix="Rp " /></Text>
+                        </Stack>
+                      </Flex>
+                    ))
+                  ) : (
+                    <Flex gap="md" align="center" className="opacity-20 h-full justify-center">
+                       <Text size="xs" fs="italic">Tidak ada merchandise</Text>
+                    </Flex>
                   )}
                 </Stack>
-              </Card>
-            </Flex>
+             </Card>
+          </SimpleGrid>
 
-            <Flex gap={20} className={`[&>*]:flex-grow`} wrap="wrap-reverse">
-              <Stack gap={10}>
-                <Text fw={600} c="gray.8">
-                  Informasi Pemesan
-                </Text>
-                <Card withBorder>
-                  <SimpleGrid className={`!grid-cols-1 md:!grid-cols-2 !gap-[15px]`}>
-                    <Stack gap={0}>
-                      <Text size="xs" fw={300}>
-                        Nama Pemesan
-                      </Text>
-                      <Text size="sm" fw={600}>
-                        {data?.identities.find((e) => e.is_pemesan == 1)?.full_name}
-                      </Text>
-                    </Stack>
-                    <Stack gap={0}>
-                      <Text size="xs" fw={300}>
-                        Email Pemesan
-                      </Text>
-                      <Text size="sm">{data?.identities.find((e) => e.is_pemesan == 1)?.email}</Text>
-                    </Stack>
-                    <Stack gap={0}>
-                      <Text size="xs" fw={300}>
-                        Tanggal Pesanan Dibuat
-                      </Text>
-                      <Text size="sm">{createdAtText ?? "Memuat waktu..."}</Text>
-                    </Stack>
-                  </SimpleGrid>
-                </Card>
-              </Stack>
-
-              {(data?.grandtotal ?? 0) > 0 && (
-                <Stack gap={10} className={`md:max-w-[250px] shrink-0`}>
-                  <Text fw={600} c="gray.8">
-                    Total Pembayaran
-                  </Text>
-                  <Card bg="gray.1">
-                    <SimpleGrid className={`!grid-cols-1 md:!grid-cols-1 !gap-[10px]`}>
-                      {/* Bagian Asuransi - DIATAS */}
-                      {insuranceChecked && (
-                        <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded-md">
-                          <div className="flex items-start gap-2">
-                            <svg className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                            </svg>
-                            <div>
-                              <p className="text-sm font-semibold text-blue-700">Anda Sudah Tercover Oleh Asuransi</p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      <Text size="xl" fw={600}>
-                        {(data?.grandtotal ?? 0) > 0 ? (
-                          <NumberFormatter value={data?.grandtotal ?? 999999} />
-                        ) : (
-                          <Text fw={600} c="green">
-                            Free
-                          </Text>
-                        )}
-                      </Text>
-
-                      {(data?.grandtotal ?? 0) > 0 && (
-                        <>
-                          <Stack gap={0}>
-                            <Text size="xs" fw={300}>
-                              Metode Pembayaran
-                            </Text>
-                            <Text size="sm" className="capitalize">
-                              {data?.payment_method.payment_name ?? "PAYMENT_METHOD"}
-                            </Text>
-                          </Stack>
-                          <Link href={data?.xendit_url ?? "#"} target="_blank">
-                            <Text size="xs" className={`hover:underline !text-primary-base`}>
-                              Buka Halaman Pembayaran
-                            </Text>
-                          </Link>
-                        </>
-                      )}
-                    </SimpleGrid>
-                  </Card>
-                </Stack>
-              )}
-            </Flex>
-
-            <Flex gap={20} className={`[&>*]:flex-grow`} wrap="wrap-reverse">
-              <Stack gap={10}>
-                <Text fw={600} c="gray.8">
-                  Informasi Voucher
-                </Text>
-                <Card withBorder>
-                  <SimpleGrid className={`!grid-cols-1 md:!grid-cols-1 !gap-[15px]`}>
-                    {data?.has_transaction_voucher.map((voucher, index) => (
-                      <React.Fragment key={index}>
-                        <Stack key={index} gap={0}>
-                          <Flex align="center" gap={10}>
-                            <Text size="md" fw={600}>
-                              Kode Voucher:
-                            </Text>
-                            <Text size="sm" fw={300}>
-                              {voucher.voucher_code}
-                            </Text>
-                          </Flex>
-                          <Flex align="center" gap={10}>
-                            <Text size="md" fw={600}>
-                              Diskon:
-                            </Text>
-                            <Text size="sm" fw={300}>
-                              {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(Number(voucher.voucher_amount) || 0)}
-                            </Text>
-                          </Flex>
-                        </Stack>
-                        {index < data?.has_transaction_voucher.length - 1 && <Divider />}
-                      </React.Fragment>
-                    ))}
-                  </SimpleGrid>
-                </Card>
-              </Stack>
-            </Flex>
-
-            <Flex gap={20} className={`[&>*]:flex-grow`} wrap="wrap-reverse">
-              <Stack gap={10} className={`lg:max-w-[630px] shrink-0`}>
-                <Text fw={600} c="gray.8">
-                  Informasi Tiket
-                </Text>
-                <Card withBorder>
-                  <SimpleGrid className={`!grid-cols-1 !gap-[15px]`}>
-                    {data?.tickets.map((ticket, index) => (
-                      <Stack key={index} gap={0}>
-                        <Text size="md" fw={600}>
-                          <FontAwesomeIcon icon={faTicket} className="text-primary" /> {ticket.has_event_ticket.name}
-                        </Text>
-                        <Text size="sm" fw={300}>
-                          {ticket.qty_ticket} Tiket x {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(ticket.has_event_ticket.price ?? 0)}
-                        </Text>
-                      </Stack>
-                    ))}
-                  </SimpleGrid>
-                </Card>
-              </Stack>
-            </Flex>
-
-            <Flex gap={20} className={`[&>*]:flex-grow`} wrap="wrap-reverse">
-              <Stack gap={10} className={`lg:max-w-[630px] shrink-0`}>
-                <Text fw={600} c="gray.8">
-                  Informasi Merchandise
-                </Text>
-                <Card withBorder>
-                  <SimpleGrid className={`!grid-cols-1 !gap-[15px]`}>
-                    {data?.transaction_merches && data.transaction_merches.length > 0 ? (
-                      data.transaction_merches.map((merch, index) => (
-                        <Stack key={index} gap={0}>
-                          <Flex align="center" gap={10}>
-                            <Icon
-                              icon="tabler:shirt"
-                              className={`text-primary-base text-[20px] shrink-0`}
-                            />
-                            <Stack gap={0} className="flex-grow">
-                              <Text size="md" fw={600}>
-                                {merch.noted || "Merchandise"}
-                              </Text>
-                              <Text size="sm" fw={300}>
-                                {merch.qty} Item × {new Intl.NumberFormat("id-ID", {
-                                  style: "currency",
-                                  currency: "IDR"
-                                }).format(Number(merch.price) || 0)}
-                              </Text>
-                              {merch.noted && (
-                                <Text size="xs" fw={300} c="gray" mt={5}>
-                                  Catatan: {merch.noted}
-                                </Text>
-                              )}
-                            </Stack>
-                            <Text size="md" fw={600}>
-                              {new Intl.NumberFormat("id-ID", {
-                                style: "currency",
-                                currency: "IDR"
-                              }).format(Number(merch.subtotal) || 0)}
-                            </Text>
-                          </Flex>
-                        </Stack>
-                      ))
-                    ) : (
-                      <Flex align="center" gap={10} py={10}>
-                        <Icon
-                          icon="tabler:shirt-off"
-                          className={`text-gray-400 text-[20px]`}
-                        />
-                        <Text size="sm" c="gray">
-                          Tidak ada merchandise yang dibeli
-                        </Text>
+          {/* Details & Summary 2 Columns */}
+          <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg" className="px-6 md:px-10 mt-8 mb-10">
+            {/* Detail Pemesanan Card */}
+            <Card shadow="none" radius="md" p="xl" style={cardShadowStyle}>
+              <Title order={6} className="text-[#002D84] font-bold mb-6" style={{ fontSize: '11px' }}>Detail Pemesanan</Title>
+              <div className="space-y-0">
+                {[
+                  { icon: "solar:bill-list-bold", label: "Nomor Tiket", value: data?.invoice_no || "KL-1749624050YGBAHJ7", mono: true },
+                  { icon: "solar:flag-bold", label: "Event Type", value: data?.has_event?.starting_price === 0 ? "Free Event" : "Paid Event" },
+                  { icon: "solar:map-point-bold", label: "Location", value: data?.has_event?.location_name || "Gelora Bung Karno" },
+                  { icon: "solar:calendar-date-bold", label: "Event Date", value: data?.has_event?.start_date ? moment(data.has_event.start_date).format("DD MMMM YYYY") : "11 May 2026" },
+                ].map((item, idx) => (
+                  <div key={idx} className="py-4 border-b last:border-0" style={{ borderColor: borderLineColor }}>
+                    <Flex justify="space-between" align="center">
+                      <Flex align="center" gap="md">
+                        <div className="bg-blue-50 p-1.5 rounded-full"><Icon icon={item.icon} className="text-[#002D84] text-sm" /></div>
+                        <Text size="xs" fw={500} className="text-gray-400" style={{ fontSize: '9px' }}>{item.label}</Text>
                       </Flex>
-                    )}
-                  </SimpleGrid>
-                </Card>
-              </Stack>
-            </Flex>
+                      <Text size="xs" fw={600} className={`text-gray-800 ${item.mono ? 'font-mono' : ''}`}>{item.value}</Text>
+                    </Flex>
+                  </div>
+                ))}
+              </div>
+            </Card>
 
-            <Stack>
-              <Text fw={600} c="gray.8">
-                Syarat dan Ketentuan
-              </Text>
-              <Box px={20}>
-                <div dangerouslySetInnerHTML={{ __html: data?.has_event.term_condition ?? "" }}></div>
+            {/* Ringkasan Pembayaran Card */}
+            <Card shadow="none" radius="md" p="xl" style={cardShadowStyle}>
+              <Title order={6} className="text-[#002D84] font-bold mb-6" style={{ fontSize: '11px' }}>Ringkasan Pembayaran</Title>
+              <div className="space-y-5">
+                <Flex justify="space-between" align="center">
+                  <Text size="xs" fw={500} className="text-gray-500">Tiket ({data?.total_qty || 2})</Text>
+                  <Text fw={600} size="xs" className="text-gray-800"><NumberFormatter value={data?.total_price || 500000} prefix="Rp " /></Text>
+                </Flex>
+                <Flex justify="space-between" align="center">
+                  <Text size="xs" fw={500} className="text-gray-500">Merchandise</Text>
+                  <Text fw={600} size="xs" className="text-gray-800"><NumberFormatter value={data?.transaction_merches?.reduce((acc, m) => acc + (Number(m.subtotal) || 0), 0) || 50000} prefix="Rp " /></Text>
+                </Flex>
+                <Flex justify="space-between" align="center">
+                  <Text size="xs" fw={500} className="text-gray-500">Biaya Layanan</Text>
+                  <Text fw={600} size="xs" className="text-gray-800">Rp 0</Text>
+                </Flex>
+                
+                <Divider my="sm" style={{ borderColor: borderLineColor }} />
+                
+                <Flex justify="space-between" align="center">
+                  <Text size="sm" fw={800} className="text-[#002D84] uppercase tracking-widest">Total</Text>
+                  <Title order={3} className="text-[#002D84]" style={{ fontSize: '24px' }}>
+                    <NumberFormatter value={data?.grandtotal || 510000} prefix="Rp " />
+                  </Title>
+                </Flex>
+
+                <Button 
+                  component={Link} 
+                  href={`${config.wsUrl}transaction-document/${invoice}`} 
+                  target="_blank" 
+                  fullWidth 
+                  size="xl"
+                  radius="md"
+                  className="mt-2 shadow-lg hover:shadow-xl transition-all"
+                  style={{ backgroundColor: '#002D84', height: '65px' }}
+                  leftSection={<Icon icon="solar:download-bold" className="text-2xl" />}
+                >
+                  <Stack gap={0} align="start">
+                    <Text fw={800} size="md" className="tracking-widest">UNDUH TIKET</Text>
+                    <Text size="9px" fw={500} className="opacity-60">Download PDF</Text>
+                  </Stack>
+                </Button>
+              </div>
+            </Card>
+          </SimpleGrid>
+
+          {/* Terms and Conditions */}
+          <div className="px-6 md:px-10 mb-12">
+            <Card shadow="none" radius="md" p="xl" style={cardShadowStyle}>
+              <Title order={6} className="text-[#002D84] font-bold mb-6" style={{ fontSize: '11px' }}>Syarat dan Ketentuan</Title>
+              <Box className="text-[11px] text-gray-500 leading-relaxed space-y-3 prose prose-sm max-w-none">
+                <div dangerouslySetInnerHTML={{ __html: data?.has_event?.term_condition || `
+                  1. Tiket tidak dapat dipindahtangankan.<br/>
+                  2. Dilarang membawa senjata tajam.<br/>
+                  3. Wajib membawa e-TTP asli.
+                ` }} />
               </Box>
-            </Stack>
-          </Stack>
-        </Card>
+            </Card>
+          </div>
+
+          {/* Footer */}
+          <div className="bg-white py-12">
+             <Stack align="center" gap="lg">
+                <Text fw={700} size="xs" className="text-[#002D84] uppercase tracking-[0.4em]">Butuh Bantuan?</Text>
+                <Flex gap="xl" wrap="wrap" justify="center" align="center">
+                  <Flex align="center" gap={10}>
+                    <Icon icon="solar:letter-bold" className="text-blue-600 text-lg" />
+                    <Link href="mailto:support@kolektix.com" className="text-gray-600 hover:text-blue-600 hover:underline text-[11px] font-medium">support@kolektix.com</Link>
+                  </Flex>
+                  <div className="hidden md:block h-4 w-[1px] bg-gray-200"></div>
+                  <Flex align="center" gap={10}>
+                    <Icon icon="solar:global-bold" className="text-blue-600 text-lg" />
+                    <Link href="https://www.kolektix.com" className="text-gray-600 hover:text-blue-600 hover:underline text-[11px] font-medium">www.kolektix.com</Link>
+                  </Flex>
+                </Flex>
+             </Stack>
+          </div>
+        </Paper>
       </Container>
     </div>
   );

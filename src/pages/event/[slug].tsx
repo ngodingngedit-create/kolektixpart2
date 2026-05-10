@@ -1667,108 +1667,9 @@ const EventDetails = () => {
   const [submittedPayload, setSubmittedPayload] = useState<any>(null);
 
   // Data Dummy untuk Deskripsi dan FAQ
-  const dummyDescription = `
-    <div class="flex flex-col gap-6">
-      <div class="w-full h-48 rounded-2xl overflow-hidden shadow-md">
-        <img src="/car_reunion_event_1777754232642.png" alt="Event Reuni Mobil" class="w-full h-full object-cover" />
-      </div>
-      <div class="flex flex-col gap-4">
-        <h4 class="text-lg font-black text-gray-900 leading-tight">Ajang Silaturahmi Pecinta Otomotif Terbesar</h4>
-        <p class="text-gray-600 leading-relaxed">
-          <strong>Event Reuni Mobil</strong> adalah ajang pertemuan berkala bagi para pecinta dan pemilik mobil untuk berbagi informasi, pengalaman, serta mempererat tali persaudaraan antar sesama komunitas.
-        </p>
-        <div class="grid grid-cols-1 gap-3 mt-2">
-          <div class="flex items-center gap-3">
-            <span class="w-2 h-2 rounded-full bg-[#194E9E]"></span>
-            <span class="text-[13px] font-bold text-gray-700">Pameran Mobil Modifikasi & Klasik</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="w-2 h-2 rounded-full bg-[#194E9E]"></span>
-            <span class="text-[13px] font-bold text-gray-700">Coaching Clinic dengan Pakar Otomotif</span>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="w-2 h-2 rounded-full bg-[#194E9E]"></span>
-            <span class="text-[13px] font-bold text-gray-700">Sesi Tanya Jawab Eksklusif</span>
-          </div>
-        </div>
-        <p class="text-gray-600 leading-relaxed mt-2">
-          Bergabunglah bersama kami untuk merayakan semangat otomotif dalam suasana yang akrab dan meriah. Berbagai hadiah menarik juga telah disiapkan untuk para peserta kegiatan!
-        </p>
-      </div>
-    </div>
-  `;
+  const dummyDescription = `<h4 style="margin-bottom: 12px;">Ajang Silaturahmi Pecinta Otomotif Terbesar</h4><p style="margin-bottom: 16px;"><strong>Event Reuni Mobil</strong> adalah ajang pertemuan berkala bagi para pecinta dan pemilik mobil untuk berbagi informasi, pengalaman, serta mempererat tali persaudaraan antar sesama komunitas.</p><p>Bergabunglah bersama kami untuk merayakan semangat otomotif dalam suasana yang akrab dan meriah. Berbagai hadiah menarik juga telah disiapkan untuk para peserta kegiatan!</p>`;
 
-  const dummyFaq = `
-    <div class="flex flex-col gap-8">
-      <!-- House Rules Container -->
-      <div class="flex flex-col gap-4">
-        <div class="flex items-center gap-3 px-1">
-          <div class="w-1.5 h-6 bg-red-500 rounded-full"></div>
-          <span class="text-[12px] font-black text-gray-900 uppercase tracking-widest">Larangan Utama</span>
-        </div>
-
-        <div class="grid grid-cols-1 gap-4">
-          <!-- Item: Senjata Tajam -->
-          <div class="group flex items-center gap-5 p-5 bg-white border border-red-100 rounded-[28px] shadow-[0_8px_30px_rgb(255,241,241,0.5)] transition-all hover:shadow-[0_8px_30px_rgb(255,241,241,0.8)]">
-            <div class="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center shrink-0 border border-red-100 group-hover:scale-105 transition-transform">
-              <span class="text-2xl">⚔️</span>
-            </div>
-            <div class="flex flex-col gap-1">
-              <span class="text-[14px] font-black text-gray-900 leading-none">DILARANG BAWA SENJATA</span>
-              <span class="text-[11px] font-bold text-gray-500 leading-relaxed">Keamanan adalah prioritas. Jangan membawa senjata tajam atau benda berbahaya.</span>
-            </div>
-          </div>
-
-          <!-- Item: Makanan Luar -->
-          <div class="group flex items-center gap-5 p-5 bg-white border border-red-100 rounded-[28px] shadow-[0_8px_30px_rgb(255,241,241,0.5)] transition-all hover:shadow-[0_8px_30px_rgb(255,241,241,0.8)]">
-            <div class="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center shrink-0 border border-red-100 group-hover:scale-105 transition-transform">
-              <span class="text-2xl">🥤</span>
-            </div>
-            <div class="flex flex-col gap-1">
-              <span class="text-[14px] font-black text-gray-900 leading-none">TANPA MAKANAN LUAR</span>
-              <span class="text-[11px] font-bold text-gray-500 leading-relaxed">Nikmati beragam hidangan yang telah tersedia secara resmi di area Food & Beverage venue.</span>
-            </div>
-          </div>
-
-          <!-- Item: Kursi Pribadi -->
-          <div class="group flex items-center gap-5 p-5 bg-white border border-red-100 rounded-[28px] shadow-[0_8px_30px_rgb(255,241,241,0.5)] transition-all hover:shadow-[0_8px_30px_rgb(255,241,241,0.8)]">
-            <div class="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center shrink-0 border border-red-100 group-hover:scale-105 transition-transform">
-              <span class="text-2xl">🚫🪑</span>
-            </div>
-            <div class="flex flex-col gap-1">
-              <span class="text-[14px] font-black text-gray-900 leading-none">KURSI SUDAH TERSEDIA</span>
-              <span class="text-[11px] font-bold text-gray-500 leading-relaxed">Fasilitas duduk sudah sangat memadai. Mohon tidak membawa kursi lipat atau kursi pribadi.</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="h-px bg-gray-100 w-full"></div>
-
-      <!-- General Guidelines -->
-      <div class="flex flex-col gap-4">
-        <div class="flex items-center gap-3 px-1">
-          <div class="w-1.5 h-6 bg-blue-500 rounded-full"></div>
-          <span class="text-[12px] font-black text-gray-900 uppercase tracking-widest">Panduan Umum</span>
-        </div>
-        
-        <div class="flex flex-col gap-3">
-          <div class="flex gap-4 p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
-            <span class="flex-shrink-0 w-6 h-6 rounded-lg bg-white shadow-sm flex items-center justify-center text-[10px] font-black text-gray-400">01</span>
-            <p class="text-[12px] font-bold text-gray-600 leading-relaxed m-0">Patuhi segala aturan lalu lintas saat menuju dan meninggalkan lokasi acara demi keselamatan bersama.</p>
-          </div>
-          <div class="flex gap-4 p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
-            <span class="flex-shrink-0 w-6 h-6 rounded-lg bg-white shadow-sm flex items-center justify-center text-[10px] font-black text-gray-400">02</span>
-            <p class="text-[12px] font-bold text-gray-600 leading-relaxed m-0">Dilarang melakukan atraksi berbahaya atau balap liar di area sekitar venue untuk menjaga ketertiban.</p>
-          </div>
-          <div class="flex gap-4 p-4 bg-gray-50/50 rounded-2xl border border-gray-100">
-            <span class="flex-shrink-0 w-6 h-6 rounded-lg bg-white shadow-sm flex items-center justify-center text-[10px] font-black text-gray-400">03</span>
-            <p class="text-[12px] font-bold text-gray-600 leading-relaxed m-0">Panitia tidak bertanggung jawab atas kehilangan barang pribadi; harap amankan barang berharga Anda.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
+  const dummyFaq = `<div style="margin-bottom: 16px;"><p style="margin-bottom: 0px;"><strong>LARANGAN UTAMA</strong></p><p style="margin-bottom: 0px; margin-top: 4px;">- DILARANG BAWA SENJATA: Keamanan adalah prioritas. Jangan membawa senjata tajam atau benda berbahaya.<br/>- TANPA MAKANAN LUAR: Nikmati beragam hidangan yang telah tersedia secara resmi di area Food & Beverage venue.<br/>- KURSI SUDAH TERSEDIA: Fasilitas duduk sudah sangat memadai. Mohon tidak membawa kursi lipat atau kursi pribadi.</p></div><div><p style="margin-bottom: 0px;"><strong>PANDUAN UMUM</strong></p><p style="margin-bottom: 0px; margin-top: 4px;">- Patuhi segala aturan lalu lintas saat menuju dan meninggalkan lokasi acara demi keselamatan bersama.<br/>- Dilarang melakukan atraksi berbahaya atau balap liar di area sekitar venue untuk menjaga ketertiban.<br/>- Panitia tidak bertanggung jawab atas kehilangan barang pribadi; harap amankan barang berharga Anda.</p></div>`;
 
   const sectionRefs = {
     info: useRef<HTMLDivElement>(null),
@@ -2763,9 +2664,9 @@ const EventDetails = () => {
               case undefined:
                 // Halaman detail event
                 return (
-                  <>
+                  <React.Fragment>
                     {width && width > 768 ? (
-                      <>
+                      <React.Fragment>
                         <div className={`${menu === 2 && detail?.seatmap && detail.seatmap.length > 0 ? "pt-12 pb-4" : "pt-20 pb-3"} bg-primary-dark transition-all duration-500`}>
                           <div className="w-full mx-auto max-w-[1250px]">
                             <Flex justify="space-between" align="end" className="px-4 md:px-6">
@@ -2952,28 +2853,29 @@ const EventDetails = () => {
                           {menu === 1 ? (
                             <div className="max-w-[1250px] mx-auto w-full flex flex-col gap-10 px-4 md:px-6">
                               {/* SECTION DESKRIPSI */}
-                              <div ref={sectionRefs.info} className="w-full">
+                              <div ref={sectionRefs.info} className="w-full mb-8">
                                 <div className="flex items-center gap-2.5 mb-4 px-1">
                                   <div className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-[10px] md:rounded-xl bg-[#194e9e] text-white shrink-0">
                                     <Icon icon="solar:document-text-bold" className="text-white text-[13px] md:text-[14px]" />
                                   </div>
                                   <h3 className="text-[14px] md:text-[16px] font-bold text-gray-900 tracking-tight">{t("description")}</h3>
                                 </div>
-                                <div className="bg-white rounded-[32px] p-6 md:p-10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] border border-[#d1d1d1]">
-                                  <div className="text-gray-600 leading-relaxed whitespace-pre-line text-sm md:text-base" dangerouslySetInnerHTML={{ __html: detail?.description && detail.description.length > 20 ? detail.description : dummyDescription }} />
+                                <div className="w-full border border-[#e2e8f0] rounded-[8px] p-5 md:p-6 shadow-sm bg-white">
+                                  <div className="text-gray-600 leading-normal text-sm md:text-base whitespace-pre-line prose prose-blue max-w-none prose-p:my-2 prose-headings:font-bold prose-headings:text-gray-800 prose-headings:mb-2 prose-headings:mt-4"
+                                    dangerouslySetInnerHTML={{ __html: detail?.description && detail.description.length > 20 ? detail.description : dummyDescription }}></div>
                                 </div>
                               </div>
 
                               {/* SECTION LOKASI */}
                               <div ref={sectionRefs.lokasi} className="w-full">
                                 <div className="flex items-center gap-2.5 mb-4 px-1">
-                                  <div className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-[10px] md:rounded-xl bg-[#194e9e] text-white shrink-0">
+                                  <div className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-[8px] md:rounded-xl bg-[#194e9e] text-white shrink-0">
                                     <Icon icon="solar:map-point-bold" className="text-white text-[13px] md:text-[14px]" />
                                   </div>
                                   <h3 className="text-[14px] md:text-[16px] font-bold text-gray-900 tracking-tight uppercase">Lokasi & Pemandu Arah</h3>
                                 </div>
-                                <div className="bg-white rounded-[32px] p-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] border border-[#d1d1d1] flex flex-col md:flex-row gap-3 mb-8">
-                                  <div className="flex-[2] min-h-[260px] md:min-h-[450px] rounded-[24px] overflow-hidden">
+                                <div className="bg-white rounded-[8px] p-2 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] border border-[#e2e8f0] flex flex-col md:flex-row gap-3 mb-8">
+                                  <div className="flex-[2] min-h-[260px] md:min-h-[450px] rounded-[8px] overflow-hidden">
                                     <iframe
                                       src={
                                         detail?.location_map?.startsWith('http') ? detail?.location_map :
@@ -3006,7 +2908,7 @@ const EventDetails = () => {
                                           { name: "Busway / JakLingko", dist: "450m", type: "Halte Terdekat", icon: "solar:bus-bold", color: "text-green-500", bg: "bg-green-50" },
                                           { name: "Kendaraan Pribadi", dist: "Lihat Rute", type: "Akses Jalan & Tol", icon: "mdi:car", color: "text-orange-500", bg: "bg-orange-50" },
                                         ].map((transport, i) => (
-                                          <div key={i} className="flex flex-row items-center justify-between gap-3 p-3 md:p-4 rounded-xl bg-gray-50/50 hover:bg-gray-100/80 transition-all border border-[#d1d1d1] hover:border-[#999999]">
+                                          <div key={i} className="flex flex-row items-center justify-between gap-3 p-3 md:p-4 rounded-xl bg-gray-50/50 hover:bg-gray-100/80 transition-all border border-[#e2e8f0] hover:border-[#cbd5e1]">
                                             <div className="flex items-center gap-3 flex-1 min-w-0">
                                               <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl flex items-center justify-center shrink-0 ${transport.bg}`}>
                                                 <Icon icon={transport.icon} className={`text-[20px] md:text-[24px] ${transport.color}`} />
@@ -3031,17 +2933,25 @@ const EventDetails = () => {
                                 </div>
                               </div>
 
-                              {/* SECTION FAQ */}
-
-                              <div ref={sectionRefs.faq} className="w-full">
-                                <div className="flex items-center gap-2.5 mb-4 px-1">
-                                  <div className="flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-[10px] md:rounded-xl bg-[#194e9e] text-white shrink-0">
-                                    <Icon icon="solar:question-square-bold" className="text-white text-[13px] md:text-[14px]" />
-                                  </div>
-                                  <h3 className="text-[14px] md:text-[16px] font-bold text-gray-900 tracking-tight uppercase">FaQ / {t("termAndCondition")}</h3>
+                              {/* SECTION FAQ DESKTOP */}
+                              <div ref={sectionRefs.faq} className="w-full mb-8">
+                                <div className="flex items-center gap-3 mb-6 px-1">
+                                  <Icon icon="solar:question-square-bold" className="text-[#194e9e] text-[20px] md:text-[24px]" />
+                                  <h3 className="text-[15px] md:text-[18px] font-extrabold text-gray-900 tracking-tight uppercase">FaQ / {t("termAndCondition")}</h3>
                                 </div>
-                                <div className="bg-white rounded-[32px] p-6 md:p-10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.08)] border border-[#d1d1d1] min-h-[350px] pb-20">
-                                  <div className="text-gray-600 leading-relaxed whitespace-pre-line text-sm md:text-base" dangerouslySetInnerHTML={{ __html: detail?.term_condition && detail.term_condition.length > 20 ? detail.term_condition : dummyFaq }} />
+
+                                <div className="w-full border border-[#e2e8f0] rounded-[8px] p-5 md:p-6 shadow-sm bg-white">
+                                  <div className="flex flex-col gap-4">
+                                    <div className="text-gray-600 leading-normal text-sm md:text-base max-w-none"
+                                      dangerouslySetInnerHTML={{ __html: detail?.term_condition && detail.term_condition.length > 20 ? detail.term_condition : dummyFaq }}></div>
+
+                                    <div className="flex flex-col gap-0.5">
+                                      <span className="text-[14px] md:text-[15px] font-bold text-gray-900">Kebijakan Pembatalan</span>
+                                      <p className="text-[13px] md:text-[14px] text-gray-600 leading-normal max-w-2xl m-0">
+                                        Tiket yang sudah dibeli tidak dapat ditukar, dikembalikan, atau diuangkan kembali (Non-Refundable).
+                                      </p>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -3077,9 +2987,9 @@ const EventDetails = () => {
                             </div>
                           )}
                         </div>
-                      </>
+                      </React.Fragment>
                     ) : (
-                      <>
+                      <React.Fragment>
                         <Box className={`!relative`}>
                           {detail && detail.image && <Images type="event" path={detail?.image} width={1000} height={1000} alt="banner" className="w-full rounded-3xl p-4 mt-16 lg:mt-0" />}
 
@@ -3231,64 +3141,18 @@ const EventDetails = () => {
 
                         <div className="w-full text-dark flex flex-col gap-6 pt-5 pb-60 bg-white">
                           {menu === 1 ? (
-                            <>
+                            <React.Fragment>
                               {/* MOBILE SECTION DESKRIPSI */}
-                              <div ref={sectionRefs.info} className="w-full">
-                                <div className="flex items-center gap-2 mb-3">
-                                  <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-[#194e9e] text-white">
-                                    <Icon icon="solar:document-text-bold" className="text-white text-[12px]" />
-                                  </div>
-                                  <h3 className="text-[13px] font-bold text-gray-900 uppercase tracking-tight">{t("description")}</h3>
+                              <div ref={sectionRefs.info} className="mx-5 mb-8">
+                                <div className="flex items-center gap-2.5 mb-4">
+                                  <Icon icon="solar:document-text-bold" className="text-[#194e9e] text-[20px]" />
+                                  <h3 className="text-[14px] font-extrabold text-gray-900 uppercase tracking-tight">{t("description")}</h3>
                                 </div>
-                                <div className="bg-white rounded-[24px] p-0 shadow-sm border border-[#e2e8f0] overflow-hidden">
-                                  {/* Quick Info Grid */}
-                                  <div className="grid grid-cols-2 divide-x divide-gray-100 border-b border-gray-100 bg-gray-50/30">
-                                    <div className="p-4 flex flex-col gap-1">
-                                      <span className="text-[9px] font-bold text-[#94a3b8] uppercase tracking-widest leading-none">Mulai</span>
-                                      <span className="text-[12px] font-black text-[#1e293b]">{moment(detail?.start_date).format("DD MMM YYYY")}</span>
-                                    </div>
-                                    <div className="p-4 flex flex-col gap-1">
-                                      <span className="text-[9px] font-bold text-[#94a3b8] uppercase tracking-widest leading-none">Pukul</span>
-                                      <span className="text-[12px] font-black text-[#1e293b]">{moment(detail?.start_date).format("HH:mm")} WIB</span>
-                                    </div>
-                                  </div>
 
-                                  {/* Content Area */}
-                                  <div className="p-6">
-                                    <div className="flex flex-col gap-6">
-                                      {/* Event Highlights List */}
-                                      <div className="grid grid-cols-1 gap-4">
-                                        <div className="flex items-start gap-4 p-3.5 bg-blue-50/30 rounded-2xl border border-blue-100/50">
-                                          <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0">
-                                            <Icon icon="solar:star-bold-duotone" className="text-[#194E9E] text-xl" />
-                                          </div>
-                                          <div className="flex flex-col gap-0.5">
-                                            <span className="text-[12px] font-black text-[#1e293b]">Premium Experience</span>
-                                            <span className="text-[10px] font-bold text-gray-500 leading-relaxed">Nikmati fasilitas terbaik dan kenyamanan maksimal selama acara berlangsung.</span>
-                                          </div>
-                                        </div>
-                                        <div className="flex items-start gap-4 p-3.5 bg-green-50/30 rounded-2xl border border-green-100/50">
-                                          <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center shrink-0">
-                                            <Icon icon="solar:ticket-sale-bold-duotone" className="text-green-600 text-xl" />
-                                          </div>
-                                          <div className="flex flex-col gap-0.5">
-                                            <span className="text-[12px] font-black text-[#1e293b]">Instan E-Ticket</span>
-                                            <span className="text-[10px] font-bold text-gray-500 leading-relaxed">Tiket langsung dikirim ke email Anda setelah pembayaran berhasil.</span>
-                                          </div>
-                                        </div>
-                                      </div>
-
-                                      <div className="h-px bg-gray-100 w-full" />
-
-                                      {/* Main Text Content */}
-                                      <div className="flex flex-col gap-2">
-                                        <span className="text-[10px] font-black text-[#194E9E] uppercase tracking-[0.2em]">Tentang Acara</span>
-                                        <div className="text-gray-600 leading-relaxed text-[13px] font-medium whitespace-pre-line prose prose-sm max-w-none"
-                                          dangerouslySetInnerHTML={{ __html: detail?.description && detail.description.length > 20 ? detail.description : dummyDescription }}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
+                                <div className="border border-[#e2e8f0] rounded-[8px] p-4 shadow-sm bg-white">
+                                  <div className="text-gray-600 leading-normal text-[13px] font-medium whitespace-pre-line prose prose-sm max-w-none prose-headings:font-bold prose-headings:text-gray-800"
+                                    dangerouslySetInnerHTML={{ __html: detail?.description && detail.description.length > 20 ? detail.description : dummyDescription }}
+                                  />
                                 </div>
                               </div>
 
@@ -3334,7 +3198,7 @@ const EventDetails = () => {
                                           { name: "Busway / JakLingko", dist: "450m", type: "Halte Terdekat", icon: "solar:bus-bold", color: "text-green-500", bg: "bg-green-50" },
                                           { name: "Kendaraan Pribadi", dist: "Lihat Rute", type: "Akses Jalan & Tol", icon: "mdi:car", color: "text-orange-500", bg: "bg-orange-50" },
                                         ].map((transport, i) => (
-                                          <div key={i} className="flex flex-row items-center justify-between gap-2 p-2.5 rounded-xl bg-gray-50/50 hover:bg-gray-100/80 transition-all border border-[#d1d1d1]">
+                                          <div key={i} className="flex flex-row items-center justify-between gap-2 p-2.5 rounded-xl bg-gray-50/50 hover:bg-gray-100/80 transition-all border border-[#e2e8f0]">
                                             <div className="flex items-center gap-2.5 flex-1 min-w-0">
                                               <div className={`w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0 ${transport.bg}`}>
                                                 <Icon icon={transport.icon} className={`text-[18px] ${transport.color}`} />
@@ -3359,39 +3223,28 @@ const EventDetails = () => {
                               </div>
 
                               {/* MOBILE SECTION FAQ */}
-                              <div ref={sectionRefs.faq} className="w-full">
-                                <div className="flex items-center gap-2 mb-3">
-                                  <div className="flex items-center justify-center w-6 h-6 rounded-lg bg-[#194e9e] text-white">
-                                    <Icon icon="solar:question-square-bold" className="text-white text-[12px]" />
-                                  </div>
-                                  <h3 className="text-[13px] font-bold text-gray-900 uppercase tracking-tight">FaQ / {t("termAndCondition")}</h3>
+                              <div ref={sectionRefs.faq} className="mx-5 mb-20">
+                                <div className="flex items-center gap-2.5 mb-4">
+                                  <Icon icon="solar:question-square-bold" className="text-[#194e9e] text-[20px]" />
+                                  <h3 className="text-[14px] font-extrabold text-gray-900 uppercase tracking-tight">S&K / FaQ</h3>
                                 </div>
-                                <div className="bg-white rounded-[24px] p-0 shadow-sm border border-[#e2e8f0] overflow-hidden mb-20">
-                                  {/* Policy Header */}
-                                  <div className="px-6 py-4 bg-gray-50/50 border-b border-gray-100 flex items-center gap-3">
-                                    <Icon icon="solar:shield-warning-bold-duotone" className="text-orange-500 text-xl" />
-                                    <span className="text-[12px] font-bold text-gray-900 uppercase tracking-tight">Kebijakan Tiket</span>
-                                  </div>
 
-                                  <div className="p-6">
-                                    <div className="text-gray-600 leading-relaxed text-[13px] whitespace-pre-line prose prose-sm max-w-none"
+                                <div className="border border-[#e2e8f0] rounded-[8px] p-4 shadow-sm bg-white">
+                                  <div className="flex flex-col gap-4">
+                                    <div className="text-gray-600 leading-normal text-[13px] max-w-none"
                                       dangerouslySetInnerHTML={{ __html: detail?.term_condition && detail.term_condition.length > 20 ? detail.term_condition : dummyFaq }}
                                     />
 
-                                    {/* Refund Policy Note */}
-                                    <div className="mt-8 p-4 bg-red-50/50 border border-red-100 rounded-2xl flex items-start gap-3">
-                                      <Icon icon="solar:info-circle-bold" className="text-red-600 text-lg mt-0.5" />
-                                      <div className="flex flex-col gap-0.5">
-                                        <span className="text-[11px] font-bold text-red-700">Kebijakan Pembatalan</span>
-                                        <span className="text-[10px] font-medium text-red-600/80 leading-relaxed">
-                                          Tiket yang sudah dibeli tidak dapat ditukar, dikembalikan, atau diuangkan kembali (Non-Refundable).
-                                        </span>
-                                      </div>
+                                    <div className="flex flex-col gap-0.5">
+                                      <span className="text-[13px] font-bold text-gray-900">Kebijakan Pembatalan</span>
+                                      <p className="text-[13px] text-gray-600 leading-normal m-0">
+                                        Tiket yang sudah dibeli tidak dapat ditukar atau dikembalikan (Non-Refundable).
+                                      </p>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </>
+                            </React.Fragment>
                           ) : (
                             /* MOBILE FULL TICKET PAGE VIEW */
                             <div className="w-full flex flex-col gap-6 py-2 animate-fade-in">
@@ -3418,9 +3271,9 @@ const EventDetails = () => {
                             </div>
                           )}
                         </div>
-                      </>
+                      </React.Fragment>
                     )}
-                  </>
+                  </React.Fragment>
                 );
 
               case 33:

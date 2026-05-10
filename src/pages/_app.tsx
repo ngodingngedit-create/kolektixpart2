@@ -479,6 +479,7 @@
 import '@/styles/globals.css';
 import { Inter } from 'next/font/google';
 import type { AppProps } from 'next/app';
+import Link from 'next/link';
 import { NextUIProvider } from '@nextui-org/react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/ReactToastify.min.css';
@@ -494,6 +495,7 @@ import NavbarComponent from '@/components/NavbarComponent';
 import NavbarBottom from '@/components/NavbarBottom';
 import { useRouter } from 'next/router';
 import { Input, MantineProvider, MantineTheme, TextInput, Select, Textarea, TagsInput, ModalProps, NumberFormatter, NumberInput, Table, createTheme, Button, ActionIcon, Tooltip, ColorInput } from '@mantine/core';
+import { Icon } from "@iconify/react/dist/iconify.js";
 
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
@@ -651,15 +653,19 @@ const theme = createTheme({
 type Context = {
   cartCount: number;
   setCartCount?: Dispatch<SetStateAction<number>>;
+  isSidebarOpen: boolean;
+  setIsSidebarOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const AppMainContext = createContext<Context>({
-  cartCount: 0
+  cartCount: 0,
+  isSidebarOpen: false
 });
 
 function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const [cartCount, setCartCount] = useState(0);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   useEffect(() => {
@@ -695,8 +701,8 @@ function App({ Component, pageProps }: AppProps) {
     
     const isDashboard = pathname.includes('/dashboard/');
     
-    // Hanya tampilkan di mobile dan bukan halaman yang harus di-hide
-    return isMobile && !shouldHide && !isDashboard;
+    // Tampilkan di semua device, tapi hide di dashboard atau halaman tertentu
+    return !shouldHide && !isDashboard;
   };
 
   return (
@@ -717,7 +723,7 @@ function App({ Component, pageProps }: AppProps) {
             ? (
               <Component {...pageProps} />
             ) : (
-              <AppMainContext.Provider value={{ cartCount, setCartCount }}>
+              <AppMainContext.Provider value={{ cartCount, setCartCount, isSidebarOpen, setIsSidebarOpen }}>
                 <NavbarComponent>
                   <Component {...pageProps} />
                 </NavbarComponent>
@@ -725,6 +731,26 @@ function App({ Component, pageProps }: AppProps) {
                 {shouldShowNavbarBottom() && <NavbarBottom />}
               </AppMainContext.Provider>
             )}
+            <Button 
+              component={Link} 
+              href="/success/SAMPLE-INV" 
+              variant="filled" 
+              color="orange" 
+              radius="xl" 
+              size="md"
+              style={{ 
+                position: 'fixed', 
+                bottom: 100, 
+                right: 20, 
+                zIndex: 9999, 
+                boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                transition: 'all 0.2s ease'
+              }}
+              leftSection={<Icon icon="solar:bill-list-bold" />}
+              className="hover:scale-105"
+            >
+              Lihat Tiket
+            </Button>
           </ModalsProvider>
         </MantineProvider>
       </NextUIProvider>

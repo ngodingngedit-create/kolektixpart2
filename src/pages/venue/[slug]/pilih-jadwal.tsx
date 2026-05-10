@@ -1006,7 +1006,7 @@ const PilihJadwal = () => {
                         </div> {/* End Left Column Parent Card */}
 
                         {/* RIGHT COLUMN: Summary Card */}
-                        <div className="hidden md:block flex-1 sticky top-[100px]">
+                        <div className="hidden md:block flex-1 sticky top-[8px]">
                             <div ref={sidebarRef} className="bg-white rounded-2xl border border-[rgb(224,224,224)] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
                                 <div className="px-6 py-5 border-b border-[rgb(224,224,224)] flex items-center justify-between bg-[#fcfdff]">
                                     <h3 className="text-[11px] font-bold text-[#000000] uppercase tracking-widest">Jadwal Veneu Terpilih</h3>

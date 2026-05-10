@@ -75,12 +75,12 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction, paymentList, eve
     if (transaction.payment_method?.payment_name) {
       return transaction.payment_method.payment_name;
     }
-    
+
     if (transaction.payment_method_id) {
       const method = paymentList.find((m) => m.id === transaction.payment_method_id);
       return method ? method.payment_name : "Unknown";
     }
-    
+
     return "Unknown";
   };
 
@@ -98,7 +98,7 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction, paymentList, eve
           return { text: transaction.payment_status, color: "gray" };
       }
     }
-    
+
     switch (transaction.transaction_status_id) {
       case 1:
         return { text: "Pending", color: "yellow" };
@@ -118,7 +118,7 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction, paymentList, eve
   const adminFee = parseNumber(transaction.admin_fee);
   const ppn = parseNumber(transaction.ppn);
   const grandTotal = parseNumber(transaction.grandtotal);
-  
+
   const totalTicketFee = transaction.tickets?.reduce((sum: number, ticket: any) => {
     return sum + parseNumber(ticket.has_event_ticket?.ticket_fee || 0) * parseNumber(ticket.qty_ticket || 1);
   }, 0) || 0;
@@ -127,7 +127,7 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction, paymentList, eve
     <div className={`fixed inset-0 z-50 flex items-center justify-center ${isOpen ? 'block' : 'hidden'}`}>
       <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
       <div className="relative bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-hidden">
-        <div className="sticky top-0 bg-white border-b px-6 py-4 z-10">
+        <div className="sticky top-80 bg-white border-b px-6 py-4 z-10">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <FontAwesomeIcon icon={faReceipt} />
@@ -141,7 +141,7 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction, paymentList, eve
           </div>
           <p className="text-sm text-gray-500 mt-1">{transaction.invoice_no}</p>
         </div>
-        
+
         <div className="overflow-y-auto p-6 max-h-[calc(90vh-80px)]">
           <div className="space-y-4">
             {/* Info Transaksi */}
@@ -220,7 +220,7 @@ const TransactionDetailModal = ({ isOpen, onClose, transaction, paymentList, eve
             </Card>
           </div>
         </div>
-        
+
         <div className="sticky bottom-0 bg-gray-50 border-t px-6 py-4">
           <Button label="Tutup" color="secondary" onClick={onClose} className="w-full" />
         </div>
@@ -296,7 +296,7 @@ const TicketOTS = () => {
 
   const refreshTransactionData = async () => {
     if (!eventData) return;
-    
+
     try {
       await getOfflineTransactions(eventData.id);
       await getOnlineTransactions(eventData.id);
@@ -1066,20 +1066,20 @@ const TicketOTS = () => {
                       <p className="text-sm font-medium">{totalCount} tiket</p>
                     </div>
                   </div>
-                  
+
                   <div className="hidden md:flex items-center gap-4">
                     <div className="text-sm">
                       <span className="text-gray-500">Subtotal: </span>
                       <span className="font-medium">Rp{subtotalPrice.toLocaleString("id-ID")}</span>
                     </div>
-                    
+
                     {totalTicketFee > 0 && (
                       <div className="text-sm">
                         <span className="text-gray-500">+ Biaya: </span>
                         <span className="font-medium text-red-600">Rp{totalTicketFee.toLocaleString("id-ID")}</span>
                       </div>
                     )}
-                    
+
                     {eventData?.ppn && (
                       <div className="text-sm">
                         <span className="text-gray-500">+ PPN: </span>
@@ -1097,12 +1097,12 @@ const TicketOTS = () => {
                     <p className="text-xs text-gray-500">Total Pembayaran</p>
                     <p className="text-lg font-bold text-primary">Rp{grandTotal.toLocaleString("id-ID")}</p>
                   </div>
-                  
-                  <Button 
-                    label="Proses Pembayaran" 
-                    color="primary" 
-                    onClick={() => setShowModal(true)} 
-                    disabled={totalCount < 1} 
+
+                  <Button
+                    label="Proses Pembayaran"
+                    color="primary"
+                    onClick={() => setShowModal(true)}
+                    disabled={totalCount < 1}
                     className="flex-1 sm:flex-none min-w-[160px]"
                   />
                 </div>
@@ -1127,7 +1127,7 @@ const TicketOTS = () => {
               refreshTransactionData();
             }
           }}
-          setParentStep={() => {}}
+          setParentStep={() => { }}
           onSuccess={() => {
             resetTicketForm();
           }}
@@ -1135,12 +1135,12 @@ const TicketOTS = () => {
       )}
 
       {/* Modal Detail Transaksi Custom */}
-      <TransactionDetailModal 
-        isOpen={showDetailModal} 
-        onClose={() => setShowDetailModal(false)} 
-        transaction={selectedTransaction} 
-        paymentList={paymentList} 
-        eventData={eventData} 
+      <TransactionDetailModal
+        isOpen={showDetailModal}
+        onClose={() => setShowDetailModal(false)}
+        transaction={selectedTransaction}
+        paymentList={paymentList}
+        eventData={eventData}
       />
     </>
   );

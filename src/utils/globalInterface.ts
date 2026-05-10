@@ -235,7 +235,7 @@ export interface PaymentMethod {
   account_branch: string;
   description: null;
   has_payment_link: PaymentLinks[];
-  type: null;
+  type: string | null;
   created_by: null;
   logo: string;
   updated_by: null;

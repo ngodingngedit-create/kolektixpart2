@@ -28,9 +28,10 @@ interface Props {
   setSelected: (index: number) => void;
   storeLocalStorage: () => void;
   venue: any;
+  hideScheduleTitle?: boolean;
 }
 
-const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin, totalSubtotalPrice, totalCount, scrollToTop, setStep, selected, setSelected, storeLocalStorage, venue }: Props) => {
+const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin, totalSubtotalPrice, totalCount, scrollToTop, setStep, selected, setSelected, storeLocalStorage, venue, hideScheduleTitle }: Props) => {
   const { t } = useTranslation();
   const [edit, setEdit] = useState(false);
   const [showVenue, setShowVenue] = useState(false);
@@ -66,6 +67,20 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
     );
   }, [data, counts]);
 
+  const hasSchedule = useMemo(() => {
+    if (!data || data.length === 0) return true; // Default behavior
+    const dates = new Set();
+    data.forEach(item => {
+      const itemDates = item.valid_dates || [item.event_schedule_date || item.ticket_date || item.start_date];
+      itemDates.forEach(date => {
+        if (date != null) {
+          dates.add(date.toString().split(' ')[0]);
+        }
+      });
+    });
+    return dates.size > 1;
+  }, [data]);
+
   const handleDelete = (index: number) => {
     if (ticket && setTicket) {
       const id = ticket[index].event_ticket_id;
@@ -81,7 +96,7 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
   const SummaryBody = () => (
     <div className="flex flex-col h-full max-h-[70vh] md:max-h-none">
       {/* 1. Header (Fixed) */}
-      <div className="flex justify-between items-center w-full mb-5 shrink-0 px-1">
+      <div className="flex justify-between items-center w-full mb-4 shrink-0 px-1">
         <Text size="sm" fw={800} className="text-gray-900 tracking-widest">
           {t("selectedTicket")}
         </Text>
@@ -105,7 +120,7 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
           const displayPrice = isBundling && bundlingQty >= 2 && bundlingQty <= 99 ? e.price : e.subtotal_price;
 
           return (
-            <div key={i} className="flex items-center justify-between gap-4 bg-white p-4 rounded-[20px] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_30px_-10px_rgba(0,0,0,0.08)] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-500 group cursor-default">
+            <div key={i} className="flex items-center justify-between gap-4 bg-white p-4 rounded-[8px] shadow-[0px_4px_12px_rgba(0,0,0,0.03)] transition-all duration-500 group cursor-default">
               <Flex gap={12} align="center">
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1C41D6]/10 to-[#1C41D6]/5 flex items-center justify-center group-hover:from-[#1C41D6]/20 group-hover:to-[#1C41D6]/10 transition-all duration-500">
                   <Icon icon={originalTicket?.icon || "solar:ticket-bold-duotone"} className="text-[#1C41D6] text-xl" />
@@ -140,7 +155,7 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
         })}
 
         {(ticket?.length ?? 0) === 0 && (
-          <div className="flex flex-col items-center justify-center py-10 px-6 bg-gray-50/30 rounded-[32px] border border-dashed border-[rgb(227,227,227)]">
+          <div className="flex flex-col items-center justify-center py-6 px-6 bg-gray-50/30 rounded-[8px] border border-dashed border-[rgb(235,235,235)]">
             <Icon icon="solar:ticket-broken" className="text-3xl text-gray-300 mb-2" />
             <Text size="xs" fw={600} className="text-gray-400 text-center tracking-wider">
               {t("selectedTicketEmpty")}
@@ -151,7 +166,7 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
 
       {/* 3. Footer (Fixed) */}
       {(ticket?.length ?? 0) > 0 && (
-        <div className="mt-8 mb-2 shrink-0 border-t border-[#e4e4e7] pt-6">
+        <div className="mt-4 mb-0 shrink-0 border-t border-[#e4e4e7] pt-4">
           <div className="flex items-center justify-between gap-4 px-1">
             <span className="text-[12px] font-bold text-gray-400 tracking-tight">Total ({totalCount}) Tiket</span>
             <div className="text-[18px] font-bold text-gray-900 tracking-tight">
@@ -165,19 +180,19 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
 
   return (
     <div className="text-dark font-inter">
-      <Drawer 
-        opened={openDetail} 
-        onClose={() => setOpenDetail(!openDetail)} 
-        withCloseButton={false} 
-        position="bottom" 
-        radius="32px 32px 0 0" 
-        size="75vh" 
+      <Drawer
+        opened={openDetail}
+        onClose={() => setOpenDetail(!openDetail)}
+        withCloseButton={false}
+        position="bottom"
+        radius="24px 24px 0 0"
+        size="75vh"
         className="[&_.mantine-Drawer-content]:bg-white [&_.mantine-Drawer-body]:p-0 [&_.mantine-Drawer-body]:h-full"
       >
         <div className="flex flex-col h-[75vh] font-inter">
           {/* Top Handle */}
           <div className="pt-4 pb-2 shrink-0">
-            <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto" />
+            <div className="w-12 h-1.5 bg-gray-200 rounded-xl mx-auto" />
           </div>
 
           {/* Main Body with Fixed/Scrollable logic inside SummaryBody */}
@@ -207,33 +222,38 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
         </div>
       </Drawer>
 
-      <div className="flex-1 flex flex-col md:flex-row bg-[#fafbfc]">
+      <div className="flex-1 flex flex-col md:flex-row bg-transparent">
         {/* MAIN CONTENT AREA: RESPONSIVE LAYOUT */}
-        <div className="flex-1 flex flex-col md:flex-row min-w-0">
+        <div className="flex-1 flex flex-col md:flex-row min-w-0 gap-2 md:gap-4">
           {/* LEFT COLUMN: DATE + TICKET TYPES (Full width on mobile) */}
-          <div className="flex-1 md:flex-[2.2] flex flex-col bg-white shadow-none md:shadow-[30px_0_60px_-30px_rgba(0,0,0,0.04)] z-10 min-w-0">
+          <div className="flex-1 flex flex-col bg-transparent z-10 min-w-0">
             {/* TOP: DATE STRIP (STICKY below sub-navbar) */}
-            <div id="date-strip" className="w-full bg-white/95 backdrop-blur-md z-30 shrink-0 shadow-sm transition-all duration-500 sticky top-[70px]">
-              <DateTab
-                maxOrder={maxOrder}
-                counts={counts}
-                setCounts={setCounts}
-                data={data}
-                isLogin={isLogin}
-                selected={selected}
-                setSelected={setSelected}
-                setStep={setStep}
-                scrollToTop={scrollToTop}
-                hideTicketList={true}
-                noShadow={true}
-                baseDate={baseDate}
-                setBaseDate={setBaseDate}
-              />
-            </div>
+            {hasSchedule && (
+              <div id="date-strip" className="w-full z-30 shrink-0 transition-all duration-500 sticky top-[85px] pt-4 md:pt-5 pb-2 bg-[#F3F4F6] rounded-[8px] px-4 md:px-6 mb-2 ml-1 md:ml-2">
+                <div className="bg-white rounded-[8px] shadow-[0px_8px_24px_-4px_rgba(0,0,0,0.04)] transition-all duration-500 p-2">
+                  <DateTab
+                    maxOrder={maxOrder}
+                    counts={counts}
+                    setCounts={setCounts}
+                    data={data}
+                    isLogin={isLogin}
+                    selected={selected}
+                    setSelected={setSelected}
+                    setStep={setStep}
+                    scrollToTop={scrollToTop}
+                    hideTicketList={true}
+                    noShadow={true}
+                    baseDate={baseDate}
+                    setBaseDate={setBaseDate}
+                    hideTitle={hideScheduleTitle}
+                  />
+                </div>
+              </div>
+            )}
 
             {/* BOTTOM: TICKET LIST */}
             <div className="flex-1">
-              <div className="px-4 md:px-8 py-6">
+              <div className="pt-2 md:pt-4 pb-24 md:pb-32">
                 <DateTab
                   maxOrder={maxOrder}
                   counts={counts}
@@ -248,14 +268,15 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
                   noShadow={false}
                   baseDate={baseDate}
                   setBaseDate={setBaseDate}
+                  hideTitle={hideScheduleTitle}
                 />
               </div>
             </div>
           </div>
 
           {/* RIGHT COLUMN: SUMMARY (Sticky Sidebar) */}
-          <div className="hidden md:flex md:w-[350px] lg:w-[400px] flex-col bg-[#fafbfc] p-6 pt-4 gap-6 min-w-0">
-            <div className="sticky top-[120px] self-start w-full bg-white rounded-[32px] shadow-[0_30px_100px_-20px_rgba(28,65,214,0.08)] p-6 transition-all duration-700 ease-out hover:shadow-[0_40px_120px_-20px_rgba(28,65,214,0.12)]">
+          <div className="hidden md:flex md:w-[340px] lg:w-[380px] flex-col bg-[#F3F4F6] rounded-[8px] px-2 md:px-3 pt-4 md:pt-6 pb-0 min-w-0 ml-1 md:ml-2">
+            <div className="sticky top-[100px] self-start w-full bg-white rounded-[8px] shadow-[0px_8px_32px_-4px_rgba(0,0,0,0.04)] p-6 pb-4 transition-all duration-700 ease-out">
               <SummaryBody />
             </div>
           </div>
@@ -270,9 +291,9 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
                 <span className="text-[10px] font-bold text-[#94a3b8] tracking-wider uppercase leading-none mb-1">Total Harga</span>
                 <span className="text-[18px] font-black text-[#1e293b] leading-none">Rp {displayTotalSubtotalPrice.toLocaleString("id-ID")}</span>
               </div>
-              <button 
+              <button
                 onClick={() => setOpenDetail(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100/50 rounded-full active:scale-95 transition-all"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100/50 rounded-xl active:scale-95 transition-all"
               >
                 <span className="text-[11px] font-black text-[#194E9E]">({totalCount}) Detail</span>
                 <Icon icon="solar:alt-arrow-up-bold" className="text-[#194E9E] text-[11px]" />
@@ -282,23 +303,22 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
             {/* Row 2: Main Action & Chat */}
             <div className="flex items-center gap-3">
               <button
-                className={`flex-1 ${totalCount > 0
-                  ? "bg-[#194E9E] active:scale-[0.98]"
-                  : "bg-gray-300 cursor-not-allowed"
-                  } text-white h-12 font-black text-[14px] rounded-2xl transition-all shadow-lg shadow-blue-900/5 flex items-center justify-center`}
+                className={`flex-1 bg-[#194E9E] active:scale-[0.98] text-white h-12 font-black text-[14px] rounded-xl transition-all shadow-lg shadow-blue-900/5 flex items-center justify-center`}
                 onClick={() => {
+                  if (totalCount === 0) {
+                    return; // Do nothing if 0, or let it pass? Let's let it trigger whatever error happens normally, or just open the detail
+                  }
                   if (isLogin) {
                     Cookies.remove("ticketCount", { path: "/" });
                     setStep(33);
                     scrollToTop();
                   } else storeLocalStorage();
                 }}
-                disabled={totalCount === 0}
               >
                 {isGratis ? "Registrasi Sekarang" : "Beli Tiket Sekarang"}
               </button>
-              
-              <button className="w-12 h-12 bg-[#194E9E] rounded-2xl flex items-center justify-center active:scale-90 transition-all shadow-lg shadow-blue-900/5">
+
+              <button className="w-12 h-12 bg-[#194E9E] rounded-xl flex items-center justify-center active:scale-90 transition-all shadow-lg shadow-blue-900/5">
                 <Icon icon="solar:chat-round-dots-bold" className="text-white text-xl" />
               </button>
             </div>
@@ -317,7 +337,7 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
               className={`${totalCount > 0
                 ? "bg-[#194E9E] hover:bg-[#0b387c] shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:scale-95"
                 : "bg-primary-disabled cursor-not-allowed"
-                } text-white px-8 py-2.5 font-bold text-[13px] rounded-2xl transition-all duration-300 shadow-md`}
+                } text-white px-8 py-2.5 font-bold text-[13px] rounded-xl transition-all duration-300 shadow-md`}
               onClick={() => {
                 if (isLogin) {
                   Cookies.remove("ticketCount", { path: "/" });

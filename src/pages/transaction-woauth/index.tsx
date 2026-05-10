@@ -31,6 +31,14 @@ interface Form {
   is_profession: string;
   is_company: string;
   is_assistant: string;
+  merch_size?: string;
+  merch_product_name?: string;
+  merch_product_id?: number;
+  merch_image_url?: string;
+  merch_price?: number;
+  merch_variant_id?: number;
+  merch_variant_name?: string;
+  event_merch_id?: number;
 }
 
 interface DataProps {
@@ -40,6 +48,7 @@ interface DataProps {
   totalCount: number;
   form: Form[];
   countdowns: string;
+  merchSelections?: any;
 }
 
 // Function to open IndexedDB
@@ -181,8 +190,8 @@ const TransactionWithoutAuth = () => {
         )}
       </div>
       {step === 0 && (
-        <div className="w-full fixed bottom-0 bg-white border-t border-[#e4e4e7] z-50 p-4 shadow-smooth-low">
-          <div className="max-w-5xl mx-auto flex justify-between items-center">
+        <div className="w-full fixed bottom-0 bg-white border-t border-[#e4e4e7] z-50 py-4 px-4 md:px-8 lg:px-12 shadow-smooth-low">
+          <div className="w-full max-w-[1600px] mx-auto flex justify-between items-center">
             <div className="flex items-center gap-2 bg-[#EA4D3E] text-white px-4 py-1.5 rounded-full shadow-sm">
               <div className="text-sm font-bold">
                 {data?.countdowns && <Countdown date={new Date(data.countdowns)} renderer={renderer} />}

@@ -42,8 +42,8 @@ const config: Config = {
       "primary-light-200": "#E2EEFE",
 
       // 🎨 tambahan baru:
-      "primary-light-700": "#1453b6", 
-      "primary-light-800": "#0d3e91", 
+      "primary-light-700": "#1453b6",
+      "primary-light-800": "#0d3e91",
 
       white: "#FFFFFF",
       dark: "#000000",

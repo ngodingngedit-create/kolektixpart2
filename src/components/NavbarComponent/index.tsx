@@ -64,22 +64,22 @@
 //   const handleFilter = () => {
 //     const wasClosed = !showFilter;
 //     setShowFilter(!showFilter);
-    
+
 //     // Jika FilterMenu dibuka, fokus ke input
 //     if (wasClosed) {
 //       setTimeout(() => {
 //         // Cari input dengan ID khusus
 //         const searchInput = document.getElementById('search-filter-input') as HTMLInputElement;
-        
+
 //         if (searchInput) {
 //           searchInput.focus();
 //           searchInput.select();
 //           return;
 //         }
-        
+
 //         // Fallback 1: cari input di modal Mantine
 //         const modalElements = document.querySelectorAll('.mantine-Modal-inner, .mantine-Modal-content, [role="dialog"]');
-        
+
 //         for (let i = 0; i < modalElements.length; i++) {
 //           const modal = modalElements[i];
 //           const input = modal.querySelector('input[type="text"], input[type="search"]') as HTMLInputElement;
@@ -89,10 +89,10 @@
 //             return;
 //           }
 //         }
-        
+
 //         // Fallback 2: cari semua input text/search
 //         const allInputs = document.querySelectorAll('input[type="text"], input[type="search"]');
-        
+
 //         for (let i = 0; i < allInputs.length; i++) {
 //           const input = allInputs[i] as HTMLInputElement;
 //           // Cek jika input terlihat dan placeholder mengandung kata search
@@ -104,7 +104,7 @@
 //             return;
 //           }
 //         }
-        
+
 //         // Fallback 3: cari input pertama yang terlihat
 //         for (let i = 0; i < allInputs.length; i++) {
 //           const input = allInputs[i] as HTMLInputElement;
@@ -187,7 +187,7 @@
 //   useHotkeys([["ctrl+F", () => {
 //     const wasClosed = !showFilter;
 //     setShowFilter(!showFilter);
-    
+
 //     if (wasClosed) {
 //       setTimeout(() => {
 //         const searchInput = document.getElementById('search-filter-input') as HTMLInputElement;
@@ -628,7 +628,7 @@
 //   const hostname = window.location.hostname;
 //   const urlParams = new URLSearchParams(window.location.search);
 //   const debug = urlParams.get('debug');
-  
+
 //   return {
 //     isProduction: hostname === 'kolektix.com' && debug !== 'showall',
 //     isCloud: hostname.includes('cloud') || hostname === 'localhost',
@@ -654,7 +654,7 @@
 //   const [bgNav, setBgNav] = useState<boolean>(false);
 //   const { cartCount } = useContext(AppMainContext);
 //   const { t, i18n } = useTranslation();
-  
+
 //   // Domain detection - dengan initial state yang benar
 //   const [domainState, setDomainState] = useState(getInitialDomainState);
 
@@ -687,19 +687,19 @@
 //   const handleFilter = () => {
 //     const wasClosed = !showFilter;
 //     setShowFilter(!showFilter);
-    
+
 //     if (wasClosed) {
 //       setTimeout(() => {
 //         const searchInput = document.getElementById('search-filter-input') as HTMLInputElement;
-        
+
 //         if (searchInput) {
 //           searchInput.focus();
 //           searchInput.select();
 //           return;
 //         }
-        
+
 //         const modalElements = document.querySelectorAll('.mantine-Modal-inner, .mantine-Modal-content, [role="dialog"]');
-        
+
 //         for (let i = 0; i < modalElements.length; i++) {
 //           const modal = modalElements[i];
 //           const input = modal.querySelector('input[type="text"], input[type="search"]') as HTMLInputElement;
@@ -709,9 +709,9 @@
 //             return;
 //           }
 //         }
-        
+
 //         const allInputs = document.querySelectorAll('input[type="text"], input[type="search"]');
-        
+
 //         for (let i = 0; i < allInputs.length; i++) {
 //           const input = allInputs[i] as HTMLInputElement;
 //           if (input.offsetParent !== null && 
@@ -722,7 +722,7 @@
 //             return;
 //           }
 //         }
-        
+
 //         for (let i = 0; i < allInputs.length; i++) {
 //           const input = allInputs[i] as HTMLInputElement;
 //           if (input.offsetParent !== null) {
@@ -804,7 +804,7 @@
 //   useHotkeys([["ctrl+F", () => {
 //     const wasClosed = !showFilter;
 //     setShowFilter(!showFilter);
-    
+
 //     if (wasClosed) {
 //       setTimeout(() => {
 //         const searchInput = document.getElementById('search-filter-input') as HTMLInputElement;
@@ -1174,7 +1174,7 @@
 //                 />
 //                 <NavLink href="/event" c="gray.1" label="Event" leftSection={<Icon icon="tabler:calendar-event" className="text-[24px]" />} />
 //                 <NavLink href="/merchandise" c="gray.1" label="Merchandise" leftSection={<Icon icon="tabler:shopping-bag" className="text-[24px]" />} />
-                
+
 //                 {/* Talent & Venue di Sidebar - Hanya di non-production */}
 //                 {showTalentVenue && (
 //                   <>
@@ -1244,7 +1244,7 @@ import useLoggedUser from "@/utils/useLoggedUser";
 import Fade from "../Transition";
 import Link from "next/link";
 import React from "react";
-import { ActionIcon, Box, Button, Indicator, Menu, Flex, Image as ImageM, UnstyledButton, Card, Avatar, Text, Stack, NavLink, Divider } from "@mantine/core";
+import { ActionIcon, Box, Button, Indicator, Menu, Flex, Image as ImageM, UnstyledButton, Card, Avatar, Text, Stack, NavLink, Divider, Collapse } from "@mantine/core";
 import { useClickOutside, useHotkeys } from "@mantine/hooks";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { AppMainContext } from "@/pages/_app";
@@ -1266,7 +1266,7 @@ const getInitialDomainState = () => {
   const hostname = window.location.hostname;
   const urlParams = new URLSearchParams(window.location.search);
   const debug = urlParams.get('debug');
-  
+
   return {
     isProduction: hostname === 'kolektix.com' && debug !== 'showall',
     isCloud: hostname.includes('cloud') || hostname === 'localhost',
@@ -1289,10 +1289,21 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [hasNotification, setHasNotification] = useState<boolean>(false);
   const [showCartDrawer, setShowCartDrawer] = useState<boolean>(false);
-  const { cartCount } = useContext(AppMainContext);
+  const { cartCount, setIsSidebarOpen } = useContext(AppMainContext);
   const { t, i18n } = useTranslation();
-  
+
+  const [mainExpanded, setMainExpanded] = useState(true);
+  const [orderExpanded, setOrderExpanded] = useState(true);
+  const [supportExpanded, setSupportExpanded] = useState(true);
+  const [merchExpanded, setMerchExpanded] = useState(false);
+
   const [domainState, setDomainState] = useState(getInitialDomainState);
+
+  useEffect(() => {
+    if (setIsSidebarOpen) {
+      setIsSidebarOpen(showSideBar);
+    }
+  }, [showSideBar, setIsSidebarOpen]);
 
   useEffect(() => {
     setDomainState(getInitialDomainState());
@@ -1321,19 +1332,19 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
   const handleFilter = () => {
     const wasClosed = !showFilter;
     setShowFilter(!showFilter);
-    
+
     if (wasClosed) {
       setTimeout(() => {
         const searchInput = document.getElementById('search-filter-input') as HTMLInputElement;
-        
+
         if (searchInput) {
           searchInput.focus();
           searchInput.select();
           return;
         }
-        
+
         const modalElements = document.querySelectorAll('.mantine-Modal-inner, .mantine-Modal-content, [role="dialog"]');
-        
+
         for (let i = 0; i < modalElements.length; i++) {
           const modal = modalElements[i];
           const input = modal.querySelector('input[type="text"], input[type="search"]') as HTMLInputElement;
@@ -1343,20 +1354,20 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
             return;
           }
         }
-        
+
         const allInputs = document.querySelectorAll('input[type="text"], input[type="search"]');
-        
+
         for (let i = 0; i < allInputs.length; i++) {
           const input = allInputs[i] as HTMLInputElement;
-          if (input.offsetParent !== null && 
-              (input.placeholder?.toLowerCase().includes('cari') || 
-               input.placeholder?.toLowerCase().includes('search'))) {
+          if (input.offsetParent !== null &&
+            (input.placeholder?.toLowerCase().includes('cari') ||
+              input.placeholder?.toLowerCase().includes('search'))) {
             input.focus();
             input.select();
             return;
           }
         }
-        
+
         for (let i = 0; i < allInputs.length; i++) {
           const input = allInputs[i] as HTMLInputElement;
           if (input.offsetParent !== null) {
@@ -1400,7 +1411,7 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
   }, [users]);
 
   const token = Cookies.get("token");
-  
+
   useEffect(() => {
     token !== undefined ? setIsLogin(true) : setIsLogin(false);
   }, [token]);
@@ -1408,7 +1419,7 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
   useHotkeys([["ctrl+F", () => {
     const wasClosed = !showFilter;
     setShowFilter(!showFilter);
-    
+
     if (wasClosed) {
       setTimeout(() => {
         const searchInput = document.getElementById('search-filter-input') as HTMLInputElement;
@@ -1431,21 +1442,22 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
   const isErrorPage = route === '/404' || route === '/_error' || asPath.includes('404');
 
   return (
-    <div>
-      <nav className="bg-primary-dark transition-colors duration-300 sticky top-0 w-full z-40">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
+    <>
+      <div className="bg-primary-dark transition-colors duration-300 sticky top-0 w-full z-40 shadow-xl border-b border-white/5">
+        <div className="max-w-[1440px] mx-auto px-5 md:px-10">
+          <div className="flex h-16 items-center justify-between gap-4">
             <div className="flex items-center flex-1">
-              <div className="mr-2 w-8">
+              <div className="mr-2 flex items-center gap-2">
                 <button
                   type="button"
-                  className="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-white hover:bg-gray-700 hover:text-white"
+                  className="text-white hover:text-primary-light-200 transition-colors p-2"
                   aria-controls="mobile-menu"
                   aria-expanded="false"
                   onClick={handleSideBar}
                 >
-                  <FontAwesomeIcon icon={showSideBar ? faXmark : faBars} />
+                  <FontAwesomeIcon icon={showSideBar ? faXmark : faBars} className="text-xl" />
                 </button>
+
               </div>
               <div className="flex-shrink-0">
                 <Link href="/">
@@ -1454,71 +1466,54 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
               </div>
             </div>
             <div className="flex items-center justify-center flex-1">
-              <div className="bg-primary-dark flex items-center drop-shadow-2xl rounded-full">
-                <div className="md:block hidden">
-                  <div className="flex items-baseline space-x-4 p-1">
+              <div className="md:block hidden">
+                <div className="flex items-center gap-4">
+                  {/* Navigation Pill */}
+                  <div className="bg-primary-darker/50 backdrop-blur-md px-1.5 py-1 rounded-full flex items-center">
                     <Link
                       href="/event"
-                      className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                        route === "/event" ? "bg-primary-darker text-white shadow-md" : "text-primary-light-200 hover:text-white hover:bg-primary-light-700/40"
-                      }`}
+                      className={`rounded-full px-5 py-2 text-sm font-bold transition-all duration-200 ${route === "/event" ? "bg-primary-darker text-white shadow-lg" : "text-white/80 hover:text-white hover:bg-white/10"
+                        }`}
                     >
                       Event
                     </Link>
 
                     <Link
                       href="/merchandise"
-                      className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                        route === "/merchandise" ? "bg-primary-darker text-white shadow-md" : "text-primary-light-200 hover:text-white hover:bg-primary-light-700/40"
-                      }`}
+                      className={`rounded-full px-5 py-2 text-sm font-bold transition-all duration-200 ${route === "/merchandise" ? "bg-primary-darker text-white shadow-lg" : "text-white/80 hover:text-white hover:bg-white/10"
+                        }`}
                     >
                       Merchandise
                     </Link>
 
-                    <Link
-                      href="/tracking"
-                      className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                        route === "/tracking" ? "bg-primary-darker text-white shadow-md" : "text-primary-light-200 hover:text-white hover:bg-primary-light-700/40"
-                      }`}
-                    >
-                      Tracking
-                    </Link>
-
-                    {showTalentVenue && (
-                      <Link
-                        href="/talent"
-                        className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                          route === "/talent" ? "bg-primary-darker text-white shadow-md" : "text-primary-light-200 hover:text-white hover:bg-primary-light-700/40"
-                        }`}
-                      >
-                        Talent
-                      </Link>
-                    )}
-
                     {showTalentVenue && (
                       <Link
                         href="/venue"
-                        className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                          route === "/venue" ? "bg-primary-darker text-white shadow-md" : "text-primary-light-200 hover:text-white hover:bg-primary-light-700/40"
-                        }`}
+                        className={`rounded-full px-5 py-2 text-sm font-bold transition-all duration-200 ${route === "/venue" ? "bg-primary-darker text-white shadow-lg" : "text-white/80 hover:text-white hover:bg-white/10"
+                          }`}
                       >
                         Venue
                       </Link>
                     )}
 
-                    
-
-                    <div className="w-10">
-                      <button 
-                        className="bg-white rounded-full w-8 h-8 hover:bg-gray-100 transition-colors" 
-                        onClick={handleFilter}
-                        aria-label="Search"
-                        title="Cari (Ctrl+F)"
-                      >
-                        <FontAwesomeIcon icon={faSearch} className="text-primary" />
-                      </button>
-                    </div>
+                    <Link
+                      href="/tracking"
+                      className={`rounded-full px-5 py-2 text-sm font-bold transition-all duration-200 ${route === "/tracking" ? "bg-primary-darker text-white shadow-lg" : "text-white/80 hover:text-white hover:bg-white/10"
+                        }`}
+                    >
+                      Tracking
+                    </Link>
                   </div>
+
+                  {/* Search Button */}
+                  <button
+                    className="bg-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-all shadow-lg active:scale-90"
+                    onClick={handleFilter}
+                    aria-label="Search"
+                    title="Cari (Ctrl+F)"
+                  >
+                    <FontAwesomeIcon icon={faSearch} className="text-primary-base text-lg" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -1526,10 +1521,10 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
               <div className="">
                 <div className="flex items-center">
                   {!route.startsWith("/event/") && !route.startsWith("/transaction-woauth") && (
-                    <button type="button" className="relative rounded-full font-semibold flex items-center bg-white px-2 py-1 text-center text-primary-base hover:text-primary-dark mx-2 text-sm md:px-3 md:py-1.5">
-                      <Link href={!userData?.has_creator ? "/register/creator" : "/create-event"} className="flex items-center">
-                        <FontAwesomeIcon icon={faCirclePlus} className={`text-[24px]`} />
-                        <span className="ml-1 hidden lg:inline whitespace-nowrap">Buat Event</span>
+                    <button type="button" className="relative rounded-full font-extrabold flex items-center bg-white px-5 py-2.5 text-center text-primary-base hover:bg-gray-50 transition-all shadow-lg active:scale-95">
+                      <Link href={!userData?.has_creator ? "/register/creator" : "/create-event"} className="flex items-center gap-2">
+                        <Icon icon="solar:add-circle-bold" className="text-2xl" />
+                        <span className="hidden lg:inline whitespace-nowrap text-[13px] tracking-wide">Buat Event</span>
                       </Link>
                     </button>
                   )}
@@ -1570,16 +1565,16 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
                       <Menu offset={20} width="250px" radius={10}>
                         <Menu.Target>
                           <UnstyledButton>
-                            <Card p={0} c={"#02255A"} bg={"white"} radius="xl">
+                            <Card p={4} c={"#02255A"} bg={"white"} radius="xl" className="shadow-lg hover:bg-gray-50 transition-all cursor-pointer">
                               {isLogin ? (
-                                <Flex gap={15} align="center" py={4} pl={16} pr={4}>
+                                <Flex gap={12} align="center" py={4} pl={16} pr={4}>
                                   <Icon icon="uiw:menu" className={`text-[18px]`} />
-                                  <Avatar size={30} src={users?.has_creator?.image_url} />
+                                  <Avatar size={34} src={users?.has_creator?.image_url} />
                                 </Flex>
                               ) : (
-                                <Flex gap={15} align="center" py={4} pl={16} pr={4}>
+                                <Flex gap={12} align="center" py={4} pl={16} pr={4}>
                                   <Icon icon="uiw:menu" className={`text-[18px]`} />
-                                  <Icon icon="qlementine-icons:user-16" className={`text-[30px] !text-dark-grey`} />
+                                  <Icon icon="qlementine-icons:user-16" className={`text-[34px] !text-dark-grey`} />
                                 </Flex>
                               )}
                             </Card>
@@ -1612,7 +1607,7 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
                         </Menu.Dropdown>
                       </Menu>
                     </Flex>
-                    
+
                     <Fade isShowing={showNotifications}>
                       <div
                         className={`absolute right-10 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg  ${showNotifications ? "opacity-100" : "opacity-0"}`}
@@ -1640,7 +1635,7 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
                         )}
                       </div>
                     </Fade>
-                    
+
                     <Fade isShowing={showUserMenu} ref={outsideClickMenu}>
                       <div
                         className={`absolute right-0 z-10 mt-2 w-48 origin-top-right divide-y divide-primary-light-200 rounded-md bg-white shadow-lg transition-all duration-200 ${showUserMenu ? "opacity-100" : "opacity-0"}`}
@@ -1675,7 +1670,7 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
             </div>
           </div>
         </div>
-        
+
         {showSideMenu && (
           <div className="" id="mobile-menu">
             <div className="border-t border-gray-700 pb-3 pt-4">
@@ -1734,78 +1729,182 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
             </div>
           </div>
         )}
-        
+
         {showSideBar && (
           <div className="fixed inset-0 flex">
-            <div className={`fixed top-0 left-0 w-[280px] bg-black opacity-80 p-4 transition-transform duration-700 ease-in-out transform ${showSideBar ? "translate-x-0" : "-translate-x-full"}`} style={{ height: "100vh", zIndex: 30 }}>
-              <div className="flex items-center">
+            <div className={`fixed top-0 left-0 w-[300px] bg-[#0b387c] px-2 py-4 flex flex-col transition-transform duration-500 ease-in-out transform ${showSideBar ? "translate-x-0" : "-translate-x-full"}`} style={{ height: "100vh", zIndex: 100 }}>
+              {/* Header: X and Logo */}
+              <div className="flex items-center px-4 pt-4 mb-8">
                 <button
                   type="button"
-                  className="relative inline-flex items-center justify-center rounded-md bg-gray-800 p-2 text-white hover:bg-gray-700 hover:text-white"
+                  className="relative inline-flex items-center justify-center rounded-md p-2 text-white hover:bg-white/10"
                   aria-controls="mobile-menu"
                   aria-expanded={showSideBar}
                   onClick={handleSideBar}
                 >
-                  <FontAwesomeIcon icon={showSideBar ? faXmark : faBars} />
+                  <FontAwesomeIcon icon={showSideBar ? faXmark : faBars} className="text-xl" />
                 </button>
                 <div className="flex-shrink-0 ms-4">
                   <Link href="/">
-                    <Image className="w-14 md:w-20" src={Logo} alt="Kolektix Logo" />
+                    <Image className="w-16 md:w-24" src={Logo} alt="Kolektix Logo" />
                   </Link>
                 </div>
               </div>
-              <Stack mt={20} gap={10} className={`hover:[&>*]:!text-black`}>
-                <NavLink
-                  c="gray.1"
-                  label="Search"
-                  onClick={() => {
-                    handleFilter();
-                    setShowSideBar(false);
-                  }}
-                  leftSection={<Icon icon="tabler:search" className="text-[24px]" />}
-                  style={{ cursor: "pointer" }}
-                />
-                <NavLink href="/event" c="gray.1" label="Event" leftSection={<Icon icon="tabler:calendar-event" className="text-[24px]" />} />
-                <NavLink href="/merchandise" c="gray.1" label="Merchandise" leftSection={<Icon icon="tabler:shopping-bag" className="text-[24px]" />} />
-                <NavLink 
-                  c="gray.1" 
-                  label={`Keranjang (${cartCount})`} 
-                  onClick={() => {
-                    setShowSideBar(false);
-                    setShowCartDrawer(true);
-                  }}
-                  leftSection={<Icon icon="tabler:shopping-cart" className="text-[24px]" />} 
-                />
-                <NavLink href="/tracking" c="gray.1" label="Tracking" leftSection={<Icon icon="tabler:truck" className="text-[24px]" />} />
-                {showTalentVenue && (
-                  <>
-                    <NavLink href="/talent" c="gray.1" label="Talent" leftSection={<Icon icon="tabler:user" className="text-[24px]" />} />
-                    <NavLink href="/venue" c="gray.1" label="Venue" leftSection={<Icon icon="tabler:building" className="text-[24px]" />} />
-                  </>
-                )}
 
-                <Divider opacity={0.5} />
-                <NavLink c="gray.1" label="Syarat & Ketentuan" leftSection={<Icon icon="fluent:info-32-regular" className={`text-[24px]`} />} />
-                <NavLink c="gray.1" label="Kebijakan Privasi" leftSection={<Icon icon="fluent:info-32-regular" className={`text-[24px]`} />} />
-                <NavLink c="gray.1" label="Bantuan" leftSection={<Icon icon="tabler:help" className={`text-[24px]`} />} />
-                <NavLink c="gray.1" label="Kirim Masukan" leftSection={<Icon icon="material-symbols:feedback-outline-rounded" className={`text-[24px]`} />} />
-              </Stack>
+              <div className="flex-1 flex flex-col gap-4 overflow-y-auto no-scrollbar px-2 mt-4">
+                {/* MENU UTAMA */}
+                <div className="flex flex-col gap-2">
+                  <Flex justify="space-between" align="center" className="px-4 mb-1 cursor-pointer group" onClick={() => setMainExpanded(!mainExpanded)}>
+                    <Text size="13px" fw={700} c="white" className="tracking-wide group-hover:opacity-100 transition-opacity">Menu Utama</Text>
+                    <Icon icon={mainExpanded ? "tabler:chevron-up" : "tabler:chevron-down"} className="text-white opacity-40 group-hover:opacity-100 text-sm" />
+                  </Flex>
+                  <Collapse in={mainExpanded}>
+                    <div className="flex flex-col gap-1">
+                      {[
+                        { label: "Search", icon: "tabler:search", onClick: () => { handleFilter(); setShowSideBar(false); } },
+                        { label: "Event", icon: "tabler:calendar-event", href: "/event" },
+                        { label: "Merchandise", icon: "tabler:shopping-bag", href: "/merchandise" },
+                        { label: "Talent", icon: "tabler:user", href: "/talent", condition: showTalentVenue },
+                        { label: "Venue", icon: "tabler:building", href: "/venue", condition: showTalentVenue },
+                      ].map((item, idx, array) => (
+                        (item.condition === undefined || item.condition) && (
+                          <div key={idx}>
+                            {item.label === "Merchandise" ? (
+                              <>
+                                <div
+                                  onClick={() => setMerchExpanded(!merchExpanded)}
+                                  className="flex items-center justify-between px-4 py-3 mx-2 cursor-pointer transition-all duration-200 hover:bg-[#154184ff] rounded-[4px]"
+                                >
+                                  <div className="flex items-center">
+                                    <div className="flex-shrink-0 mr-4">
+                                      <Icon icon={item.icon} className="text-[22px]" color={router.asPath.includes('/merchandise') || merchExpanded ? "white" : "rgba(255,255,255,0.5)"} />
+                                    </div>
+                                    <Text size="15px" c={router.asPath.includes('/merchandise') || merchExpanded ? "white" : "rgba(255,255,255,0.5)"}>{item.label}</Text>
+                                  </div>
+                                  <Icon icon={merchExpanded ? "tabler:chevron-up" : "tabler:chevron-down"} className="text-white text-sm" />
+                                </div>
+                                <Collapse in={merchExpanded}>
+                                  <div className="flex flex-col gap-1 ml-8">
+                                    <Link href="/merchandise?tab=kreator" className="block no-underline" onClick={() => setShowSideBar(false)}>
+                                      <div className={`flex items-center px-4 py-2 transition-all duration-200 hover:bg-[#154184ff] rounded-[4px] ${router.asPath === '/merchandise?tab=kreator' ? "bg-[#154184ff] font-semibold text-white" : ""}`}>
+                                        <Text size="14px" c={router.asPath === '/merchandise?tab=kreator' ? "white" : "rgba(255,255,255,0.5)"}>Kreator Merchandise</Text>
+                                      </div>
+                                    </Link>
+                                  </div>
+                                </Collapse>
+                              </>
+                            ) : item.href ? (
+                              <Link href={item.href} className="block no-underline" onClick={() => setShowSideBar(false)}>
+                                <div className={`flex items-center px-4 py-3 mx-2 transition-all duration-200 hover:bg-[#154184ff] rounded-[4px] ${router.pathname === item.href ? "bg-[#154184ff] font-semibold text-white" : ""}`}>
+                                  <div className="flex-shrink-0 mr-4">
+                                    <Icon icon={item.icon} className="text-[22px]" color={router.pathname === item.href ? "white" : "rgba(255,255,255,0.5)"} />
+                                  </div>
+                                  <Text size="15px" c={router.pathname === item.href ? "white" : "rgba(255,255,255,0.5)"}>{item.label}</Text>
+                                </div>
+                              </Link>
+                            ) : (
+                              <div
+                                onClick={item.onClick}
+                                className="flex items-center px-4 py-3 mx-2 cursor-pointer transition-all duration-200 hover:bg-[#154184ff] rounded-[4px]"
+                              >
+                                <div className="flex-shrink-0 mr-4">
+                                  <Icon icon={item.icon} className="text-[22px]" color="rgba(255,255,255,0.5)" />
+                                </div>
+                                <Text size="15px" c="rgba(255,255,255,0.5)">{item.label}</Text>
+                              </div>
+                            )}
+                          </div>
+                        )
+                      ))}
+                    </div>
+                  </Collapse>
+                </div>
+                <div className="border-b border-white/10 mx-4 mt-1" />
+
+                {/* PESANAN SAYA */}
+                <div className="flex flex-col gap-2">
+                  <Flex justify="space-between" align="center" className="px-4 mb-1 cursor-pointer group" onClick={() => setOrderExpanded(!orderExpanded)}>
+                    <Text size="13px" fw={700} c="white" className="tracking-wide group-hover:opacity-100 transition-opacity">Pesanan Saya</Text>
+                    <Icon icon={orderExpanded ? "tabler:chevron-up" : "tabler:chevron-down"} className="text-white opacity-40 group-hover:opacity-100 text-sm" />
+                  </Flex>
+                  <Collapse in={orderExpanded}>
+                    <div className="flex flex-col gap-1">
+                      <div
+                        className="flex items-center px-4 py-3 mx-2 cursor-pointer transition-all duration-200 hover:bg-[#154184ff] rounded-[4px]"
+                        onClick={() => { setShowSideBar(false); setShowCartDrawer(true); }}
+                      >
+                        <div className="flex-shrink-0 mr-4">
+                          <Icon icon="tabler:shopping-cart" className="text-[22px]" color="rgba(255,255,255,0.5)" />
+                        </div>
+                        <Text size="15px" c="rgba(255,255,255,0.5)">Keranjang ({cartCount})</Text>
+                      </div>
+                      <Link href="/tracking" className="block no-underline" onClick={() => setShowSideBar(false)}>
+                        <div className={`flex items-center px-4 py-3 mx-2 transition-all duration-200 hover:bg-[#154184ff] rounded-[4px] ${router.pathname === '/tracking' ? "bg-[#154184ff] font-semibold text-white" : ""}`}>
+                          <div className="flex-shrink-0 mr-4">
+                            <Icon icon="tabler:truck" className="text-[22px]" color={router.pathname === '/tracking' ? "white" : "rgba(255,255,255,0.5)"} />
+                          </div>
+                          <Text size="15px" c={router.pathname === '/tracking' ? "white" : "rgba(255,255,255,0.5)"}>Tracking</Text>
+                        </div>
+                      </Link>
+                    </div>
+                  </Collapse>
+                </div>
+                <div className="border-b border-white/10 mx-4 mt-1" />
+
+                {/* DUKUNGAN */}
+                <div className="flex flex-col gap-2">
+                  <Flex justify="space-between" align="center" className="px-4 mb-1 cursor-pointer group" onClick={() => setSupportExpanded(!supportExpanded)}>
+                    <Text size="13px" fw={700} c="white" className="tracking-wide group-hover:opacity-100 transition-opacity">Dukungan</Text>
+                    <Icon icon={supportExpanded ? "tabler:chevron-up" : "tabler:chevron-down"} className="text-white opacity-40 group-hover:opacity-100 text-sm" />
+                  </Flex>
+                  <Collapse in={supportExpanded}>
+                    <div className="flex flex-col gap-1">
+                      {[
+                        { label: "S&K", icon: "fluent:info-32-regular" },
+                        { label: "Kebijakan Privasi", icon: "fluent:info-32-regular" },
+                        { label: "Bantuan", icon: "tabler:help" },
+                        { label: "Kirim Masukan", icon: "material-symbols:feedback-outline-rounded" },
+                      ].map((item, idx, array) => (
+                        <div
+                          key={idx}
+                          className={`flex items-center px-4 py-3 mx-2 cursor-pointer transition-all duration-200 hover:bg-[#154184ff] rounded-[4px]`}
+                        >
+                          <div className="flex-shrink-0 mr-4">
+                            <Icon icon={item.icon} className="text-[22px]" color="rgba(255,255,255,0.5)" />
+                          </div>
+                          <Text size="15px" c="rgba(255,255,255,0.5)">{item.label}</Text>
+                        </div>
+                      ))}
+                    </div>
+                  </Collapse>
+                </div>
+              </div>
+
+              <div className="mt-auto w-full">
+                <div
+                  onClick={handleSideBar}
+                  className="bg-[#0b387c] hover:bg-[#1b3a6a] text-white py-4 text-sm transition-all w-full border-t border-white/10 flex items-center justify-between px-6 cursor-pointer"
+                >
+                  <Text fw={600} size="sm" c="white" className="flex-1 text-center">Persingkat Menu</Text>
+                  <Icon icon="tabler:chevron-left" className="text-lg" color="white" />
+                </div>
+              </div>
             </div>
             <div
-              className={`fixed inset-0 bg-black bg-opacity-30 transition-opacity duration-700 ease-in-out ${showSideBar ? "opacity-100" : "opacity-0"}`}
-              style={{ zIndex: 20 }}
+              className={`fixed inset-0 bg-black bg-opacity-40 transition-opacity duration-500 ease-in-out ${showSideBar ? "opacity-100" : "opacity-0"}`}
+              style={{ zIndex: 90 }}
               onClick={handleSideBar}
             />
           </div>
         )}
-        
+
         <Fade isShowing={showFilter}>
           <FilterMenu />
         </Fade>
-        
+
         <CartDrawer opened={showCartDrawer} onClose={() => setShowCartDrawer(false)} />
-      </nav>
-      
+      </div>
+
       <main>
         <div className="margin-min">
           {!isErrorPage && (route === "/event" || route === "/venue" || route === "/talent" || route === "/merchandise") ? (
@@ -1817,9 +1916,9 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
           {children}
         </div>
       </main>
-      
+
       {/* Footer - Hanya tampil di halaman yang benar dan bukan error page */}
       {!isErrorPage && route === "/" && <Footer />}
-    </div>
+    </>
   );
 }
