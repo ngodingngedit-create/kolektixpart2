@@ -1443,7 +1443,7 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <div className="bg-primary-dark transition-colors duration-300 sticky top-0 w-full z-40 shadow-xl border-b border-white/5">
+      <div className="bg-primary-dark transition-colors duration-300 sticky top-0 w-full z-40 border-b border-white/5">
         <div className="max-w-[1440px] mx-auto px-5 md:px-10">
           <div className="flex h-16 items-center justify-between gap-4">
             <div className="flex items-center flex-1">
@@ -1485,6 +1485,16 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
                     >
                       Merchandise
                     </Link>
+
+                    {showTalentVenue && (
+                      <Link
+                        href="/talent"
+                        className={`rounded-full px-5 py-2 text-sm font-bold transition-all duration-200 ${route === "/talent" ? "bg-primary-darker text-white shadow-lg" : "text-white/80 hover:text-white hover:bg-white/10"
+                          }`}
+                      >
+                        Talenta
+                      </Link>
+                    )}
 
                     {showTalentVenue && (
                       <Link

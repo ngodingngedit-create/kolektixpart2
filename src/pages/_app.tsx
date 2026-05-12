@@ -731,26 +731,6 @@ function App({ Component, pageProps }: AppProps) {
                 {shouldShowNavbarBottom() && <NavbarBottom />}
               </AppMainContext.Provider>
             )}
-            <Button 
-              component={Link} 
-              href="/success/SAMPLE-INV" 
-              variant="filled" 
-              color="orange" 
-              radius="xl" 
-              size="md"
-              style={{ 
-                position: 'fixed', 
-                bottom: 100, 
-                right: 20, 
-                zIndex: 9999, 
-                boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-                transition: 'all 0.2s ease'
-              }}
-              leftSection={<Icon icon="solar:bill-list-bold" />}
-              className="hover:scale-105"
-            >
-              Lihat Tiket
-            </Button>
           </ModalsProvider>
         </MantineProvider>
       </NextUIProvider>
