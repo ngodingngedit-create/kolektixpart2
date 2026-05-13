@@ -19,7 +19,8 @@ import {
   Anchor,
   Box,
   Divider,
-  Modal
+  Modal,
+  Accordion
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Icon } from '@iconify/react/dist/iconify.js';
@@ -258,8 +259,13 @@ const TalentDetail = () => {
                       </Text>
                     </Stack>
 
-                    {/* Action Buttons Container - Right on Desktop, Left on Mobile */}
-                    <Flex gap={12} w={{ base: '100%', md: 'auto' }} justify={{ base: 'flex-start', md: 'flex-end' }} className="md:mb-1">
+                    {/* Action Buttons Container - Right on Desktop, Right on Mobile */}
+                    <Flex
+                      gap={12}
+                      w={{ base: '100%', md: 'auto' }}
+                      justify={{ base: 'flex-end', md: 'flex-end' }}
+                      className="md:mb-1"
+                    >
                       <Button
                         variant="filled"
                         color="#194E9E"
@@ -290,155 +296,231 @@ const TalentDetail = () => {
 
           {/* Main Content & Sidebar */}
           <SimpleGrid cols={{ base: 1, md: 3 }} spacing={24}>
-            {/* Left Column - Main Content */}
+            {/* Left Column - Main Content (Tabbed) */}
             <Box className="md:col-span-2">
-              <Card radius={12} p={24} withBorder className="shadow-sm bg-white overflow-hidden">
-                <Stack gap={30}>
-                  {/* Tentang Saya */}
-                  <Stack gap={12}>
-                    <Text fw={700} size="md">Tentang Saya</Text>
-                    <Text size="sm" c="black" lh={1.6}>
-                      {MOCK_TALENT.description}
-                    </Text>
-                  </Stack>
-
-                  <Divider color="gray.1" />
-
-                  {/* Portfolio Summary */}
-                  <Stack gap={15}>
-                    <Flex justify="space-between" align="center">
-                      <Text fw={700} size="md">Portofolio</Text>
-                      <Anchor href={`/talent/${id}/portfolio`} size="xs" fw={600} c="#194E9E">Lihat Semua</Anchor>
-                    </Flex>
-                    <SimpleGrid cols={{ base: 2, sm: 3, md: 5 }} spacing={10}>
-                      {MOCK_TALENT.portfolio.map((img, i) => (
-                        <Box
-                          key={i}
-                          pos="relative"
-                          h={100}
-                          className="rounded-lg overflow-hidden group cursor-pointer"
-                          onClick={() => handleImageClick(img)}
+              <Card radius={12} p={0} withBorder className="shadow-sm bg-white overflow-hidden">
+                {/* Custom Tab Headers */}
+                <Box>
+                  <Flex
+                    gap={30}
+                    px={24}
+                    className="border-b border-[#F1F3F5] overflow-x-auto no-scrollbar"
+                    wrap="nowrap"
+                  >
+                    {[
+                      { value: 'profil', label: 'Tentang Saya', icon: 'solar:user-bold' },
+                      { value: 'portfolio', label: 'Portofolio', icon: 'solar:gallery-bold' },
+                      { value: 'experience', label: 'Pengalaman Kerja', icon: 'solar:case-bold' },
+                      { value: 'info', label: 'Informasi Talent', icon: 'solar:info-circle-bold' },
+                    ].map((tab) => {
+                      const isActive = activeTab === tab.value;
+                      return (
+                        <Flex
+                          key={tab.value}
+                          align="center"
+                          justify="center"
+                          gap={{ base: 4, md: 8 }}
+                          py={{ base: 12, md: 16 }}
+                          flex={{ base: 1, md: 'initial' }}
+                          className="cursor-pointer transition-all duration-200 border-b-[3px]"
+                          style={{
+                            borderBottomColor: isActive ? '#194E9E' : 'transparent',
+                            color: isActive ? '#194E9E' : '#495057',
+                            whiteSpace: 'nowrap',
+                            minWidth: 'fit-content'
+                          }}
+                          onClick={() => setActiveTab(tab.value)}
                         >
-                          <Image src={img} alt={`Portfolio ${i}`} fill className="object-cover group-hover:scale-110 transition-transform duration-300" />
-                          {i === 4 && (
-                            <Box pos="absolute" inset={0} className="bg-black/60 flex items-center justify-center pointer-events-none">
-                              <Text c="white" fw={700}>+12</Text>
-                            </Box>
-                          )}
-                        </Box>
-                      ))}
-                    </SimpleGrid>
-                  </Stack>
+                          <Icon
+                            icon={tab.icon}
+                            width={isActive ? 18 : 16}
+                            style={{ color: isActive ? '#194E9E' : 'inherit' }}
+                            className="shrink-0"
+                          />
+                          <Text fw={600} fz={{ base: 10, md: 14 }} style={{ color: 'inherit' }} className="shrink-0">
+                            {tab.label}
+                          </Text>
+                        </Flex>
+                      );
+                    })}
+                  </Flex>
+                </Box>
 
-                  <Divider color="gray.1" />
+                {/* Tab Content Panels */}
+                <Box p={24}>
+                  {activeTab === 'profil' && (
+                    <Stack gap={15}>
+                      <Text fw={700} size="md">Tentang Saya</Text>
+                      <Text size="sm" c="black" lh={1.6}>
+                        {MOCK_TALENT.description}
+                      </Text>
 
-                  {/* Pengalaman Kerja */}
-                  <Stack gap={15}>
-                    <Text fw={700} size="md">Pengalaman Kerja</Text>
-                    <Timeline active={0} bulletSize={12} lineWidth={2} color="#194E9E">
-                      {MOCK_TALENT.experience.map((exp, i) => (
-                        <Timeline.Item key={i}>
-                          <Flex gap={20} direction={{ base: 'column', sm: 'row' }}>
-                            <Text size="xs" c="black" w={100} className="shrink-0">{exp.period}</Text>
-                            <Stack gap={4}>
-                              <Text fw={700} size="sm">{exp.role}</Text>
-                              <Text size="xs" c="black">{exp.company}</Text>
-                              <Text size="xs" c="black">{exp.desc}</Text>
-                            </Stack>
-                          </Flex>
-                        </Timeline.Item>
-                      ))}
-                    </Timeline>
-                  </Stack>
-                </Stack>
+                      <Divider my={10} color="gray.1" />
+
+                      <Accordion variant="separated" radius="md" styles={{
+                        item: { border: 'none', backgroundColor: 'transparent' },
+                        control: { padding: '10px 0' },
+                        content: { padding: '10px 0' }
+                      }}>
+                        <Accordion.Item value="skills">
+                          <Accordion.Control>
+                            <Text fw={700} size="sm">Skills</Text>
+                          </Accordion.Control>
+                          <Accordion.Panel>
+                            <Flex gap={8} wrap="wrap">
+                              {MOCK_TALENT.skills.map((skill, i) => (
+                                <Badge
+                                  key={i}
+                                  variant="outline"
+                                  color="gray.3"
+                                  c="black"
+                                  radius={8}
+                                  size="md"
+                                  tt="capitalize"
+                                  px={12}
+                                  fw={400}
+                                  className="border-gray-300"
+                                >
+                                  {skill}
+                                </Badge>
+                              ))}
+                            </Flex>
+                          </Accordion.Panel>
+                        </Accordion.Item>
+                      </Accordion>
+                    </Stack>
+                  )}
+
+                  {activeTab === 'portfolio' && (
+                    <Stack gap={20}>
+                      <Flex justify="space-between" align="center">
+                        <Text fw={700} size="md">Portofolio</Text>
+                        <Anchor href={`/talent/${id}/portfolio`} size="xs" fw={600} c="#194E9E">Lihat Semua</Anchor>
+                      </Flex>
+                      <SimpleGrid cols={{ base: 2, sm: 3, md: 4 }} spacing={12}>
+                        {MOCK_TALENT.portfolio.map((img, i) => (
+                          <Box
+                            key={i}
+                            pos="relative"
+                            h={120}
+                            className="rounded-xl overflow-hidden group cursor-pointer border border-gray-100"
+                            onClick={() => handleImageClick(img)}
+                          >
+                            <Image src={img} alt={`Portfolio ${i}`} fill className="object-cover group-hover:scale-110 transition-transform duration-300" />
+                            {i === 4 && (
+                              <Box pos="absolute" inset={0} className="bg-black/60 flex items-center justify-center pointer-events-none">
+                                <Text c="white" fw={700} size="lg">+12</Text>
+                              </Box>
+                            )}
+                          </Box>
+                        ))}
+                      </SimpleGrid>
+                    </Stack>
+                  )}
+
+                  {activeTab === 'experience' && (
+                    <Stack gap={20}>
+                      <Text fw={700} size="md">Pengalaman Kerja</Text>
+                      <Timeline active={0} bulletSize={12} lineWidth={2} color="#194E9E">
+                        {MOCK_TALENT.experience.map((exp, i) => (
+                          <Timeline.Item key={i}>
+                            <Flex gap={20} direction={{ base: 'column', sm: 'row' }}>
+                              <Text size="xs" c="gray.6" w={100} className="shrink-0 font-bold">{exp.period}</Text>
+                              <Stack gap={4}>
+                                <Text fw={800} size="sm" c="dark.8">{exp.role}</Text>
+                                <Text size="xs" fw={600} c="#194E9E">{exp.company}</Text>
+                                <Text size="xs" c="gray.7" lh={1.5}>{exp.desc}</Text>
+                              </Stack>
+                            </Flex>
+                          </Timeline.Item>
+                        ))}
+                      </Timeline>
+                    </Stack>
+                  )}
+
+                  {activeTab === 'info' && (
+                    <Stack gap={20}>
+                      <Text fw={700} size="md">Informasi Lengkap</Text>
+                      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={20}>
+                        {[
+                          { icon: 'material-symbols:location-on-rounded', label: 'Lokasi', val: MOCK_TALENT.location },
+                          { icon: 'solar:calendar-bold', label: 'Bergabung Sejak', val: MOCK_TALENT.joinDate },
+                          { icon: 'solar:chat-round-bold', label: 'Rata-rata Balas Pesan', val: MOCK_TALENT.responseTime },
+                          { icon: 'solar:global-bold', label: 'Bahasa yang Dikuasai', val: MOCK_TALENT.languages },
+                          { icon: 'solar:verified-check-bold', label: 'Status Verifikasi', val: 'Terverifikasi' },
+                          { icon: 'solar:star-bold', label: 'Rating Global', val: `${MOCK_TALENT.rating} (${MOCK_TALENT.ratingCount} Ulasan)` },
+                        ].map((item, i) => (
+                          <Card key={i} p={15} radius="md" withBorder className="bg-gray-50/50">
+                            <Flex align="center" gap={12}>
+                              <Box p={8} className="bg-white rounded-full shadow-sm">
+                                <Icon icon={item.icon} className="text-[#194E9E] text-lg" />
+                              </Box>
+                              <Stack gap={2}>
+                                <Text size="xs" c="dimmed" fw={500}>{item.label}</Text>
+                                <Text size="sm" fw={700} c="dark.8">{item.val}</Text>
+                              </Stack>
+                            </Flex>
+                          </Card>
+                        ))}
+                      </SimpleGrid>
+                    </Stack>
+                  )}
+                </Box>
               </Card>
             </Box>
 
             {/* Right Column - Sidebar */}
             <Stack gap={24}>
-              {/* Informasi Talent */}
-              <Card radius={12} p={20} withBorder className="shadow-sm bg-white">
-                <Stack gap={15}>
-                  <Text fw={700} size="sm">Informasi Talent</Text>
-                  <Stack gap={12}>
-                    {[
-                      { icon: 'material-symbols:location-on-rounded', label: 'Lokasi', val: MOCK_TALENT.location },
-                      { icon: 'solar:calendar-bold', label: 'Bergabung', val: MOCK_TALENT.joinDate },
-                      { icon: 'solar:chat-round-bold', label: 'Balas Pesan', val: MOCK_TALENT.responseTime },
-                      { icon: 'solar:global-bold', label: 'Bahasa', val: MOCK_TALENT.languages },
-                    ].map((item, i) => (
-                      <Flex key={i} justify="space-between" align="center">
-                        <Flex align="center" gap={8}>
-                          <Icon icon={item.icon} className="text-gray-400" />
-                          <Text size="xs" c="black">{item.label}</Text>
+              {/* Combined Sidebar Card with Accordion */}
+              <Card radius={12} p={0} withBorder className="shadow-sm bg-white overflow-hidden">
+                <Accordion variant="separated" radius="md" defaultValue="services" styles={{
+                  item: { border: 'none', backgroundColor: 'transparent' },
+                  control: { padding: '15px 20px' },
+                  content: { padding: '0 20px 20px 20px' }
+                }}>
+                  <Accordion.Item value="services">
+                    <Accordion.Control icon={<Icon icon="solar:tag-bold" className="text-[#194E9E] text-xl" />}>
+                      <Text fw={700} size="sm">Layanan & Harga</Text>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      <Stack gap={15}>
+                        <Flex gap={12} align="center">
+                          <Box p={8} className="bg-[#F8F9FA] rounded-lg">
+                            <Icon icon="solar:camera-bold" className="text-[#194E9E] text-xl" />
+                          </Box>
+                          <Stack gap={2}>
+                            <Text fw={700} size="xs">Event Photography</Text>
+                            <Text size="10px" c="black">Mulai dari</Text>
+                            <Text fw={700} size="sm" c="black">Rp 1.500.000 <Text span fw={400} c="black">/ event</Text></Text>
+                          </Stack>
                         </Flex>
-                        <Text size="xs" fw={600} c="dark.8">{item.val}</Text>
-                      </Flex>
-                    ))}
-                  </Stack>
-                </Stack>
-              </Card>
+                      </Stack>
+                    </Accordion.Panel>
+                  </Accordion.Item>
 
-              {/* Layanan & Harga */}
-              <Card radius={12} p={20} withBorder className="shadow-sm bg-white">
-                <Stack gap={15}>
-                  <Text fw={700} size="sm">Layanan & Harga</Text>
-                  <Flex gap={12} align="center">
-                    <Box p={8} className="bg-[#F8F9FA] rounded-lg">
-                      <Icon icon="solar:camera-bold" className="text-[#194E9E] text-xl" />
-                    </Box>
-                    <Stack gap={2}>
-                      <Text fw={700} size="xs">Event Photography</Text>
-                      <Text size="10px" c="black">Mulai dari</Text>
-                      <Text fw={700} size="sm" c="black">Rp 1.500.000 <Text span fw={400} c="black">/ event</Text></Text>
-                    </Stack>
-                  </Flex>
-                  <Button
-                    variant="outline"
-                    color="#194E9E"
-                    radius="md"
-                    size="xs"
-                    fullWidth
-                    className="border-[#194E9E]"
-                    onClick={() => router.push(`/talent/${id}/services`)}
-                  >
-                    Lihat Paket Layanan
-                  </Button>
-                </Stack>
-              </Card>
+                  <Divider color="gray.1" mx={20} />
 
-              {/* Skills */}
-              <Card radius={12} p={20} withBorder className="shadow-sm bg-white">
-                <Stack gap={15}>
-                  <Text fw={700} size="sm">Skills</Text>
-                  <Flex gap={8} wrap="wrap">
-                    {MOCK_TALENT.skills.map((skill, i) => (
-                      <Badge key={i} variant="filled" color="gray.1" c="dark.8" radius="sm" size="sm" tt="lowercase" px={8}>
-                        {skill}
-                      </Badge>
-                    ))}
-                  </Flex>
-                </Stack>
-              </Card>
-
-              {/* Bagikan Profil */}
-              <Card radius={12} p={20} withBorder className="shadow-sm bg-white">
-                <Stack gap={15}>
-                  <Text fw={700} size="sm">Bagikan Profil</Text>
-                  <Group gap={10}>
-                    {[
-                      'solar:link-bold',
-                      'ri:whatsapp-fill',
-                      'ri:instagram-fill',
-                      'ri:facebook-fill',
-                      'ri:twitter-x-fill'
-                    ].map((icon, i) => (
-                      <ActionIcon key={i} variant="filled" color="gray.1" radius="xl" size="lg" c="gray.6">
-                        <Icon icon={icon} className="text-lg" />
-                      </ActionIcon>
-                    ))}
-                  </Group>
-                </Stack>
+                  <Accordion.Item value="share">
+                    <Accordion.Control icon={<Icon icon="solar:share-bold" className="text-[#194E9E] text-xl" />}>
+                      <Text fw={700} size="sm">Bagikan Profil</Text>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      <Group gap={10} justify="center">
+                        {[
+                          'solar:link-bold',
+                          'ri:whatsapp-fill',
+                          'ri:instagram-fill',
+                          'ri:facebook-fill',
+                          'ri:twitter-x-fill'
+                        ].map((icon, i) => (
+                          <ActionIcon key={i} variant="filled" color="gray.1" radius="xl" size="lg" c="gray.6">
+                            <Icon icon={icon} className="text-lg" />
+                          </ActionIcon>
+                        ))}
+                      </Group>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                </Accordion>
               </Card>
             </Stack>
           </SimpleGrid>
@@ -459,13 +541,19 @@ const TalentDetail = () => {
           <Flex
             direction={{ base: 'column', md: 'row' }}
             justify="space-between"
-            align={{ base: 'flex-start', md: 'center' }}
+            align={{ base: 'stretch', md: 'center' }}
             gap={{ base: 12, md: 10 }}
           >
             {/* Price Info */}
-            <Box>
-              <Text size="10px" c="black" fw={500} mb={-2}>Harga Mulai Dari</Text>
-              <Text fw={700} fz={{ base: 'sm', md: 'md' }} c="black">
+            <Box
+              style={(theme) => ({
+                alignSelf: 'var(--box-align-self)',
+                textAlign: 'inherit'
+              })}
+              className="base:text-right md:text-left [--box-align-self:flex-end] md:[--box-align-self:auto]"
+            >
+              <Text size="10px" c="black" fw={500} mb={-2} className="text-right md:text-left">Harga Mulai Dari</Text>
+              <Text fw={700} fz={{ base: 'sm', md: 'md' }} c="black" className="text-right md:text-left">
                 Rp 1.500.000 <Text span fw={400} c="black" size="xs">/ event</Text>
               </Text>
             </Box>
@@ -486,14 +574,15 @@ const TalentDetail = () => {
               <Button
                 variant="filled"
                 color="#194E9E"
-                size="md"
+                size="sm"
                 radius="md"
                 className="shadow-sm"
-                h={40}
+                h={36}
                 flex={1}
-                leftSection={<Icon icon="solar:ticket-bold" className="text-lg" />}
+                leftSection={<Icon icon="solar:tag-bold" className="text-lg" />}
+                onClick={() => router.push(`/talent/${id}/services`)}
               >
-                Sewa Talenta
+                Lihat Paket Layanan
               </Button>
             </Flex>
           </Flex>

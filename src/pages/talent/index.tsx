@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useMediaQuery } from '@mantine/hooks';
 import TalentCard from '@/components/Card/TalentCard';
 import { TalentProps } from '@/utils/globalInterface';
 import { Get } from '@/utils/REST';
 import empty from '@/assets/icon/vacancy.png';
 import Image from 'next/image';
 import FilterTalent from '@/components/FilterTalent';
-import { Button, Flex, Text, Stack, Container, SimpleGrid, TextInput, Select, Pagination, ActionIcon, Box } from '@mantine/core';
+import { Button, Flex, Text, Stack, Container, SimpleGrid, TextInput, Select, Pagination, ActionIcon, Box, Breadcrumbs, Anchor } from '@mantine/core';
 import { Icon } from '@iconify/react/dist/iconify.js';
 
 // Mock data for high-fidelity demonstration
@@ -25,6 +27,7 @@ const TalentPage = () => {
   const [nameFilter, setNameFilter] = useState<string>('');
   const [categoryFilter, setCategoryFilter] = useState<string>('');
   const [showFilterSidebar, setShowFilterSidebar] = useState<boolean>(false);
+  const isMobile = useMediaQuery('(max-width: 48em)');
 
   const getData = () => {
     setLoading(true);
@@ -37,7 +40,13 @@ const TalentPage = () => {
 
   return (
     <div className="bg-[#F8F9FA] min-h-screen">
-      <Container size="xl" py={40}>
+      <Container size="xl" pt={80} pb={40}>
+        {/* Breadcrumbs */}
+        <Breadcrumbs mb={20} separator=">">
+          <Anchor href="/" c="#0B387C" size="sm" style={{ textDecoration: 'none', fontWeight: 500 }}>Beranda</Anchor>
+          <Text size="sm" c="gray.6" fw={500}>Talenta</Text>
+        </Breadcrumbs>
+
         {/* Page Header */}
         <Flex justify="space-between" align={{ base: 'flex-start', sm: 'center' }} direction={{ base: 'column', sm: 'row' }} gap="md" mb={30}>
           <Stack gap={5}>
@@ -45,42 +54,71 @@ const TalentPage = () => {
             <Text c="dimmed" size="sm">Temukan talenta terbaik untuk kebutuhan eventmu</Text>
           </Stack>
 
-          <Button 
-            variant="filled" 
-            color="#194E9E" 
-            radius="md" 
-            size="sm"
-            leftSection={<Icon icon="solar:user-plus-bold" className="text-lg" />}
+          <Button
+            variant="filled"
+            color="#000000ff"
+            component={Link}
+            href="/talent/register"
           >
             Daftar Talenta
           </Button>
         </Flex>
 
-        {/* Category Pill Buttons + Filter Toggle */}
-        <Flex gap={12} wrap="wrap" align="center" mb={24}>
-          <Button 
-            variant={showFilterSidebar ? "filled" : "outline"} 
-            color={showFilterSidebar ? "#194E9E" : "gray"} 
-            c={showFilterSidebar ? "white" : "dark.8"}
-            radius="xl" 
-            size="sm" 
-            onClick={() => setShowFilterSidebar(!showFilterSidebar)}
-            leftSection={<Icon icon="lucide:sliders-horizontal" />}
-            className={!showFilterSidebar ? "border-gray-300" : ""}
+        {/* Category Pill Buttons */}
+        <Flex
+          gap={12}
+          wrap={{ base: 'nowrap', sm: 'wrap' }}
+          align="center"
+          mb={24}
+          style={{
+            overflowX: 'auto',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch'
+          }}
+          className="[&::-webkit-scrollbar]:hidden pb-2"
+        >
+          <Button
+            variant="filled"
+            color="#194E9E"
+            radius="xl"
+            size={isMobile ? 'xs' : 'sm'}
+            leftSection={<Icon icon="material-symbols:group" />}
+            className="shrink-0"
           >
-            Filtering
-          </Button>
-
-          <Button variant="filled" color="#194E9E" radius="xl" size="sm" leftSection={<Icon icon="material-symbols:group" />}>
             Semua Talenta
           </Button>
-          <Button variant="outline" color="gray" c="gray.8" radius="xl" size="sm" className="border-gray-300" leftSection={<Icon icon="material-symbols:camera-enhance" />}>
+          <Button
+            variant="outline"
+            color="gray"
+            c="gray.8"
+            radius="xl"
+            size={isMobile ? 'xs' : 'sm'}
+            className="border-gray-300 shrink-0"
+            leftSection={<Icon icon="material-symbols:camera-enhance" />}
+          >
             Photographer
           </Button>
-          <Button variant="outline" color="gray" c="gray.8" radius="xl" size="sm" className="border-gray-300" leftSection={<Icon icon="material-symbols:videocam" />}>
+          <Button
+            variant="outline"
+            color="gray"
+            c="gray.8"
+            radius="xl"
+            size={isMobile ? 'xs' : 'sm'}
+            className="border-gray-300 shrink-0"
+            leftSection={<Icon icon="material-symbols:videocam" />}
+          >
             Videographer
           </Button>
-          <Button variant="outline" color="gray" c="gray.8" radius="xl" size="sm" className="border-gray-300" leftSection={<Icon icon="material-symbols:equalizer" />}>
+          <Button
+            variant="outline"
+            color="gray"
+            c="gray.8"
+            radius="xl"
+            size={isMobile ? 'xs' : 'sm'}
+            className="border-gray-300 shrink-0"
+            leftSection={<Icon icon="material-symbols:equalizer" />}
+          >
             Sound Engineer
           </Button>
         </Flex>
@@ -90,7 +128,7 @@ const TalentPage = () => {
           {/* Sidebar Filter - Conditional with Animation */}
           {showFilterSidebar && (
             <Box w={{ base: '100%', md: 280 }} className="shrink-0 sticky top-20">
-              <FilterTalent 
+              <FilterTalent
                 setNameFilter={setNameFilter}
                 setCategoryFilter={setCategoryFilter}
                 categories={[]}
@@ -107,7 +145,7 @@ const TalentPage = () => {
                     key={item.id}
                     id={item.id}
                     name={item.name}
-                    image={item.image} 
+                    image={item.image}
                     skills={item.skills}
                     description={item.description}
                     location={item.location}
