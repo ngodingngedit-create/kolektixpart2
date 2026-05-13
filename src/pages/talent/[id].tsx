@@ -159,7 +159,7 @@ const TalentDetail = () => {
         </Container>
       </Box>
 
-      <Container size={1380} py={40}>
+      <Container size={1380} px={{ base: 5, md: 40 }} py={40}>
         <Breadcrumbs
           separator={<Icon icon="tabler:chevron-right" width={14} />}
           mb={24}
@@ -180,7 +180,7 @@ const TalentDetail = () => {
               />
             </Box>
 
-            <Box px={{ base: 20, md: 40 }} pb={{ base: 20, md: 30 }} pos="relative">
+            <Box px={{ base: 10, md: 40 }} pb={{ base: 20, md: 30 }} pos="relative">
               {/* Overlapping Content Container */}
               <Flex
                 gap={{ base: 12, md: 25 }}
@@ -189,13 +189,44 @@ const TalentDetail = () => {
                 direction={{ base: 'column', md: 'row' }}
               >
                 {/* Avatar with Thick Border */}
-                <Avatar
-                  src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300"
-                  w={{ base: 80, md: 150 }}
-                  h={{ base: 80, md: 150 }}
-                  radius={150}
-                  className="border-[4px] md:border-[6px] border-white shadow-xl z-30 bg-white shrink-0"
-                />
+                <Flex align="flex-end" justify="space-between" w={{ base: '100%', md: 'auto' }} gap={15}>
+                  <Avatar
+                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300"
+                    w={{ base: 80, md: 150 }}
+                    h={{ base: 80, md: 150 }}
+                    radius={150}
+                    className="border-[4px] md:border-[6px] border-white shadow-xl z-30 bg-white shrink-0"
+                  />
+                  
+                  {/* Buttons for Mobile - Positioned next to Avatar */}
+                  <Flex hiddenFrom="md" gap={6} mb={8} align="center">
+                    <Button
+                      variant="filled"
+                      color="#194E9E"
+                      radius="md"
+                      h={30}
+                      px={12}
+                      fz={10}
+                      className="font-bold shadow-sm"
+                      leftSection={
+                        <Box display="flex" style={{ alignItems: 'center' }}>
+                          <Icon icon="solar:chat-round-bold" width={12} style={{ color: 'white' }} />
+                        </Box>
+                      }
+                    >
+                      Chat
+                    </Button>
+                    <ActionIcon
+                      variant="outline"
+                      color="gray"
+                      size={30}
+                      radius="md"
+                      className="border-gray-200 bg-white"
+                    >
+                      <Icon icon="solar:bookmark-linear" className="text-[#194E9E] text-base" />
+                    </ActionIcon>
+                  </Flex>
+                </Flex>
 
                 <Stack gap={0} flex={1} mt={{ base: 5, md: 20 }} pos="relative" className="w-full">
                   {/* Talent Name - Sitting on Banner (Desktop) or Below (Mobile) */}
@@ -259,12 +290,13 @@ const TalentDetail = () => {
                       </Text>
                     </Stack>
 
-                    {/* Action Buttons Container - Right on Desktop, Right on Mobile */}
+                    {/* Action Buttons Container - Desktop Only */}
                     <Flex
                       gap={12}
                       w={{ base: '100%', md: 'auto' }}
                       justify={{ base: 'flex-end', md: 'flex-end' }}
                       className="md:mb-1"
+                      visibleFrom="md"
                     >
                       <Button
                         variant="filled"
@@ -274,9 +306,13 @@ const TalentDetail = () => {
                         px={20}
                         fz={12}
                         className="font-bold shadow-sm hover:bg-[#002D72] transition-colors"
-                        leftSection={<Icon icon="solar:letter-bold" width={16} />}
+                        leftSection={
+                          <Box display="flex" style={{ alignItems: 'center' }}>
+                            <Icon icon="solar:chat-round-bold" width={16} style={{ color: 'white' }} />
+                          </Box>
+                        }
                       >
-                        Kirim Pesan
+                        Chat
                       </Button>
                       <ActionIcon
                         variant="outline"
@@ -560,30 +596,30 @@ const TalentDetail = () => {
 
             {/* Actions */}
             <Flex gap={8} align="center" w={{ base: '100%', md: 'auto' }}>
-              <ActionIcon
-                variant="outline"
-                color="gray"
-                size="md"
-                radius="md"
-                style={{ borderColor: '#CED4DA', height: '40px', width: '46px' }}
-                onClick={() => { }}
-              >
-                <Icon icon="solar:cart-large-2-bold" width={22} className="text-[#194E9E]" />
-              </ActionIcon>
-
               <Button
                 variant="filled"
                 color="#194E9E"
                 size="sm"
                 radius="md"
                 className="shadow-sm"
-                h={36}
+                h={40}
                 flex={1}
                 leftSection={<Icon icon="solar:tag-bold" className="text-lg" />}
                 onClick={() => router.push(`/talent/${id}/services`)}
               >
                 Lihat Paket Layanan
               </Button>
+
+              <ActionIcon
+                variant="outline"
+                color="gray"
+                size="lg"
+                radius="md"
+                style={{ borderColor: '#CED4DA', height: '40px', width: '46px' }}
+                onClick={() => { }}
+              >
+                <Icon icon="solar:chat-round-bold" width={22} className="text-[#194E9E]" />
+              </ActionIcon>
             </Flex>
           </Flex>
         </Container>

@@ -46,7 +46,7 @@ const TalentCard = ({
       w="100%" 
       radius={12} 
       p={0} 
-      className="!shadow-smooth-low hover:!shadow-md transition-shadow bg-white overflow-hidden border-gray-200"
+      className="!shadow-smooth-low hover:!shadow-md transition-all bg-white overflow-hidden border-gray-200 group"
     >
       {/* Cover Photo */}
       <div className="relative h-40">
@@ -62,19 +62,19 @@ const TalentCard = ({
             TERSEDIA
           </Badge>
         </div>
-        <div className="absolute top-3 right-3">
+        <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <ActionIcon 
             variant="white" 
             color="gray" 
             radius="md" 
             size="md"
-            className="shadow-sm"
+            className="shadow-sm hover:!bg-[#194E9E] hover:!text-white transition-colors"
             onClick={(e) => {
               e.preventDefault();
               setBookmark(!bookmark);
             }}
           >
-            <Icon icon={bookmark ? "lucide:bookmark-check" : "lucide:bookmark"} />
+            <Icon icon={bookmark ? "lucide:bookmark-check" : "lucide:bookmark"} className={bookmark ? "text-white" : ""} />
           </ActionIcon>
         </div>
       </div>
@@ -142,7 +142,7 @@ const TalentCard = ({
             c="dark.8"
             radius="md" 
             size="xs"
-            className="px-4 border-gray-300"
+            className="px-4 border-gray-300 hover:!bg-[#194E9E] hover:!text-white hover:!border-[#194E9E] transition-all"
           >
             Lihat Profil
           </Button>

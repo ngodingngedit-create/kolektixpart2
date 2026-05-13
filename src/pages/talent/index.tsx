@@ -65,63 +65,83 @@ const TalentPage = () => {
         </Flex>
 
         {/* Category Pill Buttons */}
-        <Flex
-          gap={12}
-          wrap={{ base: 'nowrap', sm: 'wrap' }}
-          align="center"
-          mb={24}
-          style={{
-            overflowX: 'auto',
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            WebkitOverflowScrolling: 'touch'
-          }}
-          className="[&::-webkit-scrollbar]:hidden pb-2"
-        >
-          <Button
-            variant="filled"
-            color="#194E9E"
-            radius="xl"
-            size={isMobile ? 'xs' : 'sm'}
-            leftSection={<Icon icon="material-symbols:group" />}
-            className="shrink-0"
+        <Stack gap={15} mb={24}>
+          <Flex
+            gap={12}
+            wrap={{ base: 'nowrap', sm: 'wrap' }}
+            align="center"
+            style={{
+              overflowX: 'auto',
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              WebkitOverflowScrolling: 'touch'
+            }}
+            className="[&::-webkit-scrollbar]:hidden pb-2"
           >
-            Semua Talenta
-          </Button>
-          <Button
-            variant="outline"
-            color="gray"
-            c="gray.8"
-            radius="xl"
-            size={isMobile ? 'xs' : 'sm'}
-            className="border-gray-300 shrink-0"
-            leftSection={<Icon icon="material-symbols:camera-enhance" />}
-          >
-            Photographer
-          </Button>
-          <Button
-            variant="outline"
-            color="gray"
-            c="gray.8"
-            radius="xl"
-            size={isMobile ? 'xs' : 'sm'}
-            className="border-gray-300 shrink-0"
-            leftSection={<Icon icon="material-symbols:videocam" />}
-          >
-            Videographer
-          </Button>
-          <Button
-            variant="outline"
-            color="gray"
-            c="gray.8"
-            radius="xl"
-            size={isMobile ? 'xs' : 'sm'}
-            className="border-gray-300 shrink-0"
-            leftSection={<Icon icon="material-symbols:equalizer" />}
-          >
-            Sound Engineer
-          </Button>
-        </Flex>
+            <Button
+              variant="filled"
+              color="#194E9E"
+              radius="xl"
+              size={isMobile ? 'xs' : 'sm'}
+              leftSection={<Icon icon="material-symbols:group" />}
+              className="shrink-0"
+            >
+              Semua Talenta
+            </Button>
+            
+            <Button
+              variant="outline"
+              color="gray"
+              c="gray.8"
+              radius="xl"
+              size={isMobile ? 'xs' : 'sm'}
+              className="border-gray-300 shrink-0"
+              leftSection={<Icon icon="material-symbols:search" />}
+              onClick={() => {
+                const headerSearchBtn = document.querySelector('button[aria-label="Search"]') as HTMLButtonElement;
+                if (headerSearchBtn) {
+                  headerSearchBtn.click();
+                }
+              }}
+            >
+              Search Talenta
+            </Button>
+
+            <Button
+              variant="outline"
+              color="gray"
+              c="gray.8"
+              radius="xl"
+              size={isMobile ? 'xs' : 'sm'}
+              className="border-gray-300 shrink-0"
+              leftSection={<Icon icon="material-symbols:camera-enhance" />}
+            >
+              Photographer
+            </Button>
+            <Button
+              variant="outline"
+              color="gray"
+              c="gray.8"
+              radius="xl"
+              size={isMobile ? 'xs' : 'sm'}
+              className="border-gray-300 shrink-0"
+              leftSection={<Icon icon="material-symbols:videocam" />}
+            >
+              Videographer
+            </Button>
+            <Button
+              variant="outline"
+              color="gray"
+              c="gray.8"
+              radius="xl"
+              size={isMobile ? 'xs' : 'sm'}
+              className="border-gray-300 shrink-0"
+              leftSection={<Icon icon="material-symbols:equalizer" />}
+            >
+              Sound Engineer
+            </Button>
+          </Flex>
+        </Stack>
 
         {/* Main Content: Sidebar + Grid */}
         <Flex gap={30} direction={{ base: 'column', md: 'row' }} align="flex-start">

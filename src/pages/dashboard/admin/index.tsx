@@ -1,52 +1,22 @@
-// import { formatDateNoCheck, formatDay, formatYear } from "@/utils/useFormattedDate";
-// import useLoggedUser from "@/utils/useLoggedUser";
-// import { Alert } from "@mantine/core";
-
-// type ComponentProps = {
-    
-// };
-
-// export default function DashboardUser({  }: Readonly<ComponentProps>) {
-//     const user = useLoggedUser();
-//     const now = new Date();
-
-//     return (
-//         <div className="w-full text-dark">
-//             <div className="flex flex-col gap-2 px-4 py-4 md:px-7 md:py-4 w-full bg-gradient-to-b from-white to-[#f5f5f5]">
-//                 <h1 className='mb-4 text-dark'>Dashboard</h1>
-//                 <p className="text-dark-grey mb-1">
-//                     {formatDay(now.toString())} &bull; {formatDateNoCheck(now.toString())},{' '}
-//                     {formatYear(now.toString())}
-//                 </p>
-//                 <h3 className="font-semibold text-xl md:text-2xl">Halo, {user?.name}</h3>
-//                 {/* <p className="text-sm text-dark-grey">Pantau dan kelola event, lowongan, dan merchandise</p> */}
-//             </div>
-//             {/* <Alert>
-//                 Akunmu belum terverifikasi, verifikasi akun sekarang
-//             </Alert> */}
-//         </div>
-//     );
-// }
-
 import { formatDateNoCheck, formatDay, formatYear } from "@/utils/useFormattedDate";
 import useLoggedUser from "@/utils/useLoggedUser";
 import { useState, useEffect } from "react";
 
-type ComponentProps = {};
-
-export default function DashboardUser({}: Readonly<ComponentProps>) {
+export default function DashboardAdmin() {
     const user = useLoggedUser();
+    const [mounted, setMounted] = useState(false);
     const [currentDate, setCurrentDate] = useState<Date | null>(null);
     
     useEffect(() => {
+        setMounted(true);
         setCurrentDate(new Date());
     }, []);
     
-    if (!currentDate) {
+    if (!mounted || !currentDate) {
         return (
             <div className="w-full text-dark">
                 <div className="flex flex-col gap-2 px-4 py-4 md:px-7 md:py-4 w-full bg-gradient-to-b from-white to-[#f5f5f5]">
-                    <h1 className='mb-4 text-dark'>Dashboard</h1>
+                    <h1 className='mb-4 text-dark'>Dashboard Admin</h1>
                     <p className="text-dark-grey mb-1">
                         Loading...
                     </p>
@@ -59,12 +29,13 @@ export default function DashboardUser({}: Readonly<ComponentProps>) {
     return (
         <div className="w-full text-dark">
             <div className="flex flex-col gap-2 px-4 py-4 md:px-7 md:py-4 w-full bg-gradient-to-b from-white to-[#f5f5f5]">
-                <h1 className='mb-4 text-dark'>Dashboard</h1>
+                <h1 className='mb-4 text-dark'>Dashboard Admin</h1>
                 <p className="text-dark-grey mb-1">
                     {formatDay(currentDate.toString())} &bull; {formatDateNoCheck(currentDate.toString())},{' '}
                     {formatYear(currentDate.toString())}
                 </p>
-                <h3 className="font-semibold text-xl md:text-2xl">Halo, {user?.name}</h3>
+                <h3 className="font-semibold text-xl md:text-2xl">Halo, {user?.name || "Admin"}</h3>
+                <p className="text-sm text-dark-grey">Selamat datang di panel kontrol administrasi.</p>
             </div>
         </div>
     );

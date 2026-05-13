@@ -55,7 +55,7 @@ const MOCK_SERVICES = [
     id: 3,
     title: "Event Photography - Premium",
     description: "Cakupan lengkap untuk event besar sepanjang hari dengan dokumentasi mendalam dan highlight khusus.",
-    duration: "Full Day (8-10 Jam)",
+    duration: "Full Time (8-12 Jam)",
     deliverables: "Semua Foto (Min. 250+ Edit)",
     price: 6000000,
     image: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800",
@@ -164,7 +164,7 @@ const ServiceDetails = () => {
         </Container>
       </Box>
 
-      <Container size={1380} pt={100} pb={40}>
+      <Container size={1380} pt={100} pb={40} px={{ base: 5, md: 20 }}>
         <Breadcrumbs
           separator={<Icon icon="tabler:chevron-right" width={14} />}
           mb={24}
@@ -368,11 +368,11 @@ const ServiceDetails = () => {
                     </Flex>
                     <SimpleGrid cols={{ base: 2, xs: 3, sm: 3, md: 4, lg: 5 }} spacing="xs">
                       {[
-                        "00:00 - 01:00", "06:00 - 07:00", "07:00 - 08:00", "08:00 - 09:00", 
+                        "Full Time", "00:00 - 01:00", "06:00 - 07:00", "07:00 - 08:00", "08:00 - 09:00", 
                         "09:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00", "12:00 - 13:00", 
                         "13:00 - 14:00", "14:00 - 15:00", "23:00 - 00:00"
                       ].map((time, i) => {
-                        const isAvailable = service.id === 2 || time === "00:00 - 01:00" || time === "23:00 - 00:00";
+                        const isAvailable = time === "Full Time" || service.id === 2 || time === "00:00 - 01:00" || time === "23:00 - 00:00";
                         const availableTimes = (service.id === 2 
                           ? ["00:00 - 01:00", "06:00 - 07:00", "07:00 - 08:00", "08:00 - 09:00", "09:00 - 10:00", "10:00 - 11:00", "11:00 - 12:00", "12:00 - 13:00", "13:00 - 14:00", "14:00 - 15:00", "23:00 - 00:00"]
                           : ["00:00 - 01:00", "23:00 - 00:00"]
@@ -552,8 +552,18 @@ const ServiceDetails = () => {
                 {selectedSlots.length > 0 
                   ? (() => {
                       const grouped = selectedSlots.reduce((acc, slotKey) => {
-                        const serviceId = parseInt(slotKey.split('-')[0]);
-                        acc[serviceId] = (acc[serviceId] || 0) + 1;
+                        const parts = slotKey.split('-');
+                        const serviceId = parseInt(parts[0]);
+                        const isFullTime = parts[1] === "Full Time";
+                        
+                        const service = MOCK_SERVICES.find(s => s.id === serviceId);
+                        const availableCount = service?.id === 2 ? 11 : 2;
+
+                        if (isFullTime) {
+                          acc[serviceId] = availableCount;
+                        } else if (acc[serviceId] !== availableCount) {
+                          acc[serviceId] = (acc[serviceId] || 0) + 1;
+                        }
                         return acc;
                       }, {} as Record<number, number>);
 
@@ -581,17 +591,6 @@ const ServiceDetails = () => {
 
             {/* Actions */}
             <Flex gap={10} w={{ base: '100%', md: 'auto' }} justify="flex-end">
-              <ActionIcon
-                variant="outline"
-                color="gray"
-                size="md"
-                radius="md"
-                style={{ borderColor: '#CED4DA', height: '42px', width: '50px' }}
-                onClick={() => { }}
-              >
-                <Icon icon="solar:cart-large-2-bold" width={24} className="text-[#194E9E]" />
-              </ActionIcon>
-
               <Button
                 variant="filled"
                 color="#194E9E"
@@ -604,6 +603,17 @@ const ServiceDetails = () => {
               >
                 Sewa Talenta
               </Button>
+
+              <ActionIcon
+                variant="outline"
+                color="gray"
+                size="md"
+                radius="md"
+                style={{ borderColor: '#CED4DA', height: '42px', width: '50px' }}
+                onClick={() => { }}
+              >
+                <Icon icon="solar:cart-large-2-bold" width={24} className="text-[#194E9E]" />
+              </ActionIcon>
             </Flex>
           </Flex>
         </Container>

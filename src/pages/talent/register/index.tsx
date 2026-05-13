@@ -24,13 +24,16 @@ import {
   Input,
   Tooltip,
   RingProgress,
-  Accordion
+  Accordion,
+  Badge
 } from '@mantine/core';
 import { Icon } from '@iconify/react';
 import { useMediaQuery } from '@mantine/hooks';
 import Image from 'next/image';
 import Head from 'next/head';
-import InformasiDasar from './InformasiDasar';
+import InformasiDasar from '@/components/TalentRegistration/InformasiDasar';
+import Portfolio from '@/components/TalentRegistration/Portfolio';
+import LayananHarga from '@/components/TalentRegistration/LayananHarga';
 
 const STEPS = [
   { label: 'Pilih Jenis Talenta', icon: 'solar:user-broken' },
@@ -233,7 +236,11 @@ export default function TalentRegistrationPage() {
                   <Text c="dimmed" size="sm">
                     {activeStep === 0
                       ? 'Pilih kategori yang paling sesuai dengan keahlian utama Anda.'
-                      : 'Lengkapi informasi profil Anda dengan data yang benar.'}
+                      : activeStep === 1
+                      ? 'Lengkapi informasi profil Anda dengan data yang benar.'
+                      : activeStep === 2
+                      ? 'Tampilkan hasil karya terbaik Anda. Portofolio yang menarik akan meningkatkan peluang Anda mendapatkan proyek.'
+                      : 'Tawarkan layanan yang Anda sediakan beserta paket harga agar klien dapat mengetahui pilihan dan menyesuaikan kebutuhan mereka.'}
                   </Text>
                 </Box>
 
@@ -287,6 +294,22 @@ export default function TalentRegistrationPage() {
 
                 {activeStep === 1 && (
                   <InformasiDasar
+                    isMobile={!!isMobile}
+                    formData={formData}
+                    updateFormData={updateFormData}
+                  />
+                )}
+
+                {activeStep === 2 && (
+                  <Portfolio
+                    isMobile={!!isMobile}
+                    formData={formData}
+                    updateFormData={updateFormData}
+                  />
+                )}
+
+                {activeStep === 3 && (
+                  <LayananHarga
                     isMobile={!!isMobile}
                     formData={formData}
                     updateFormData={updateFormData}
@@ -382,7 +405,7 @@ export default function TalentRegistrationPage() {
 
                 <Stack gap={2} mb={25}>
                   <Text fw={800} size="lg">{savedData.fullName || 'Nama Anda'}</Text>
-                  <Text size="sm" c="#0B387C" fw={700}>
+                  <Text size="sm" c="black" fw={600}>
                     {CATEGORIES.find(c => c.id === savedData.category)?.title || 'Talenta'}
                   </Text>
                 </Stack>
@@ -404,8 +427,18 @@ export default function TalentRegistrationPage() {
                   <Box>
                     <Text size="xs" fw={800} c="dark" mb={8} style={{ textTransform: 'uppercase' }}>Layanan</Text>
                     <Group gap={8}>
-                      <Box bg="gray.1" h={25} w={60} style={{ borderRadius: 6 }} />
-                      <Box bg="gray.1" h={25} w={80} style={{ borderRadius: 6 }} />
+                      {activeStep >= 3 ? (
+                        <>
+                          <Badge variant="light" color="gray" size="sm" radius="md">Fotografi Event</Badge>
+                          <Badge variant="light" color="gray" size="sm" radius="md">Videografi Event</Badge>
+                          <Badge variant="light" color="gray" size="sm" radius="md">Editing Foto</Badge>
+                        </>
+                      ) : (
+                        <>
+                          <Box bg="gray.1" h={25} w={60} style={{ borderRadius: 6 }} />
+                          <Box bg="gray.1" h={25} w={80} style={{ borderRadius: 6 }} />
+                        </>
+                      )}
                     </Group>
                   </Box>
 
@@ -413,7 +446,10 @@ export default function TalentRegistrationPage() {
 
                   <Box style={{ textAlign: 'right' }}>
                     <Text size="xs" c="dimmed" fw={700}>Mulai dari</Text>
-                    <Text fw={800} size="lg">Rp 0 <Text span size="xs" fw={500} c="dimmed">/ event</Text></Text>
+                    <Text fw={800} size="lg">
+                      {activeStep >= 3 ? 'Rp 1.500.000' : 'Rp 0'}{' '}
+                      <Text span size="xs" fw={500} c="dimmed">/ paket</Text>
+                    </Text>
                   </Box>
                 </Stack>
               </Card>
