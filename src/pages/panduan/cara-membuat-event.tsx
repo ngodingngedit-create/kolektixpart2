@@ -48,29 +48,26 @@ export default function CaraMembuatEvent() {
 
 
       {/* --- MAIN CONTENT WRAPPER --- */}
-      <Container size="xl" className="pt-24 pb-12">
+      <Container size="91%" className="pt-24 pb-12 px-4 md:px-12 lg:px-20 xl:px-32">
         <Stack gap={48}>
 
           {/* --- 2. HERO SECTION --- */}
           <Card
             radius="20px"
             p={0}
-            className="overflow-hidden border-none"
+            className="overflow-hidden border-none relative"
             style={{ backgroundColor: 'rgba(34, 101, 200, 0.05)' }}
           >
+            {/* Last Updated Label */}
+            <div className="absolute top-4 md:top-6 right-4 md:right-8 flex items-center gap-2 bg-[#194E9E] backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/40 z-20">
+              <Icon icon="solar:calendar-outline" width={14} className="text-white" />
+              <div className="text-[10px] md:text-[11px] font-semibold text-white ">Terakhir diperbarui: 14 Januari 2026</div>
+            </div>
+
             <Grid gutter={0} align="center">
               <Grid.Col span={isMobile ? 12 : 7} p={isMobile ? 32 : 48}>
                 <Stack gap={24}>
-                  <Badge
-                    variant="filled"
-                    color="blue"
-                    radius="md"
-                    size="lg"
-                    className="bg-[#194E9E] w-fit"
-                    style={{ textTransform: 'none' }}
-                  >
-                    Panduan
-                  </Badge>
+
                   <Box>
                     <Title order={1} className="text-[32px] md:text-[44px] font-extrabold text-[#02255A] leading-tight">
                       Cara Membuat Event
@@ -79,10 +76,6 @@ export default function CaraMembuatEvent() {
                       Panduan lengkap untuk membantu Anda membuat dan mempublikasikan event di platform Kolektix dengan mudah.
                     </Text>
                   </Box>
-                  <Flex align="center" gap={8} className="text-gray-500">
-                    <Icon icon="solar:calendar-outline" width={20} />
-                    <Text size="sm" fw={500}>Terakhir diperbarui: 14 Januari 2026</Text>
-                  </Flex>
                 </Stack>
               </Grid.Col>
 
@@ -112,7 +105,7 @@ export default function CaraMembuatEvent() {
                 <Box id="persiapan">
                   <Flex align="center" gap={12} className="mb-6">
                     <ThemeIcon size={32} radius="xl" color="blue" className="bg-[#194E9E]">
-                      <Text size="xs" fw={700}>1</Text>
+                      <Text size="xl" fw={700}>1</Text>
                     </ThemeIcon>
                     <Title order={2} size="h3" className="text-[#02255A] font-bold">
                       Persiapan Sebelum Membuat Event
@@ -121,16 +114,16 @@ export default function CaraMembuatEvent() {
 
                   <Card radius="12px" padding={isMobile ? 'lg' : 'xl'} className="shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-200 bg-white">
                     <Box>
-                      <Text className="text-gray-600 mb-8 leading-relaxed">
+                      <div className="text-gray-600 mb-8 leading-relaxed pl-1">
                         Sebelum membuat event, pastikan Anda sudah menyiapkan beberapa hal berikut agar proses pembuatan event berjalan lancar.
-                      </Text>
+                      </div>
 
                       <Grid gutter="lg">
                         {[
                           { title: 'Informasi Event', icon: 'solar:document-text-linear', color: 'blue', desc: 'Siapkan detail event seperti nama, deskripsi, tanggal, waktu, dan lokasi.' },
                           { title: 'Media Event', icon: 'solar:gallery-linear', color: 'green', desc: 'Siapkan gambar/grafis event seperti poster, banner, dan lainnya.' },
                           { title: 'Rencana Tiket', icon: 'solar:ticket-linear', color: 'purple', desc: 'Tentukan jenis tiket, kategori, dan harga yang akan ditawarkan.' },
-                          { title: 'Kebutuhan Promosi', icon: 'solar:megaphone-linear', color: 'orange', desc: 'Siapkan strategi promosi untuk menjangkau audiens Anda.' },
+                          { title: 'Kebutuhan Promosi', icon: 'solar:tag-bold-duotone', color: 'orange', desc: 'Siapkan strategi promosi untuk menjangkau audiens Anda.' },
                         ].map((card, i) => (
                           <Grid.Col span={isMobile ? 6 : 3} key={card.title}>
                             <Card
@@ -175,20 +168,20 @@ export default function CaraMembuatEvent() {
                   <Card radius="12px" padding={isMobile ? 'lg' : 'xl'} className="shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-200 bg-white">
                     <Box>
                       <Stack gap={0} className="relative pl-12">
-                        {/* Vertical Line */}
-                        <Box className="absolute left-[15px] top-4 bottom-4 w-0.5 bg-gray-200" />
+                        {/* Connecting Line */}
+                        <Box className="absolute left-[19px] top-8 bottom-8 w-[1px] bg-[#194E9E]/20 z-0" />
 
                         {[
                           { title: 'Masuk ke Akun Kolektix', icon: 'solar:user-linear', desc: 'Login ke akun Kolektix Anda, lalu klik tombol "Buat Event" di bagian kanan atas.' },
                           { title: 'Isi Informasi Dasar Event', icon: 'solar:document-text-linear', desc: 'Lengkapi informasi dasar seperti nama event, kategori, deskripsi, tanggal, waktu, dan lokasi.' },
                           { title: 'Unggah Media Event', icon: 'solar:cloud-upload-linear', desc: 'Upload gambar poster, banner, atau video untuk mempercantik tampilan event Anda.' },
                           { title: 'Atur Tiket & Harga', icon: 'solar:ticket-bold-duotone', desc: 'Tambahkan jenis tiket, tentukan harga, kuota, dan periode penjualan tiket.' },
-                          { title: 'Atur Promosi (Opsional)', icon: 'solar:megaphone-bold-duotone', desc: 'Buat kode promo atau tentukan program promosi untuk menarik lebih banyak audiens.' },
+                          { title: 'Atur Promosi (Opsional)', icon: 'solar:tag-bold-duotone', desc: 'Buat kode promo atau tentukan program promosi untuk menarik lebih banyak audiens.' },
                           { title: 'Review & Publish', icon: 'solar:check-circle-linear', desc: 'Periksa kembali semua informasi event Anda. Jika sudah sesuai, klik "Publish Event".' },
                         ].map((step, i) => (
                           <Box key={step.title} className="pb-10 last:pb-0 relative">
                             {/* Number Circle on Line */}
-                            <Box className="absolute -left-[45px] top-1 w-8 h-8 rounded-full bg-[#194E9E] flex items-center justify-center text-white text-[10px] font-extrabold z-10 border-4 border-white shadow-sm">
+                            <Box className="absolute -left-[45px] top-1.5 w-8 h-8 rounded-full bg-[#194E9E] flex items-center justify-center text-white text-[11px] font-extrabold z-10 border-4 border-white shadow-sm">
                               {i + 1}
                             </Box>
 
@@ -226,93 +219,68 @@ export default function CaraMembuatEvent() {
 
             {/* RIGHT COLUMN: SIDEBAR */}
             <Grid.Col span={isMobile ? 12 : 4}>
-              <Stack gap={20} className={isMobile ? '' : 'sticky top-[200px] mt-24'}>
+              <Stack gap={20} className={isMobile ? '' : 'sticky top-[80px] mt-14'}>
 
-                {/* FAQ Section */}
-                <Card id="faq" radius="12px" padding="md" className="shadow-[0_4px_12px_rgba(0,0,0,0.01)] border border-gray-200" style={{ borderColor: '#E5E7EB' }}>
-                  <Title order={3} size="h5" className="mb-1 text-[#02255A] px-2">Butuh Bantuan?</Title>
-                  <Text size="10px" className="text-gray-400 mb-4 px-2">Temukan jawaban untuk pertanyaan yang sering diajukan.</Text>
+                <Accordion variant="separated" radius="12px" defaultValue={['faq', 'video', 'support']} multiple styles={{
+                  item: { border: '1px solid #E5E7EB', backgroundColor: 'white', marginBottom: '16px', boxShadow: '0 4px 20px rgba(0,0,0,0.05)' },
+                  control: { padding: '16px 20px' },
+                  label: { fontSize: '18px', fontWeight: 700, color: '#02255A' },
+                  content: { padding: '0 16px 20px 16px' }
+                }}>
 
-                  <Accordion
-                    variant="unstyled"
-                    defaultValue={faqData[0].q}
-                    styles={{
-                      item: { border: 'none', background: 'transparent' },
-                      control: { padding: '12px 8px', '&:hover': { background: 'transparent' } },
-                      content: { padding: '0 8px 12px 8px' },
-                      label: { fontSize: '13px', fontWeight: 600, color: '#4A5568' },
-                      chevron: { color: '#194E9E' }
-                    }}
-                  >
-                    {faqData.map((item, idx) => (
-                      <Accordion.Item key={item.q} value={item.q}>
-                        <Accordion.Control>{item.q}</Accordion.Control>
-                        <Accordion.Panel>
-                          <Text size="xs" className="text-gray-500 leading-relaxed">{item.a}</Text>
-                        </Accordion.Panel>
-                        {idx !== faqData.length - 1 && (
-                          <Divider my={2} color="gray.2" className="mx-2" />
-                        )}
-                      </Accordion.Item>
-                    ))}
-                  </Accordion>
-                </Card>
+                  {/* FAQ Section */}
+                  <Accordion.Item value="faq">
+                    <Accordion.Control>Butuh Bantuan?</Accordion.Control>
+                    <Accordion.Panel>
+                      <div className="text-sm text-gray-500 mb-6 pl-2 pr-1 leading-relaxed">Temukan jawaban untuk pertanyaan yang sering diajukan.</div>
+                      <Accordion
+                        variant="unstyled"
+                        defaultValue={faqData[0].q}
+                        styles={{
+                          item: { border: 'none', background: 'transparent' },
+                          control: { padding: '12px 8px', '&:hover': { background: 'transparent' } },
+                          content: { padding: '0 8px 12px 8px' },
+                          label: { fontSize: '13px', fontWeight: 700, color: '#000000ff' },
+                          chevron: { color: '#000000ff' }
+                        }}
+                      >
+                        {faqData.map((item, idx) => (
+                          <Accordion.Item key={item.q} value={item.q}>
+                            <Accordion.Control>{item.q}</Accordion.Control>
+                            <Accordion.Panel>
+                              <Text size="xs" className="text-gray-500 leading-relaxed">{item.a}</Text>
+                            </Accordion.Panel>
+                            {idx !== faqData.length - 1 && (
+                              <Divider my={2} color="gray.2" className="mx-2" />
+                            )}
+                          </Accordion.Item>
+                        ))}
+                      </Accordion>
+                    </Accordion.Panel>
+                  </Accordion.Item>
 
-                {/* Video Tutorial Card */}
-                <Card id="video" radius="12px" padding="md" className="shadow-[0_4px_12px_rgba(0,0,0,0.01)] border border-gray-200 overflow-hidden relative">
-                  <Title order={3} size="h5" className="mb-1 text-[#02255A] px-2">Video Tutorial</Title>
-                  <Text size="10px" className="text-gray-500 mb-4 px-2">Pelajari cara membuat event melalui video panduan berikut.</Text>
-
-                  <Box className="relative rounded-lg overflow-hidden aspect-video bg-[#02255A] group cursor-pointer mb-4">
-                    <Box className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
-                    <Box className="absolute inset-0 flex items-center justify-center z-20">
-                      <Box className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-                        <Icon icon="solar:play-bold" width={20} className="text-[#194E9E] ml-1" />
-                      </Box>
-                    </Box>
-                    <Box className="absolute bottom-3 left-3 z-20">
-                      <Image src={LogoWhite} alt="logo" width={50} height={15} className="object-contain opacity-80" />
-                      <Text fw={700} size="xs" className="text-white mt-1">Cara Membuat Event</Text>
-                    </Box>
-                  </Box>
-
-                  <Button
-                    variant="outline"
-                    fullWidth
-                    radius="8px"
-                    size="sm"
-                    rightSection={<Icon icon="solar:arrow-right-up-linear" width={14} />}
-                    className="!border-gray-200 !text-[#194E9E] font-bold hover:bg-gray-50"
-                  >
-                    Tonton di YouTube
-                  </Button>
-                </Card>
-
-                {/* Support Card */}
-                <Card radius="12px" padding="xl" className="bg-[#F8FAFF] border-none shadow-[0_4px_12px_rgba(0,0,0,0.01)]">
-                  <Stack align="start" gap="xs">
-                    <Title order={3} size="h4" className="text-[#02255A]">Masih butuh bantuan?</Title>
-                    <Text size="xs" className="text-gray-500">Tim support kami siap membantu Anda.</Text>
-                    <Button
-                      variant="outline"
-                      radius="8px"
-                      fullWidth
-                      mt="md"
-                      size="md"
-                      leftSection={<Icon icon="solar:headphones-round-linear" width={20} />}
-                      className="!border-[#194E9E] !text-[#194E9E] font-bold bg-white hover:bg-blue-50 transition-colors"
-                    >
-                      Hubungi Support
-                    </Button>
-                  </Stack>
-                </Card>
+                  {/* Support Section */}
+                  <Accordion.Item value="support">
+                    <Accordion.Control>Masih butuh bantuan?</Accordion.Control>
+                    <Accordion.Panel>
+                      <div className="text-sm text-gray-500 mb-4 pl-2 leading-relaxed">Tim support kami siap membantu Anda.</div>
+                      <Button
+                        variant="outline"
+                        radius="8px"
+                        fullWidth
+                        size="md"
+                        leftSection={<Icon icon="solar:headphones-round-linear" width={20} />}
+                        className="!border-[#194E9E] !text-[#194E9E] font-bold bg-white hover:bg-blue-50 transition-colors"
+                      >
+                        Hubungi Support
+                      </Button>
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                </Accordion>
 
               </Stack>
             </Grid.Col>
           </Grid>
-
-
-
         </Stack>
       </Container>
 
