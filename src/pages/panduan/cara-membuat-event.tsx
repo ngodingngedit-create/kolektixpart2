@@ -48,7 +48,7 @@ export default function CaraMembuatEvent() {
 
 
       {/* --- MAIN CONTENT WRAPPER --- */}
-      <Container size="91%" className="pt-24 pb-12 px-4 md:px-12 lg:px-20 xl:px-32">
+      <Container size="91%" className="pt-24 pb-12 px-2 md:px-12 lg:px-20 xl:px-32">
         <Stack gap={48}>
 
           {/* --- 2. HERO SECTION --- */}
@@ -59,9 +59,9 @@ export default function CaraMembuatEvent() {
             style={{ backgroundColor: 'rgba(34, 101, 200, 0.05)' }}
           >
             {/* Last Updated Label */}
-            <div className="absolute top-4 md:top-6 right-4 md:right-8 flex items-center gap-2 bg-[#194E9E] backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/40 z-20">
-              <Icon icon="solar:calendar-outline" width={14} className="text-white" />
-              <div className="text-[10px] md:text-[11px] font-semibold text-white ">Terakhir diperbarui: 14 Januari 2026</div>
+            <div className="absolute top-3 md:top-6 right-3 md:right-8 flex items-center gap-1 md:gap-2 bg-[#194E9E] backdrop-blur-md px-2 md:px-3 py-0.5 md:py-1.5 rounded-full shadow-sm border border-white/40 z-20">
+              <Icon icon="solar:calendar-outline" width={10} className="text-white md:w-[14px]" />
+              <div className="text-[7px] md:text-[11px] font-semibold text-white">Terakhir diperbarui: 14 Januari 2026</div>
             </div>
 
             <Grid gutter={0} align="center">
@@ -69,12 +69,12 @@ export default function CaraMembuatEvent() {
                 <Stack gap={24}>
 
                   <Box>
-                    <Title order={1} className="text-[32px] md:text-[44px] font-extrabold text-[#02255A] leading-tight">
+                    <div className="text-[20px] md:text-[44px] font-extrabold text-[#02255A] leading-tight">
                       Cara Membuat Event
-                    </Title>
-                    <Text size="lg" className="text-gray-600 mt-4 max-w-lg leading-relaxed">
+                    </div>
+                    <div className="text-sm md:text-lg text-gray-600 mt-3 md:mt-4 max-w-lg leading-relaxed">
                       Panduan lengkap untuk membantu Anda membuat dan mempublikasikan event di platform Kolektix dengan mudah.
-                    </Text>
+                    </div>
                   </Box>
                 </Stack>
               </Grid.Col>
@@ -103,11 +103,11 @@ export default function CaraMembuatEvent() {
 
                 {/* SECTION 1: PREPARATION */}
                 <Box id="persiapan">
-                  <Flex align="center" gap={12} className="mb-6">
-                    <ThemeIcon size={32} radius="xl" color="blue" className="bg-[#194E9E]">
-                      <Text size="xl" fw={700}>1</Text>
+                  <Flex align="center" gap={isMobile ? 8 : 12} className={isMobile ? 'mb-4' : 'mb-6'}>
+                    <ThemeIcon size={isMobile ? 24 : 32} radius="xl" color="blue" className="bg-[#194E9E]">
+                      <Text size={isMobile ? 'xs' : 'sm'} fw={700}>1</Text>
                     </ThemeIcon>
-                    <Title order={2} size="h3" className="text-[#02255A] font-bold">
+                    <Title order={2} size={isMobile ? '16px' : 'h3'} className="text-[#02255A] font-bold">
                       Persiapan Sebelum Membuat Event
                     </Title>
                   </Flex>
@@ -127,23 +127,23 @@ export default function CaraMembuatEvent() {
                         ].map((card, i) => (
                           <Grid.Col span={isMobile ? 6 : 3} key={card.title}>
                             <Card
-                              padding="xl"
+                              padding={isMobile ? 'md' : 'xl'}
                               radius="12px"
                               className="h-full border border-gray-200 shadow-[0_4px_6px_rgba(0,0,0,0.01)] hover:shadow-md transition-all text-center group"
                             >
-                              <Stack align="center" gap="md">
+                              <Stack align="center" gap={isMobile ? 'xs' : 'md'}>
                                 <ThemeIcon
-                                  size={56}
+                                  size={isMobile ? 40 : 56}
                                   radius="xl"
                                   variant="light"
                                   color={card.color}
                                   className="group-hover:scale-110 transition-transform"
                                 >
-                                  <Icon icon={card.icon} width={28} />
+                                  <Icon icon={card.icon} width={isMobile ? 20 : 28} />
                                 </ThemeIcon>
                                 <Box>
-                                  <Text fw={700} size="sm" className="text-[#02255A] mb-2">{card.title}</Text>
-                                  <Text size="xs" className="text-gray-500 leading-normal">{card.desc}</Text>
+                                  <Text fw={700} size={isMobile ? 'xs' : 'sm'} className="text-[#02255A] mb-1 md:mb-2">{card.title}</Text>
+                                  <div className="text-[10px] md:text-xs text-gray-500 leading-normal">{card.desc}</div>
                                 </Box>
                               </Stack>
                             </Card>
@@ -156,42 +156,47 @@ export default function CaraMembuatEvent() {
 
                 {/* SECTION 2: STEPS */}
                 <Box id="langkah">
-                  <Flex align="center" gap={12} className="mb-6">
-                    <ThemeIcon size={32} radius="xl" color="blue" className="bg-[#194E9E]">
-                      <Text size="xs" fw={700}>2</Text>
+                  <Flex align="center" gap={isMobile ? 8 : 12} className={isMobile ? 'mb-4' : 'mb-6'}>
+                    <ThemeIcon size={isMobile ? 24 : 32} radius="xl" color="blue" className="bg-[#194E9E]">
+                      <Text size={isMobile ? 'xs' : 'sm'} fw={700}>2</Text>
                     </ThemeIcon>
-                    <Title order={2} size="h3" className="text-[#02255A] font-bold">
+                    <Title order={2} size={isMobile ? '16px' : 'h3'} className="text-[#02255A] font-bold">
                       Langkah Membuat Event
                     </Title>
                   </Flex>
 
                   <Card radius="12px" padding={isMobile ? 'lg' : 'xl'} className="shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-gray-200 bg-white">
                     <Box>
-                      <Stack gap={0} className="relative pl-12">
+                      <Stack gap={0} className={`relative ${isMobile ? 'pl-9' : 'pl-12'}`}>
                         {/* Connecting Line */}
-                        <Box className="absolute left-[19px] top-8 bottom-8 w-[1px] bg-[#194E9E]/20 z-0" />
+                        <Box className={`absolute ${isMobile ? 'left-[14px]' : 'left-[19px]'} top-8 bottom-8 w-[1px] bg-[#194E9E]/20 z-0`} />
 
                         {[
                           { title: 'Masuk ke Akun Kolektix', icon: 'solar:user-linear', desc: 'Login ke akun Kolektix Anda, lalu klik tombol "Buat Event" di bagian kanan atas.' },
-                          { title: 'Isi Informasi Dasar Event', icon: 'solar:document-text-linear', desc: 'Lengkapi informasi dasar seperti nama event, kategori, deskripsi, tanggal, waktu, dan lokasi.' },
+                          { title: 'Isi Informasi Dasar Event', icon: 'solar:document-text-linear', desc: 'Lengkapi informasi dasar seperti nama event, kategori, deskripsi, lokasi, dan waktu.' },
                           { title: 'Unggah Media Event', icon: 'solar:cloud-upload-linear', desc: 'Upload gambar poster, banner, atau video untuk mempercantik tampilan event Anda.' },
                           { title: 'Atur Tiket & Harga', icon: 'solar:ticket-bold-duotone', desc: 'Tambahkan jenis tiket, tentukan harga, kuota, dan periode penjualan tiket.' },
                           { title: 'Atur Promosi (Opsional)', icon: 'solar:tag-bold-duotone', desc: 'Buat kode promo atau tentukan program promosi untuk menarik lebih banyak audiens.' },
                           { title: 'Review & Publish', icon: 'solar:check-circle-linear', desc: 'Periksa kembali semua informasi event Anda. Jika sudah sesuai, klik "Publish Event".' },
                         ].map((step, i) => (
                           <Box key={step.title} className="pb-10 last:pb-0 relative">
-                            {/* Number Circle on Line */}
-                            <Box className="absolute -left-[45px] top-1.5 w-8 h-8 rounded-full bg-[#194E9E] flex items-center justify-center text-white text-[11px] font-extrabold z-10 border-4 border-white shadow-sm">
-                              {i + 1}
-                            </Box>
+                            <Flex align="start" gap={isMobile ? 12 : 20}>
+                              {/* Step Number */}
+                              <Box 
+                                className={`${isMobile ? 'w-7 h-7' : 'w-10 h-10'} rounded-full bg-[#194E9E] flex items-center justify-center text-white font-bold ${isMobile ? 'text-[10px]' : 'text-sm'} shadow-lg absolute ${isMobile ? 'left-[-35px]' : 'left-[-48px]'} z-10 ${isMobile ? 'top-1' : 'top-2'}`}
+                              >
+                                {i + 1}
+                              </Box>
 
-                            <Flex gap={20}>
-                              <ThemeIcon size={48} radius="xl" variant="light" color="blue" className="shrink-0 bg-blue-50/50">
-                                <Icon icon={step.icon} width={24} />
-                              </ThemeIcon>
-                              <Box pt={4}>
-                                <Text fw={700} className="text-[#02255A] mb-1">{step.title}</Text>
-                                <Text size="sm" className="text-gray-500 leading-relaxed">{step.desc}</Text>
+                              {/* Icon Box */}
+                              <Box className={`${isMobile ? 'w-10 h-10' : 'w-14 h-14'} rounded-2xl bg-blue-50 flex items-center justify-center text-[#194E9E] shadow-sm shrink-0`}>
+                                <Icon icon={step.icon} width={isMobile ? 20 : 28} />
+                              </Box>
+
+                              {/* Content */}
+                              <Box className="flex-1" pt={isMobile ? 2 : 4}>
+                                <Text fw={700} size={isMobile ? 'sm' : 'lg'} className="text-[#02255A] leading-tight">{step.title}</Text>
+                                <div className={`${isMobile ? 'text-[10px]' : 'text-sm'} text-gray-500 mt-1 leading-relaxed`}>{step.desc}</div>
                               </Box>
                             </Flex>
                           </Box>

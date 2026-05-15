@@ -39,9 +39,9 @@ const FooterData: FooterSection[] = [
     title: 'Rayakan Event Kamu',
     item: [
       { id: 1, name: 'Cara Membuat Event', link: '/panduan/cara-membuat-event' },
-      { id: 2, name: 'Cara Mempublikasikan Event' },
-      { id: 3, name: 'Cara Mencari Lowongan' },
-      { id: 4, name: 'Cara Menjadi Talent' },
+      { id: 2, name: 'How to Publish an Event', link: '/panduan/cara-mempublikasikan-event' },
+      { id: 3, name: 'Cara Mencari Lowongan', link: '/panduan/cara-mencari-lowongan' },
+      { id: 4, name: 'Cara Menjadi Talent', link: '/panduan/cara-menjadi-talent' },
       { id: 5, name: 'Syarat & Ketentuan' },
       { id: 6, name: 'Cara Mempromosikan' },
       { id: 7, name: 'Metode Pembayaran', link: '/metode-pembayaran' },
