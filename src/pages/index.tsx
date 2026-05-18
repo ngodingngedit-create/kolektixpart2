@@ -607,6 +607,9 @@ import { MerchPromoResponse } from "@/pages/dashboard/merch/type";
 import Cookies from "js-cookie";
 import PromoBlock from "@/components/Home/PromoBlock";
 import PromoMerchandiseList from "@/components/Home/MerchandiseList/index";
+import dynamic from "next/dynamic";
+
+const TrendingEvent = dynamic(() => import("@/components/Home/TrendingEvent"), { ssr: false });
 
 export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -722,11 +725,11 @@ export default function Home() {
     getMerchandiseData();
   }, []);
 
-  // TETAP TAMPILKAN KOMPONEN MESKIPUN ERROR - JANGAN REDIRECT
   return (
     <main className="bg-white min-h-screen">
       <HeroSection data={upcoming} loading={loading} slider={sliderData} />
       <CategoryBlock />
+      <TrendingEvent />
       <EventList data={data} loading={loading} />
       <PromoMerchandiseList data={promoData} loading={promoLoading} />
       <PromoBlock />
