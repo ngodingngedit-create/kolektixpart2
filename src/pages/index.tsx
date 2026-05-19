@@ -728,8 +728,8 @@ export default function Home() {
   return (
     <main className="bg-white min-h-screen">
       <HeroSection data={upcoming} loading={loading} slider={sliderData} />
-      <CategoryBlock />
       <TrendingEvent />
+      <CategoryBlock />
       <EventList data={data} loading={loading} />
       <PromoMerchandiseList data={promoData} loading={promoLoading} />
       <PromoBlock />
