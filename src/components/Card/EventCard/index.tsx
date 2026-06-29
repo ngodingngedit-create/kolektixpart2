@@ -149,19 +149,22 @@ const EventCard = ({ id, maxWidth, slug, title, date, location, img, description
   };
 
   return (
-    <div style={{ maxWidth }} className="[&_.hoverCTA]:hover:!translate-y-0 bg-white rounded-lg shadow-md mx-1 md:mx-2 border border-primary-light-200 relative w-full">
+    <div
+      style={{ maxWidth }}
+      className={`mx-auto w-full ${styles.cardContainer}`}
+    >
       <Link href={`/event/${slug}`}>
-        <div className="relative overflow-hidden">
+        <div className={styles.shineContainer}>
           <Box pos="relative">
-            <AspectRatio ratio={1062 / 365}>
-              <Image className={`!rounded-t-lg !w-full`} src={img} alt="Banner" />
+            <AspectRatio ratio={1062 / 520}>
+              <Image className="!rounded-lg md:!rounded-xl !w-full" src={img} alt="Banner" />
             </AspectRatio>
 
             {isCurrentTimeBetween(`${start_date} ${start_time}:00`, `${end_date} ${end_time}:00`) && (
-              <Card className={`!absolute z-20 top-2 right-2 w-fit !rounded-full !border !border-white/50 backdrop-blur-sm`} p="4px 16px 4px 30px" bg="#00000030">
+              <Card className="!absolute z-20 top-2 right-2 w-fit !rounded-full !border !border-white/50 backdrop-blur-sm" p="4px 16px 4px 30px" bg="#00000030">
                 <Flex gap={10} align="center">
-                  <Icon icon="ph:dot-duotone" className={`absolute top-2/4 left-0 -translate-y-2/4 !text-[40px] mr-[-20px] animate-pulse !text-red-500`} />
-                  <Icon icon="mynaui:video" className={`!text-[22px] !text-red-500`} />
+                  <Icon icon="ph:dot-duotone" className="absolute top-2/4 left-0 -translate-y-2/4 !text-[40px] mr-[-20px] animate-pulse !text-red-500" />
+                  <Icon icon="mynaui:video" className="!text-[22px] !text-red-500" />
                   <Text fw={600} c="white" size="xs">
                     Live Event
                   </Text>
@@ -170,24 +173,20 @@ const EventCard = ({ id, maxWidth, slug, title, date, location, img, description
             )}
           </Box>
 
-          {isEventEnded ? (
+          {isEventEnded && (
             <div className="absolute top-2 right-2 bg-light-grey text-dark px-2 py-1 rounded-xl text-xs">Event Ended</div>
-          ) : (
-            <Card pos="absolute" p="5px 14px" bg="#ffffff20" radius="xl" fw={600} c="white" className={`transition-transform hoverCTA !border !border-white translate-y-[60px] bottom-3 right-3`}>
-              Beli Tiket
-            </Card>
           )}
         </div>
       </Link>
-      <div className="p-3">
+      <div className="p-3 md:p-4">
         <Link href={`/event/${slug}`}>
-          <h5 className="mb-2 text-lg font-semibold tracking-tight text-dark truncate max-w-[230px]">{title}</h5>
+          <h5 className="mb-2 text-base md:text-lg font-semibold tracking-tight text-dark truncate max-w-full">{title}</h5>
         </Link>
-        <p className="mb-3 font-normal text-sm">
+        <p className="mb-3 font-normal text-xs md:text-sm">
           <FontAwesomeIcon icon={faCalendar} className="mr-3 text-primary-base" />
           <span className="text-grey">{`${eventDate(date, end)}`}</span>
         </p>
-        <div className="flex justify-between text-dark items-center font-semibold">
+        <div className="flex justify-between text-dark items-center font-semibold text-sm md:text-base">
           <p>{price === 0 ? "Free" : `Rp${price?.toLocaleString("id-ID")}`}</p>
           {users?.name && (
             <button onClick={toggleBookmark} className="inline-flex items-center py-2 text-base font-medium text-center text-dark rounded-lg">
@@ -196,10 +195,10 @@ const EventCard = ({ id, maxWidth, slug, title, date, location, img, description
           )}
         </div>
       </div>
-      <div className="border-t-1.5 border-dashed border-primary-light-200">
-        <Link className="flex items-center p-3" href={`/creator/${creatorSlug}`}>
-          <Images type="creator" path={creatorImg} alt="image" className="w-8 h-8 border border-primary-light-200 rounded-full object-contain" width={200} height={200} />
-          <p className="ml-2 text-dark text-sm font-semibold truncate max-w-[200px]">{creator}</p>
+      <div className={`border-t ${styles.cardDivider}`}>
+        <Link className="flex items-center p-3 md:p-4" href={`/creator/${creatorSlug}`}>
+          <Images type="creator" path={creatorImg} alt="image" className="w-7 h-7 md:w-8 md:h-8 border border-primary-light-200 rounded-full object-contain" width={200} height={200} />
+          <p className="ml-2 text-dark text-xs md:text-sm font-semibold truncate max-w-[180px] md:max-w-[200px]">{creator}</p>
           {verified == 1 && (
             <Tooltip label="Telah diverifikasi" withArrow position="top">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#1DA1F2" className="w-4 h-4 ml-2 cursor-pointer">

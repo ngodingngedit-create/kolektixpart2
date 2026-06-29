@@ -224,7 +224,7 @@ const CaraMempublikasikanEvent = () => {
                                     </ThemeIcon>
                                     <Box>
                                       <Text fw={700} size="sm" className="text-[#02255A]">Setelah event dipublikasikan</Text>
-                                      <Text size="xs" className="text-gray-600 mt-1">Status akan berubah menjadi "Review" dan Anda akan menerima email konfirmasi.</Text>
+                                      <Text size="xs" className="text-gray-600 mt-1">Status akan berubah menjadi &quot;Review&quot; dan Anda akan menerima email konfirmasi.</Text>
                                     </Box>
                                   </Flex>
                                 </Card>
@@ -247,7 +247,7 @@ const CaraMempublikasikanEvent = () => {
                       <Box>
                         <Text fw={700} size="sm" className="text-[#02255A]">Setelah event dipublikasikan</Text>
                         <Text size="xs" className="text-gray-600 mt-1 leading-relaxed">
-                          Status akan berubah menjadi "Review" dan Anda akan menerima email konfirmasi.
+                          Status akan berubah menjadi &quot;Review&quot; dan Anda akan menerima email konfirmasi.
                           Pastikan Anda memantau email atau notifikasi dashboard untuk update dari tim moderator Kolektix.
                         </Text>
                       </Box>

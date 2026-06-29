@@ -27,10 +27,10 @@ import React from "react";
 
 const EventCardLoading = () => {
   return (
-    <div className="bg-white rounded-lg border border-primary-light-200 shadow-md mx-1 md:mx-2 w-full">
-      <div className="animate-pulse p-3">
+    <div className="bg-transparent border border-transparent mx-auto w-full">
+      <div className="animate-pulse p-3 md:p-4">
         {/* image area with same aspect ratio as real card */}
-        <div className="bg-light-grey w-full rounded-md mb-3" style={{ paddingTop: "34.4%" }} />
+        <div className="bg-light-grey w-full rounded-lg md:rounded-xl mb-3" style={{ paddingTop: "34.4%" }} />
         {/* paddingTop 34.4% approximates ratio 1062/365 -> 365/1062 = 0.3438 */}
 
         <div className="py-2">
@@ -45,10 +45,10 @@ const EventCardLoading = () => {
           </div>
         </div>
 
-        <div className="border-t-1.5 border-dashed border-primary-light-200 mt-3 pt-3 flex items-center gap-3">
-          <div className="bg-light-grey rounded-full" style={{ width: 40, height: 40 }} />
+        <div className="border-t border-transparent mt-3 pt-3 flex items-center gap-3">
+          <div className="bg-light-grey rounded-full" style={{ width: 32, height: 32 }} />
           <div style={{ flex: 1 }}>
-            <div className="bg-light-grey h-3 w-1/2 rounded-md mb-2" />
+            <div className="bg-light-grey h-3 w-1/2 rounded-md" />
           </div>
         </div>
       </div>

@@ -373,3 +373,965 @@ h5 {
 /* Hide scrollbar */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ==========================================================================
+   PREMIUM ALERTS & TOAST NOTIFICATION STYLING (Mantine & React-Toastify)
+   ========================================================================== */
+
+/* 1. MANTINE NOTIFICATIONS ROOT OVERRIDES */
+.mantine-Notifications-list {
+  z-index: 99999 !important;
+}
+
+.mantine-Notification-root {
+  --notification-bg: #FFFFFF !important;
+  --notification-bd: 1px solid #E2E8F0 !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  padding: 16px 16px 16px 20px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  align-items: center !important;
+  min-height: 72px !important;
+}
+
+[class*="Notification-root"] {
+  --notification-bg: #FFFFFF !important;
+  --notification-bd: 1px solid #E2E8F0 !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  padding: 16px 16px 16px 20px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  align-items: center !important;
+  min-height: 72px !important;
+}
+
+.m_a513464 {
+  --notification-bg: #FFFFFF !important;
+  --notification-bd: 1px solid #E2E8F0 !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  padding: 16px 16px 16px 20px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  align-items: center !important;
+  min-height: 72px !important;
+}
+
+/* Left vertical accent line for Notifications */
+.mantine-Notification-root::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  inset-inline-start: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 4px !important;
+  background-color: var(--notification-color, #EF4444) !important;
+  z-index: 2 !important;
+  border-radius: 0 !important;
+  display: block !important;
+}
+
+[class*="Notification-root"]::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  inset-inline-start: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 4px !important;
+  background-color: var(--notification-color, #EF4444) !important;
+  z-index: 2 !important;
+  border-radius: 0 !important;
+  display: block !important;
+}
+
+.m_a513464::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  inset-inline-start: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 4px !important;
+  background-color: var(--notification-color, #EF4444) !important;
+  z-index: 2 !important;
+  border-radius: 0 !important;
+  display: block !important;
+}
+
+/* Color overrides for Notification left accent line based on style attribute */
+.mantine-Notification-root[style*="red"]::before { background-color: #EF4444 !important; }
+.mantine-Notification-root[style*="danger"]::before { background-color: #EF4444 !important; }
+.mantine-Notification-root[style*="green"]::before { background-color: #10B981 !important; }
+.mantine-Notification-root[style*="success"]::before { background-color: #10B981 !important; }
+.mantine-Notification-root[style*="blue"]::before { background-color: #3B82F6 !important; }
+.mantine-Notification-root[style*="info"]::before { background-color: #3B82F6 !important; }
+.mantine-Notification-root[style*="yellow"]::before { background-color: #F59E0B !important; }
+.mantine-Notification-root[style*="warning"]::before { background-color: #F59E0B !important; }
+
+[class*="Notification-root"][style*="red"]::before { background-color: #EF4444 !important; }
+[class*="Notification-root"][style*="danger"]::before { background-color: #EF4444 !important; }
+[class*="Notification-root"][style*="green"]::before { background-color: #10B981 !important; }
+[class*="Notification-root"][style*="success"]::before { background-color: #10B981 !important; }
+[class*="Notification-root"][style*="blue"]::before { background-color: #3B82F6 !important; }
+[class*="Notification-root"][style*="info"]::before { background-color: #3B82F6 !important; }
+[class*="Notification-root"][style*="yellow"]::before { background-color: #F59E0B !important; }
+[class*="Notification-root"][style*="warning"]::before { background-color: #F59E0B !important; }
+
+.m_a513464[style*="red"]::before { background-color: #EF4444 !important; }
+.m_a513464[style*="danger"]::before { background-color: #EF4444 !important; }
+.m_a513464[style*="green"]::before { background-color: #10B981 !important; }
+.m_a513464[style*="success"]::before { background-color: #10B981 !important; }
+.m_a513464[style*="blue"]::before { background-color: #3B82F6 !important; }
+.m_a513464[style*="info"]::before { background-color: #3B82F6 !important; }
+.m_a513464[style*="yellow"]::before { background-color: #F59E0B !important; }
+.m_a513464[style*="warning"]::before { background-color: #F59E0B !important; }
+
+/* Custom badge padding when no icon is supplied */
+.mantine-Notification-root:not([data-with-icon]) { padding-left: 72px !important; padding-inline-start: 72px !important; }
+[class*="Notification-root"]:not([data-with-icon]) { padding-left: 72px !important; padding-inline-start: 72px !important; }
+[class*="Notification-root"][data-with-icon="false"] { padding-left: 72px !important; padding-inline-start: 72px !important; }
+[class*="Notification-root"]:not(:has([class*="Notification-icon"])) { padding-left: 72px !important; padding-inline-start: 72px !important; }
+.m_a513464:not([data-with-icon]) { padding-left: 72px !important; padding-inline-start: 72px !important; }
+.m_a513464[data-with-icon="false"] { padding-left: 72px !important; padding-inline-start: 72px !important; }
+.m_a513464:not(:has(.m_a4ceffb)) { padding-left: 72px !important; padding-inline-start: 72px !important; }
+
+/* Custom badge injection (Default 'i') when no icon is supplied */
+.mantine-Notification-root:not([data-with-icon])::after {
+  content: 'i' !important;
+  position: absolute !important;
+  left: 18px !important;
+  inset-inline-start: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  z-index: 10 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+  font-family: 'Georgia', serif !important;
+  font-style: italic !important;
+}
+
+[class*="Notification-root"]:not([data-with-icon])::after {
+  content: 'i' !important;
+  position: absolute !important;
+  left: 18px !important;
+  inset-inline-start: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  z-index: 10 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+  font-family: 'Georgia', serif !important;
+  font-style: italic !important;
+}
+
+[class*="Notification-root"][data-with-icon="false"]::after {
+  content: 'i' !important;
+  position: absolute !important;
+  left: 18px !important;
+  inset-inline-start: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  z-index: 10 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+  font-family: 'Georgia', serif !important;
+  font-style: italic !important;
+}
+
+[class*="Notification-root"]:not(:has([class*="Notification-icon"]))::after {
+  content: 'i' !important;
+  position: absolute !important;
+  left: 18px !important;
+  inset-inline-start: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  z-index: 10 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+  font-family: 'Georgia', serif !important;
+  font-style: italic !important;
+}
+
+.m_a513464:not([data-with-icon])::after {
+  content: 'i' !important;
+  position: absolute !important;
+  left: 18px !important;
+  inset-inline-start: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  z-index: 10 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+  font-family: 'Georgia', serif !important;
+  font-style: italic !important;
+}
+
+.m_a513464[data-with-icon="false"]::after {
+  content: 'i' !important;
+  position: absolute !important;
+  left: 18px !important;
+  inset-inline-start: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  z-index: 10 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+  font-family: 'Georgia', serif !important;
+  font-style: italic !important;
+}
+
+.m_a513464:not(:has(.m_a4ceffb))::after {
+  content: 'i' !important;
+  position: absolute !important;
+  left: 18px !important;
+  inset-inline-start: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  z-index: 10 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+  font-family: 'Georgia', serif !important;
+  font-style: italic !important;
+}
+
+/* Color specific overrides for the custom notification badge style */
+.mantine-Notification-root:not([data-with-icon])[style*="red"]::after { content: '!' !important; background-color: #FEF2F2 !important; color: #EF4444 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.mantine-Notification-root:not([data-with-icon])[style*="danger"]::after { content: '!' !important; background-color: #FEF2F2 !important; color: #EF4444 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.mantine-Notification-root:not([data-with-icon])[style*="green"]::after { content: '✓' !important; background-color: #ECFDF5 !important; color: #10B981 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.mantine-Notification-root:not([data-with-icon])[style*="success"]::after { content: '✓' !important; background-color: #ECFDF5 !important; color: #10B981 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.mantine-Notification-root:not([data-with-icon])[style*="blue"]::after { content: 'i' !important; background-color: #EFF6FF !important; color: #3B82F6 !important; font-family: 'Georgia', serif !important; font-style: italic !important; }
+.mantine-Notification-root:not([data-with-icon])[style*="info"]::after { content: 'i' !important; background-color: #EFF6FF !important; color: #3B82F6 !important; font-family: 'Georgia', serif !important; font-style: italic !important; }
+.mantine-Notification-root:not([data-with-icon])[style*="yellow"]::after { content: '!' !important; background-color: #FEF3C7 !important; color: #D97706 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.mantine-Notification-root:not([data-with-icon])[style*="warning"]::after { content: '!' !important; background-color: #FEF3C7 !important; color: #D97706 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+
+[class*="Notification-root"]:not([data-with-icon])[style*="red"]::after { content: '!' !important; background-color: #FEF2F2 !important; color: #EF4444 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+[class*="Notification-root"]:not([data-with-icon])[style*="danger"]::after { content: '!' !important; background-color: #FEF2F2 !important; color: #EF4444 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+[class*="Notification-root"]:not([data-with-icon])[style*="green"]::after { content: '✓' !important; background-color: #ECFDF5 !important; color: #10B981 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+[class*="Notification-root"]:not([data-with-icon])[style*="success"]::after { content: '✓' !important; background-color: #ECFDF5 !important; color: #10B981 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+[class*="Notification-root"]:not([data-with-icon])[style*="blue"]::after { content: 'i' !important; background-color: #EFF6FF !important; color: #3B82F6 !important; font-family: 'Georgia', serif !important; font-style: italic !important; }
+[class*="Notification-root"]:not([data-with-icon])[style*="info"]::after { content: 'i' !important; background-color: #EFF6FF !important; color: #3B82F6 !important; font-family: 'Georgia', serif !important; font-style: italic !important; }
+[class*="Notification-root"]:not([data-with-icon])[style*="yellow"]::after { content: '!' !important; background-color: #FEF3C7 !important; color: #D97706 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+[class*="Notification-root"]:not([data-with-icon])[style*="warning"]::after { content: '!' !important; background-color: #FEF3C7 !important; color: #D97706 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+
+.m_a513464:not([data-with-icon])[style*="red"]::after { content: '!' !important; background-color: #FEF2F2 !important; color: #EF4444 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.m_a513464:not([data-with-icon])[style*="danger"]::after { content: '!' !important; background-color: #FEF2F2 !important; color: #EF4444 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.m_a513464:not([data-with-icon])[style*="green"]::after { content: '✓' !important; background-color: #ECFDF5 !important; color: #10B981 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.m_a513464:not([data-with-icon])[style*="success"]::after { content: '✓' !important; background-color: #ECFDF5 !important; color: #10B981 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.m_a513464:not([data-with-icon])[style*="blue"]::after { content: 'i' !important; background-color: #EFF6FF !important; color: #3B82F6 !important; font-family: 'Georgia', serif !important; font-style: italic !important; }
+.m_a513464:not([data-with-icon])[style*="info"]::after { content: 'i' !important; background-color: #EFF6FF !important; color: #3B82F6 !important; font-family: 'Georgia', serif !important; font-style: italic !important; }
+.m_a513464:not([data-with-icon])[style*="yellow"]::after { content: '!' !important; background-color: #FEF3C7 !important; color: #D97706 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.m_a513464:not([data-with-icon])[style*="warning"]::after { content: '!' !important; background-color: #FEF3C7 !important; color: #D97706 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+
+/* Custom Styling when icon IS present on Notifications */
+.mantine-Notification-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  margin-right: 14px !important;
+  margin-inline-end: 14px !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+}
+
+.m_a4ceffb {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  margin-right: 14px !important;
+  margin-inline-end: 14px !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+}
+
+[class*="Notification-icon"] {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  margin-right: 14px !important;
+  margin-inline-end: 14px !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+}
+
+.mantine-Notification-root[style*="red"] .mantine-Notification-icon { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+.mantine-Notification-root[style*="danger"] .mantine-Notification-icon { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+.mantine-Notification-root[style*="green"] .mantine-Notification-icon { background-color: #ECFDF5 !important; color: #10B981 !important; }
+.mantine-Notification-root[style*="success"] .mantine-Notification-icon { background-color: #ECFDF5 !important; color: #10B981 !important; }
+.mantine-Notification-root[style*="blue"] .mantine-Notification-icon { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+.mantine-Notification-root[style*="info"] .mantine-Notification-icon { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+.mantine-Notification-root[style*="yellow"] .mantine-Notification-icon { background-color: #FEF3C7 !important; color: #D97706 !important; }
+.mantine-Notification-root[style*="warning"] .mantine-Notification-icon { background-color: #FEF3C7 !important; color: #D97706 !important; }
+
+.m_a513464[style*="red"] .m_a4ceffb { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+.m_a513464[style*="danger"] .m_a4ceffb { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+.m_a513464[style*="green"] .m_a4ceffb { background-color: #ECFDF5 !important; color: #10B981 !important; }
+.m_a513464[style*="success"] .m_a4ceffb { background-color: #ECFDF5 !important; color: #10B981 !important; }
+.m_a513464[style*="blue"] .m_a4ceffb { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+.m_a513464[style*="info"] .m_a4ceffb { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+.m_a513464[style*="yellow"] .m_a4ceffb { background-color: #FEF3C7 !important; color: #D97706 !important; }
+.m_a513464[style*="warning"] .m_a4ceffb { background-color: #FEF3C7 !important; color: #D97706 !important; }
+
+[class*="Notification-root"][style*="red"] [class*="Notification-icon"] { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+[class*="Notification-root"][style*="danger"] [class*="Notification-icon"] { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+[class*="Notification-root"][style*="green"] [class*="Notification-icon"] { background-color: #ECFDF5 !important; color: #10B981 !important; }
+[class*="Notification-root"][style*="success"] [class*="Notification-icon"] { background-color: #ECFDF5 !important; color: #10B981 !important; }
+[class*="Notification-root"][style*="blue"] [class*="Notification-icon"] { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+[class*="Notification-root"][style*="info"] [class*="Notification-icon"] { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+[class*="Notification-root"][style*="yellow"] [class*="Notification-icon"] { background-color: #FEF3C7 !important; color: #D97706 !important; }
+[class*="Notification-root"][style*="warning"] [class*="Notification-icon"] { background-color: #FEF3C7 !important; color: #D97706 !important; }
+
+/* Text styles for Notifications */
+.mantine-Notification-title { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; margin-bottom: 2px !important; line-height: 1.35 !important; }
+[class*="Notification-title"] { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; margin-bottom: 2px !important; line-height: 1.35 !important; }
+.m_3feedf16 { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; margin-bottom: 2px !important; line-height: 1.35 !important; }
+
+.mantine-Notification-description { font-size: 0.8rem !important; font-weight: 500 !important; color: #475569 !important; line-height: 1.4 !important; }
+[class*="Notification-description"] { font-size: 0.8rem !important; font-weight: 500 !important; color: #475569 !important; line-height: 1.4 !important; }
+.m_3d733a3a { font-size: 0.8rem !important; font-weight: 500 !important; color: #475569 !important; line-height: 1.4 !important; }
+
+/* Prominent message when no title is provided on Notifications */
+.mantine-Notification-root:not([data-with-title]) .mantine-Notification-description { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; }
+.mantine-Notification-root:not(:has(.mantine-Notification-title)) .mantine-Notification-description { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; }
+[class*="Notification-root"]:not([data-with-title]) [class*="Notification-description"] { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; }
+[class*="Notification-root"]:not(:has([class*="Notification-title"])) [class*="Notification-description"] { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; }
+.m_a513464:not([data-with-title]) .m_3d733a3a { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; }
+.m_a513464:not(:has(.m_3feedf16)) .m_3d733a3a { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; }
+
+/* Close button style for Notifications */
+.mantine-Notification-closeButton {
+  color: #64748B !important;
+  background: none !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  margin-left: 12px !important;
+  margin-inline-start: 12px !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+[class*="Notification-closeButton"] {
+  color: #64748B !important;
+  background: none !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  margin-left: 12px !important;
+  margin-inline-start: 12px !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.m_919a4d88 {
+  color: #64748B !important;
+  background: none !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  margin-left: 12px !important;
+  margin-inline-start: 12px !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.mantine-Notification-closeButton:hover { background-color: #F1F5F9 !important; color: #0F172A !important; }
+[class*="Notification-closeButton"]:hover { background-color: #F1F5F9 !important; color: #0F172A !important; }
+.m_919a4d88:hover { background-color: #F1F5F9 !important; color: #0F172A !important; }
+
+
+/* 2. REACT TOASTIFY NOTIFICATIONS */
+.Toastify__toast-container {
+  z-index: 99999 !important;
+}
+
+.Toastify__toast {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  padding: 16px 16px 16px 20px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  color: #0F172A !important;
+  min-height: 72px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Left vertical accent line for React Toastify */
+.Toastify__toast::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  inset-inline-start: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 4px !important;
+  background-color: #FEE2E2 !important;
+  z-index: 2 !important;
+}
+
+.Toastify__toast--error::before { background-color: #EF4444 !important; }
+.Toastify__toast--success::before { background-color: #10B981 !important; }
+.Toastify__toast--warning::before { background-color: #F59E0B !important; }
+.Toastify__toast--info::before { background-color: #3B82F6 !important; }
+
+/* Style the body & text for React Toastify */
+.Toastify__toast-body {
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #0F172A !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Icon design for React Toastify */
+.Toastify__toast-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  margin-right: 14px !important;
+  margin-inline-end: 14px !important;
+}
+
+.Toastify__toast--error .Toastify__toast-icon { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+.Toastify__toast--success .Toastify__toast-icon { background-color: #ECFDF5 !important; color: #10B981 !important; }
+.Toastify__toast--warning .Toastify__toast-icon { background-color: #FEF3C7 !important; color: #D97706 !important; }
+.Toastify__toast--info .Toastify__toast-icon { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+.Toastify__toast-icon svg { fill: currentColor !important; }
+
+/* Close button style for React Toastify */
+.Toastify__close-button {
+  color: #64748B !important;
+  opacity: 1 !important;
+  background: none !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  align-self: center !important;
+  margin-left: 12px !important;
+  margin-inline-start: 12px !important;
+}
+
+.Toastify__close-button:hover {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+}
+
+
+/* 3. MANTINE INLINE ALERTS ROOT OVERRIDES */
+.mantine-Alert-root {
+  --alert-bg: #FFFFFF !important;
+  --alert-bd: 1px solid #E2E8F0 !important;
+  --alert-color: #0F172A !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  padding: 16px 16px 16px 20px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  min-height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  color: #0F172A !important;
+}
+
+[class*="Alert-root"] {
+  --alert-bg: #FFFFFF !important;
+  --alert-bd: 1px solid #E2E8F0 !important;
+  --alert-color: #0F172A !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  padding: 16px 16px 16px 20px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  min-height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  color: #0F172A !important;
+}
+
+.m_66836ed3 {
+  --alert-bg: #FFFFFF !important;
+  --alert-bd: 1px solid #E2E8F0 !important;
+  --alert-color: #0F172A !important;
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08) !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  padding: 16px 16px 16px 20px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  min-height: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  color: #0F172A !important;
+}
+
+/* Left vertical accent line for Alert */
+.mantine-Alert-root::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  inset-inline-start: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 4px !important;
+  background-color: var(--alert-color, #64748B) !important;
+  z-index: 2 !important;
+  border-radius: 0 !important;
+  display: block !important;
+}
+
+[class*="Alert-root"]::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  inset-inline-start: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 4px !important;
+  background-color: var(--alert-color, #64748B) !important;
+  z-index: 2 !important;
+  border-radius: 0 !important;
+  display: block !important;
+}
+
+.m_66836ed3::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  inset-inline-start: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 4px !important;
+  background-color: var(--alert-color, #64748B) !important;
+  z-index: 2 !important;
+  border-radius: 0 !important;
+  display: block !important;
+}
+
+/* Color overrides for Alert left accent line based on style attribute */
+.mantine-Alert-root[style*="red"]::before { background-color: #EF4444 !important; }
+.mantine-Alert-root[style*="danger"]::before { background-color: #EF4444 !important; }
+.mantine-Alert-root[style*="green"]::before { background-color: #10B981 !important; }
+.mantine-Alert-root[style*="success"]::before { background-color: #10B981 !important; }
+.mantine-Alert-root[style*="blue"]::before { background-color: #3B82F6 !important; }
+.mantine-Alert-root[style*="info"]::before { background-color: #3B82F6 !important; }
+.mantine-Alert-root[style*="yellow"]::before { background-color: #F59E0B !important; }
+.mantine-Alert-root[style*="warning"]::before { background-color: #F59E0B !important; }
+.mantine-Alert-root[style*="gray"]::before { background-color: #64748B !important; }
+
+.m_66836ed3[style*="red"]::before { background-color: #EF4444 !important; }
+.m_66836ed3[style*="danger"]::before { background-color: #EF4444 !important; }
+.m_66836ed3[style*="green"]::before { background-color: #10B981 !important; }
+.m_66836ed3[style*="success"]::before { background-color: #10B981 !important; }
+.m_66836ed3[style*="blue"]::before { background-color: #3B82F6 !important; }
+.m_66836ed3[style*="info"]::before { background-color: #3B82F6 !important; }
+.m_66836ed3[style*="yellow"]::before { background-color: #F59E0B !important; }
+.m_66836ed3[style*="warning"]::before { background-color: #F59E0B !important; }
+.m_66836ed3[style*="gray"]::before { background-color: #64748B !important; }
+
+[class*="Alert-root"][style*="red"]::before { background-color: #EF4444 !important; }
+[class*="Alert-root"][style*="danger"]::before { background-color: #EF4444 !important; }
+[class*="Alert-root"][style*="green"]::before { background-color: #10B981 !important; }
+[class*="Alert-root"][style*="success"]::before { background-color: #10B981 !important; }
+[class*="Alert-root"][style*="blue"]::before { background-color: #3B82F6 !important; }
+[class*="Alert-root"][style*="info"]::before { background-color: #3B82F6 !important; }
+[class*="Alert-root"][style*="yellow"]::before { background-color: #F59E0B !important; }
+[class*="Alert-root"][style*="warning"]::before { background-color: #F59E0B !important; }
+[class*="Alert-root"][style*="gray"]::before { background-color: #64748B !important; }
+
+/* Alert Icon container base styling */
+.mantine-Alert-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  margin-right: 14px !important;
+  margin-inline-end: 14px !important;
+  z-index: 5 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+}
+
+.m_667f2a6a {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  margin-right: 14px !important;
+  margin-inline-end: 14px !important;
+  z-index: 5 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+}
+
+[class*="Alert-icon"] {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  margin-right: 14px !important;
+  margin-inline-end: 14px !important;
+  z-index: 5 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+}
+
+/* Color specific backgrounds for the icon container */
+.mantine-Alert-root[style*="red"] .mantine-Alert-icon { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+.mantine-Alert-root[style*="danger"] .mantine-Alert-icon { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+.mantine-Alert-root[style*="green"] .mantine-Alert-icon { background-color: #ECFDF5 !important; color: #10B981 !important; }
+.mantine-Alert-root[style*="success"] .mantine-Alert-icon { background-color: #ECFDF5 !important; color: #10B981 !important; }
+.mantine-Alert-root[style*="blue"] .mantine-Alert-icon { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+.mantine-Alert-root[style*="info"] .mantine-Alert-icon { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+.mantine-Alert-root[style*="yellow"] .mantine-Alert-icon { background-color: #FEF3C7 !important; color: #D97706 !important; }
+.mantine-Alert-root[style*="warning"] .mantine-Alert-icon { background-color: #FEF3C7 !important; color: #D97706 !important; }
+.mantine-Alert-root[style*="gray"] .mantine-Alert-icon { background-color: #F1F5F9 !important; color: #64748B !important; }
+
+.m_66836ed3[style*="red"] .m_667f2a6a { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+.m_66836ed3[style*="danger"] .m_667f2a6a { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+.m_66836ed3[style*="green"] .m_667f2a6a { background-color: #ECFDF5 !important; color: #10B981 !important; }
+.m_66836ed3[style*="success"] .m_667f2a6a { background-color: #ECFDF5 !important; color: #10B981 !important; }
+.m_66836ed3[style*="blue"] .m_667f2a6a { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+.m_66836ed3[style*="info"] .m_667f2a6a { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+.m_66836ed3[style*="yellow"] .m_667f2a6a { background-color: #FEF3C7 !important; color: #D97706 !important; }
+.m_66836ed3[style*="warning"] .m_667f2a6a { background-color: #FEF3C7 !important; color: #D97706 !important; }
+.m_66836ed3[style*="gray"] .m_667f2a6a { background-color: #F1F5F9 !important; color: #64748B !important; }
+
+[class*="Alert-root"][style*="red"] [class*="Alert-icon"] { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+[class*="Alert-root"][style*="danger"] [class*="Alert-icon"] { background-color: #FEF2F2 !important; color: #EF4444 !important; }
+[class*="Alert-root"][style*="green"] [class*="Alert-icon"] { background-color: #ECFDF5 !important; color: #10B981 !important; }
+[class*="Alert-root"][style*="success"] [class*="Alert-icon"] { background-color: #ECFDF5 !important; color: #10B981 !important; }
+[class*="Alert-root"][style*="blue"] [class*="Alert-icon"] { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+[class*="Alert-root"][style*="info"] [class*="Alert-icon"] { background-color: #EFF6FF !important; color: #3B82F6 !important; }
+[class*="Alert-root"][style*="yellow"] [class*="Alert-icon"] { background-color: #FEF3C7 !important; color: #D97706 !important; }
+[class*="Alert-root"][style*="warning"] [class*="Alert-icon"] { background-color: #FEF3C7 !important; color: #D97706 !important; }
+[class*="Alert-root"][style*="gray"] [class*="Alert-icon"] { background-color: #F1F5F9 !important; color: #64748B !important; }
+
+/* Ensure SVGs inside Alert icon container inherit dynamic colors */
+.mantine-Alert-icon svg { width: 20px !important; height: 20px !important; fill: currentColor !important; }
+[class*="Alert-icon"] svg { width: 20px !important; height: 20px !important; fill: currentColor !important; }
+.m_667f2a6a svg { width: 20px !important; height: 20px !important; fill: currentColor !important; }
+
+/* Styling Alert wrappers and body */
+.mantine-Alert-wrapper { display: flex !important; align-items: center !important; width: 100% !important; background: none !important; }
+[class*="Alert-wrapper"] { display: flex !important; align-items: center !important; width: 100% !important; background: none !important; }
+.m_a5d60502 { display: flex !important; align-items: center !important; width: 100% !important; background: none !important; }
+
+.mantine-Alert-body { flex: 1 !important; display: flex !important; flex-direction: column !important; justify-content: center !important; }
+[class*="Alert-body"] { flex: 1 !important; display: flex !important; flex-direction: column !important; justify-content: center !important; }
+.m_667c2793 { flex: 1 !important; display: flex !important; flex-direction: column !important; justify-content: center !important; }
+
+.mantine-Alert-title { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; margin-bottom: 2px !important; line-height: 1.35 !important; }
+[class*="Alert-title"] { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; margin-bottom: 2px !important; line-height: 1.35 !important; }
+.m_6a03f287 { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; margin-bottom: 2px !important; line-height: 1.35 !important; }
+
+.mantine-Alert-label { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; }
+[class*="Alert-label"] { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; }
+.m_698f4f23 { font-size: 0.9rem !important; font-weight: 700 !important; color: #0F172A !important; }
+
+.mantine-Alert-message { font-size: 0.85rem !important; font-weight: 500 !important; color: #475569 !important; line-height: 1.4 !important; }
+[class*="Alert-message"] { font-size: 0.85rem !important; font-weight: 500 !important; color: #475569 !important; line-height: 1.4 !important; }
+.m_7fa78076 { font-size: 0.85rem !important; font-weight: 500 !important; color: #475569 !important; line-height: 1.4 !important; }
+
+/* Prominent message when no title is provided (only child message container) */
+.mantine-Alert-body > .mantine-Alert-message:only-child { font-size: 0.9rem !important; font-weight: 600 !important; color: #0F172A !important; }
+[class*="Alert-body"] > [class*="Alert-message"]:only-child { font-size: 0.9rem !important; font-weight: 600 !important; color: #0F172A !important; }
+.m_667c2793 > .m_7fa78076:only-child { font-size: 0.9rem !important; font-weight: 600 !important; color: #0F172A !important; }
+
+.mantine-Alert-root:not(:has(.mantine-Alert-title)) .mantine-Alert-message { font-size: 0.9rem !important; font-weight: 600 !important; color: #0F172A !important; }
+[class*="Alert-root"]:not(:has([class*="Alert-title"])) [class*="Alert-message"] { font-size: 0.9rem !important; font-weight: 600 !important; color: #0F172A !important; }
+.m_66836ed3:not(:has(.m_6a03f287)) .m_7fa78076 { font-size: 0.9rem !important; font-weight: 600 !important; color: #0F172A !important; }
+
+/* If no icon is supplied, adjust padding and inject custom badge for Alert */
+.mantine-Alert-root:not(:has(.mantine-Alert-icon)) { padding-left: 72px !important; padding-inline-start: 72px !important; }
+[class*="Alert-root"]:not(:has([class*="Alert-icon"])) { padding-left: 72px !important; padding-inline-start: 72px !important; }
+.m_66836ed3:not(:has(.m_667f2a6a)) { padding-left: 72px !important; padding-inline-start: 72px !important; }
+
+.mantine-Alert-root:not(:has(.mantine-Alert-icon))::after {
+  content: 'i' !important;
+  position: absolute !important;
+  left: 18px !important;
+  inset-inline-start: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  z-index: 10 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+  font-family: 'Georgia', serif !important;
+  font-style: italic !important;
+}
+
+[class*="Alert-root"]:not(:has([class*="Alert-icon"]))::after {
+  content: 'i' !important;
+  position: absolute !important;
+  left: 18px !important;
+  inset-inline-start: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  z-index: 10 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+  font-family: 'Georgia', serif !important;
+  font-style: italic !important;
+}
+
+.m_66836ed3:not(:has(.m_667f2a6a))::after {
+  content: 'i' !important;
+  position: absolute !important;
+  left: 18px !important;
+  inset-inline-start: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  z-index: 10 !important;
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+  font-family: 'Georgia', serif !important;
+  font-style: italic !important;
+}
+
+/* Color specific backgrounds/symbols for the custom Alert badge */
+.mantine-Alert-root:not(:has(.mantine-Alert-icon))[style*="red"]::after { content: '!' !important; background-color: #FEF2F2 !important; color: #EF4444 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.mantine-Alert-root:not(:has(.mantine-Alert-icon))[style*="danger"]::after { content: '!' !important; background-color: #FEF2F2 !important; color: #EF4444 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.mantine-Alert-root:not(:has(.mantine-Alert-icon))[style*="green"]::after { content: '✓' !important; background-color: #ECFDF5 !important; color: #10B981 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.mantine-Alert-root:not(:has(.mantine-Alert-icon))[style*="success"]::after { content: '✓' !important; background-color: #ECFDF5 !important; color: #10B981 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.mantine-Alert-root:not(:has(.mantine-Alert-icon))[style*="blue"]::after { content: 'i' !important; background-color: #EFF6FF !important; color: #3B82F6 !important; font-family: 'Georgia', serif !important; font-style: italic !important; }
+.mantine-Alert-root:not(:has(.mantine-Alert-icon))[style*="info"]::after { content: 'i' !important; background-color: #EFF6FF !important; color: #3B82F6 !important; font-family: 'Georgia', serif !important; font-style: italic !important; }
+.mantine-Alert-root:not(:has(.mantine-Alert-icon))[style*="yellow"]::after { content: '!' !important; background-color: #FEF3C7 !important; color: #D97706 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.mantine-Alert-root:not(:has(.mantine-Alert-icon))[style*="warning"]::after { content: '!' !important; background-color: #FEF3C7 !important; color: #D97706 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+
+[class*="Alert-root"]:not(:has([class*="Alert-icon"]))[style*="red"]::after { content: '!' !important; background-color: #FEF2F2 !important; color: #EF4444 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+[class*="Alert-root"]:not(:has([class*="Alert-icon"]))[style*="danger"]::after { content: '!' !important; background-color: #FEF2F2 !important; color: #EF4444 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+[class*="Alert-root"]:not(:has([class*="Alert-icon"]))[style*="green"]::after { content: '✓' !important; background-color: #ECFDF5 !important; color: #10B981 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+[class*="Alert-root"]:not(:has([class*="Alert-icon"]))[style*="success"]::after { content: '✓' !important; background-color: #ECFDF5 !important; color: #10B981 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+[class*="Alert-root"]:not(:has([class*="Alert-icon"]))[style*="blue"]::after { content: 'i' !important; background-color: #EFF6FF !important; color: #3B82F6 !important; font-family: 'Georgia', serif !important; font-style: italic !important; }
+[class*="Alert-root"]:not(:has([class*="Alert-icon"]))[style*="info"]::after { content: 'i' !important; background-color: #EFF6FF !important; color: #3B82F6 !important; font-family: 'Georgia', serif !important; font-style: italic !important; }
+[class*="Alert-root"]:not(:has([class*="Alert-icon"]))[style*="yellow"]::after { content: '!' !important; background-color: #FEF3C7 !important; color: #D97706 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+[class*="Alert-root"]:not(:has([class*="Alert-icon"]))[style*="warning"]::after { content: '!' !important; background-color: #FEF3C7 !important; color: #D97706 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+
+.m_66836ed3:not(:has(.m_667f2a6a))[style*="red"]::after { content: '!' !important; background-color: #FEF2F2 !important; color: #EF4444 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.m_66836ed3:not(:has(.m_667f2a6a))[style*="danger"]::after { content: '!' !important; background-color: #FEF2F2 !important; color: #EF4444 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.m_66836ed3:not(:has(.m_667f2a6a))[style*="green"]::after { content: '✓' !important; background-color: #ECFDF5 !important; color: #10B981 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.m_66836ed3:not(:has(.m_667f2a6a))[style*="success"]::after { content: '✓' !important; background-color: #ECFDF5 !important; color: #10B981 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.m_66836ed3:not(:has(.m_667f2a6a))[style*="blue"]::after { content: 'i' !important; background-color: #EFF6FF !important; color: #3B82F6 !important; font-family: 'Georgia', serif !important; font-style: italic !important; }
+.m_66836ed3:not(:has(.m_667f2a6a))[style*="info"]::after { content: 'i' !important; background-color: #EFF6FF !important; color: #3B82F6 !important; font-family: 'Georgia', serif !important; font-style: italic !important; }
+.m_66836ed3:not(:has(.m_667f2a6a))[style*="yellow"]::after { content: '!' !important; background-color: #FEF3C7 !important; color: #D97706 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+.m_66836ed3:not(:has(.m_667f2a6a))[style*="warning"]::after { content: '!' !important; background-color: #FEF3C7 !important; color: #D97706 !important; font-family: 'Inter', sans-serif !important; font-style: normal !important; }
+
+/* Close button style for Alert if present */
+.mantine-Alert-closeButton {
+  color: #64748B !important;
+  background: none !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  margin-left: 12px !important;
+  margin-inline-start: 12px !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+[class*="Alert-closeButton"] {
+  color: #64748B !important;
+  background: none !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  margin-left: 12px !important;
+  margin-inline-start: 12px !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.mantine-CloseButton-root {
+  color: #64748B !important;
+  background: none !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  margin-left: 12px !important;
+  margin-inline-start: 12px !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.m_87f54839 {
+  color: #64748B !important;
+  background: none !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: background-color 0.2s, color 0.2s !important;
+  margin-left: 12px !important;
+  margin-inline-start: 12px !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.mantine-Alert-closeButton:hover { background-color: #F1F5F9 !important; color: #0F172A !important; }
+[class*="Alert-closeButton"]:hover { background-color: #F1F5F9 !important; color: #0F172A !important; }
+.mantine-CloseButton-root:hover { background-color: #F1F5F9 !important; color: #0F172A !important; }
+.m_87f54839:hover { background-color: #F1F5F9 !important; color: #0F172A !important; }
+
+
+

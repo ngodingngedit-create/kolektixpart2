@@ -476,7 +476,6 @@
 
 // export default appWithTranslation(App);
 
-import '@/styles/globals.css';
 import { Inter } from 'next/font/google';
 import type { AppProps } from 'next/app';
 import Link from 'next/link';
@@ -501,6 +500,7 @@ import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import '@mantine/carousel/styles.css';
 import '@mantine/dates/styles.css';
+import '@/styles/globals.css';
 import { Notifications } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
 import { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react';
