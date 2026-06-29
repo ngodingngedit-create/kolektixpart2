@@ -107,9 +107,9 @@ export const Get = async (url: string, params: any) => {
         if (err?.response?.status == 401) {
           Cookies.remove('token');
           Cookies.remove('user_data');
-          setTimeout(() => {
-            router.push('/login');
-          }, 1000);
+          // setTimeout(() => {
+          //   router.push('/login');
+          // }, 1000);
         }
 
         reject(err);
