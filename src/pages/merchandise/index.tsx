@@ -453,7 +453,7 @@ import fetch from "@/utils/fetch";
 import Cookies from "js-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCartShopping, faFilter, faSearch } from "@fortawesome/free-solid-svg-icons";
-import { Modal, TextInput, Divider, ActionIcon } from "@mantine/core";
+import { Modal, TextInput, Divider, ActionIcon, Drawer } from "@mantine/core";
 import { MerchListResponse } from "../dashboard/merch/type";
 import { BookmarkListResponse, BookmarkRequest } from "@/types/bookmark";
 
@@ -474,6 +474,46 @@ const Merchandise = () => {
   const [selectedCreator, setSelectedCreator] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [opened, { open, close }] = useDisclosure(false);
+
+  // Cache list of creators persistently
+  const [allLoadedCreators, setAllLoadedCreators] = useState<any[]>([]);
+
+  // ============ HORIZONTAL FILTER SLIDER STATES & HANDLERS ============
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(false);
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const updateArrowVisibility = useCallback(() => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setShowLeftArrow(scrollLeft > 5);
+      setShowRightArrow(scrollLeft + clientWidth < scrollWidth - 5);
+    }
+  }, []);
+
+  const syncActiveIndicator = useCallback(() => {
+    if (scrollRef.current) {
+      const targetId = selectedCreator || "semua";
+      const activeButton = scrollRef.current.querySelector(`[data-creator-id="${targetId}"]`) as HTMLButtonElement;
+      if (activeButton) {
+        setIndicatorStyle({
+          left: activeButton.offsetLeft,
+          width: activeButton.offsetWidth
+        });
+      }
+    }
+  }, [selectedCreator]);
+
+  const handleScroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const offset = direction === "left" ? -250 : 250;
+      scrollRef.current.scrollBy({ left: offset, behavior: "smooth" });
+      setTimeout(updateArrowVisibility, 350);
+    }
+  };
+
+
   
   const users = useLoggedUser();
   const isLoggedIn = !!users?.name;
@@ -483,12 +523,22 @@ const Merchandise = () => {
   const loadingRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
   const initialLoadDoneRef = useRef(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
   
   // ============ CACHE CREATOR ============
   const [creatorCache, setCreatorCache] = useState<Record<number, boolean>>({});
   const cacheRef = useRef<Record<number, boolean>>({});
   const isFetchingCreators = useRef(false);
   const pendingCreatorFetch = useRef<Set<number>>(new Set());
+
+  // ============ SCROLL DETECTION ============
+  useEffect(() => {
+    const handleWindowScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleWindowScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleWindowScroll);
+  }, []);
 
   // ============ INITIAL LOAD ============
   useEffect(() => {
@@ -500,6 +550,28 @@ const Merchandise = () => {
       }
     };
   }, []);
+
+  // ============ PERSISTENT CREATORS CACHE ============
+  useEffect(() => {
+    if (data.length > 0) {
+      const creators = new Map();
+      data.forEach(item => {
+        if (item.creator?.id && item.creator?.name) {
+          creators.set(item.creator.id, {
+            id: item.creator.id,
+            name: item.creator.name
+          });
+        }
+      });
+      
+      setAllLoadedCreators(prev => {
+        const nextMap = new Map();
+        prev.forEach(c => nextMap.set(c.id, c));
+        creators.forEach(c => nextMap.set(c.id, c));
+        return Array.from(nextMap.values());
+      });
+    }
+  }, [data]);
 
   // ============ RESET WHEN FILTER CHANGE ============
   useEffect(() => {
@@ -736,8 +808,50 @@ const Merchandise = () => {
         });
       }
     });
-    return Array.from(creators.values()).sort((a, b) => a.name.localeCompare(b.name));
-  }, [data]);
+    
+    const realCreators = Array.from(creators.values()).sort((a, b) => a.name.localeCompare(b.name));
+    
+    const mockCreators = [
+      { id: 9901, name: "moofeet" },
+      { id: 9902, name: "Abiboy" },
+      { id: 9903, name: "subculturemerch" },
+      { id: 9904, name: "MCL" },
+      { id: 9905, name: "Karina Christy" },
+      { id: 9906, name: "Sir Dandy" },
+      { id: 9907, name: "Solear Records" },
+      { id: 9908, name: "Los Panturas Mart" },
+      { id: 9909, name: "Ten Holes" },
+      { id: 9910, name: "Setengah Limart" },
+      { id: 9911, name: "Geral Idgitaf" },
+      { id: 9912, name: "The Jansen" }
+    ];
+
+    const allCreatorsMap = new Map();
+    realCreators.forEach(c => allCreatorsMap.set(c.name.toLowerCase(), c));
+    mockCreators.forEach(c => {
+      if (!allCreatorsMap.has(c.name.toLowerCase())) {
+        allCreatorsMap.set(c.name.toLowerCase(), c);
+      }
+    });
+
+    return Array.from(allCreatorsMap.values());
+  }, [allLoadedCreators]);
+
+  // ============ SLIDER ARROWS & INDICATOR SYNC ============
+  useEffect(() => {
+    const syncAll = () => {
+      updateArrowVisibility();
+      syncActiveIndicator();
+    };
+
+    const timer = setTimeout(syncAll, 150);
+
+    window.addEventListener("resize", syncAll);
+    return () => {
+      window.removeEventListener("resize", syncAll);
+      clearTimeout(timer);
+    };
+  }, [uniqueCreators, selectedCreator, updateArrowVisibility, syncActiveIndicator]);
 
   const filteredCreators = useMemo(() => {
     if (!searchQuery.trim()) return uniqueCreators;
@@ -855,7 +969,130 @@ const Merchandise = () => {
 
   // ============ RENDER ============
   return (
-    <div className="py-10 md:pt-12 max-w-5xl mx-auto text-dark">
+    <div className="py-10 md:pt-12 max-w-[1440px] mx-auto px-5 md:px-10 text-dark">
+      {/* Styles for scrollbar */}
+      <style dangerouslySetInnerHTML={{__html: `
+        .scrollbar-custom {
+          scrollbar-width: none !important;
+          -ms-overflow-style: none !important;
+        }
+        .scrollbar-custom::-webkit-scrollbar {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+        @media (max-width: 768px) {
+          .scrollbar-custom {
+            scrollbar-width: thin !important;
+            -ms-overflow-style: auto !important;
+          }
+          .scrollbar-custom::-webkit-scrollbar {
+            display: block !important;
+            height: 3px !important;
+          }
+          .scrollbar-custom::-webkit-scrollbar-track {
+            background: transparent !important;
+          }
+          .scrollbar-custom::-webkit-scrollbar-thumb {
+            background-color: #E2E8F0 !important;
+            border-radius: 9px !important;
+          }
+        }
+      `}} />
+
+          {/* FILTER CHIPS (IMAGE 3 STYLE) */}
+          {/* Outer: sticky full-width bg spanning across viewport */}
+           <div className={`mb-6 mt-4 md:mt-5 sticky top-[64px] z-[100] bg-white transition-shadow duration-200 mx-[calc(50%-50vw)] ${
+             isScrolled ? 'shadow-[0_10px_10px_-10px_rgba(0,0,0,0.15)]' : ''
+           }`}>
+            {/* Inner: content aligned with page max-width grid */}
+            <div className="max-w-[1440px] mx-auto px-5 md:px-10 flex items-center gap-4 py-2">
+              {/* Menu icon button */}
+              <button 
+                onClick={open}
+                className="flex-shrink-0 w-9 h-9 md:w-10 md:h-10 rounded-full border border-[#E5E7EB] flex items-center justify-center bg-white text-[#64748B] hover:bg-gray-50 hover:text-[#194E9E] transition-all duration-200"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                </svg>
+              </button>
+
+              {/* Horizontal scroll list of chips wrapper */}
+              <div className="flex-1 relative flex items-center overflow-hidden w-full">
+                {/* Left Arrow Button */}
+                {showLeftArrow && (
+                  <button
+                    onClick={() => handleScroll("left")}
+                    className="hidden md:flex absolute left-0 z-10 w-8 h-8 md:w-9 md:h-9 rounded-full bg-white border border-[#E5E7EB] shadow-md items-center justify-center text-gray-500 hover:text-[#194E9E] hover:scale-105 transition-all duration-200 focus:outline-none"
+                    aria-label="Scroll left"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                    </svg>
+                  </button>
+                )}
+
+                {/* Scroll Container */}
+                <div 
+                  ref={scrollRef}
+                  onScroll={updateArrowVisibility}
+                  className="w-full overflow-x-scroll scrollbar-custom flex items-center gap-4 py-2 select-none relative"
+                >
+                  {/* Sliding active indicator underline */}
+                  <div 
+                    className="absolute bottom-[3px] h-[4px] transition-all duration-300 ease-out flex justify-center"
+                    style={{ 
+                      left: `${indicatorStyle.left}px`, 
+                      width: `${indicatorStyle.width}px` 
+                    }}
+                  >
+                    <div className="h-[4px] w-full bg-[#194E9E] rounded-full" />
+                  </div>
+
+                  {/* "Semua" chip */}
+                  <button
+                    data-creator-id="semua"
+                    onClick={() => setSelectedCreator(null)}
+                    className={`px-1 rounded-none bg-transparent whitespace-nowrap transition-all duration-200 pb-[6px] pt-1 border-none focus:outline-none
+                      ${!selectedCreator 
+                        ? "text-[#194E9E] font-semibold" 
+                        : "text-black font-normal hover:text-[#194E9E]"}`}
+                  >
+                    Semua
+                  </button>
+
+                  {/* Creator chips */}
+                  {uniqueCreators.map((creator) => (
+                    <button
+                      key={creator.id}
+                      data-creator-id={creator.id.toString()}
+                      onClick={() => setSelectedCreator(creator.id.toString())}
+                      className={`px-1 rounded-none bg-transparent whitespace-nowrap transition-all duration-200 pb-[6px] pt-1 border-none focus:outline-none
+                        ${selectedCreator === creator.id.toString()
+                          ? "text-[#194E9E] font-semibold"
+                          : "text-black font-normal hover:text-[#194E9E]"}`}
+                    >
+                      {creator.name}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Right Arrow Button */}
+                {showRightArrow && (
+                  <button
+                    onClick={() => handleScroll("right")}
+                    className="hidden md:flex absolute right-0 z-10 w-8 h-8 md:w-9 md:h-9 rounded-full bg-white border border-[#E5E7EB] shadow-md items-center justify-center text-gray-500 hover:text-[#194E9E] hover:scale-105 transition-all duration-200 focus:outline-none"
+                    aria-label="Scroll right"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+
       {/* LOADING INITIAL */}
       {loading && (
         <Center className="min-h-[50vh] flex-col gap-4">
@@ -870,10 +1107,10 @@ const Merchandise = () => {
           {/* FLASH SALE SECTION */}
           {flashSaleProduct.length > 0 && (
             <>
-              <Text px={20} size="xl" fw={600} className="mb-2">
+              <Text size="xl" fw={600} className="mb-2">
                 🔥 Flash Sale
               </Text>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 px-[20px] mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
                 {flashSaleProduct.map((item) => (
                   <MerchandiseCard
                     key={`flash-${item.id}`}
@@ -886,12 +1123,12 @@ const Merchandise = () => {
                     creatorImage={item.creator?.image_url}
                     redirect={`/merchandise/${item.slug}`}
                     image={item.product_image?.[0]?.image_url}
+                    hoverImage={item.product_image?.[1]?.image_url || item.product_image?.[0]?.image_url}
                     location={item.has_store_location?.store_name}
                     isBookmarked={bookmarkedIds.has(item.id)}
                     onBookmarkToggle={toggleBookmark}
                     showBookmark={isLoggedIn}
                     isVerified={cacheRef.current[item.creator?.id] || item.creator?.is_verified === 1 || item.creator?.is_verified === true}
-                    // ✅ TAMBAHKAN INI!
                     isPreorder={item.is_preorder}
                   />
                 ))}
@@ -899,116 +1136,136 @@ const Merchandise = () => {
             </>
           )}
 
-          {/* FILTER MOBILE */}
-          <div className="px-[20px] mb-4 md:hidden">
-            <div className="flex items-center justify-between">
-              <Text size="xl" fw={600}>
-                Semua Merchandise
-                <span className="ml-2 text-sm font-normal text-gray-500">
-                  ({filteredData.length})
-                </span>
-              </Text>
-              {uniqueCreators.length > 0 && (
-                <ActionIcon variant="light" color="blue" size="lg" onClick={open}>
-                  <FontAwesomeIcon icon={faFilter} />
-                </ActionIcon>
-              )}
-            </div>
-            {selectedCreator && (
-              <div className="mt-2 flex items-center justify-between">
-                <Badge color="blue" variant="light" size="lg">
-                  {uniqueCreators.find(c => c.id.toString() === selectedCreator)?.name}
-                  <span className="ml-1 text-xs">({filteredData.length})</span>
-                </Badge>
-                <Button variant="subtle" size="xs" onClick={() => setSelectedCreator(null)} color="red">
-                  Hapus
-                </Button>
-              </div>
-            )}
-          </div>
-
-          {/* MODAL FILTER */}
-          <Modal
-            opened={opened}
-            onClose={close}
-            title={<Text fw={600}>Filter Creator</Text>}
-            centered
-            size="sm"
-            className="md:hidden"
-            radius="md"
-          >
-            <div className="space-y-4">
-              <TextInput
-                placeholder="Cari creator..."
-                leftSection={<FontAwesomeIcon icon={faSearch} size="sm" />}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.currentTarget.value)}
-              />
-              <Divider />
-              <div className="max-h-[60vh] overflow-y-auto">
-                <Button
-                  fullWidth
-                  variant={!selectedCreator ? "filled" : "light"}
-                  color={!selectedCreator ? "blue" : "gray"}
-                  onClick={() => handleSelectCreator(null)}
-                  className="justify-start mb-1"
-                >
-                  <div className="flex items-center justify-between w-full">
-                    <span>Semua Creator</span>
-                    <Badge color="gray" variant="light" size="sm">
-                      {data.length}
-                    </Badge>
-                  </div>
-                </Button>
-                
-                {filteredCreators.map((creator) => {
-                  const count = data.filter(item => item.creator?.id === creator.id).length;
-                  return (
-                    <Button
-                      key={creator.id}
-                      fullWidth
-                      variant={selectedCreator === creator.id.toString() ? "filled" : "light"}
-                      color={selectedCreator === creator.id.toString() ? "blue" : "gray"}
-                      onClick={() => handleSelectCreator(creator.id.toString())}
-                      className="justify-start mb-1"
-                    >
-                      <div className="flex items-center justify-between w-full">
-                        <span className="truncate">{creator.name}</span>
-                        <Badge color="gray" variant="light" size="sm">
-                          {count}
-                        </Badge>
-                      </div>
-                    </Button>
-                  );
-                })}
-              </div>
-              <Button fullWidth onClick={close} variant="light">
-                Tutup
-              </Button>
-            </div>
-          </Modal>
-
-          {/* DESKTOP TITLE */}
-          <div className="hidden md:flex md:px-[20px] md:mb-4 md:items-center md:justify-between">
-            <div className="flex items-center gap-3">
-              <Text size="xl" fw={600}>
-                Semua Merchandise
-              </Text>
-              <Badge size="lg" variant="dot" color="blue">
-                {filteredData.length} item
-              </Badge>
-            </div>
-            {selectedCreator && (
+          {/* HAPUS FILTER BUTTON (ONLY SHOWS IF ACTIVE) */}
+          {selectedCreator && (
+            <div className="mb-4 flex justify-end">
               <Button variant="subtle" size="xs" onClick={() => setSelectedCreator(null)} color="red">
                 Hapus Filter: {uniqueCreators.find(c => c.id.toString() === selectedCreator)?.name}
               </Button>
-            )}
-          </div>
+            </div>
+          )}
+
+
+
+          {/* SIDEBAR FILTER DRAWER (DARK BLUE DESIGN) */}
+          <Drawer
+            opened={opened}
+            onClose={close}
+            size="290px"
+            padding="xl"
+            position="left"
+            withCloseButton={false}
+            styles={{
+              content: {
+                backgroundColor: '#0A3370',
+                color: '#ffffff',
+              },
+              header: {
+                display: 'none',
+              }
+            }}
+          >
+            <div className="flex flex-col h-full text-white">
+              {/* Custom Header */}
+              <div className="flex items-center justify-between mb-8">
+                <span className="text-xl font-bold tracking-wide">Filter Produk</span>
+                <button 
+                  onClick={close} 
+                  className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/10 transition-all text-white"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Items List */}
+              <div className="space-y-6">
+                {/* Populer */}
+                <button 
+                  onClick={() => {
+                    toast.info("Menampilkan produk Populer");
+                    close();
+                  }}
+                  className="flex items-center gap-4 w-full text-left group hover:opacity-90 transition-all"
+                >
+                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-blue-200 group-hover:bg-white/20 transition-all flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 18a3.75 3.75 0 0 0 .495-7.467 5.99 5.99 0 0 0-1.925 3.546 5.974 5.974 0 0 1-2.133-1A3.75 3.75 0 0 0 12 18Z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[15px] leading-tight">Sedang Populer</p>
+                    <p className="text-[11px] text-white/60 mt-0.5">Produk yang paling banyak dilihat</p>
+                  </div>
+                </button>
+
+                {/* Trending */}
+                <button 
+                  onClick={() => {
+                    toast.info("Menampilkan produk Trending");
+                    close();
+                  }}
+                  className="flex items-center gap-4 w-full text-left group hover:opacity-90 transition-all"
+                >
+                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-blue-200 group-hover:bg-white/20 transition-all flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[15px] leading-tight">Sedang Trending</p>
+                    <p className="text-[11px] text-white/60 mt-0.5">Produk yang sedang naik daun</p>
+                  </div>
+                </button>
+
+                {/* Terlaris */}
+                <button 
+                  onClick={() => {
+                    toast.info("Menampilkan produk Paling Banyak Dibeli");
+                    close();
+                  }}
+                  className="flex items-center gap-4 w-full text-left group hover:opacity-90 transition-all"
+                >
+                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-blue-200 group-hover:bg-white/20 transition-all flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[15px] leading-tight">Paling Banyak di Beli</p>
+                    <p className="text-[11px] text-white/60 mt-0.5">Produk terlaris saat ini</p>
+                  </div>
+                </button>
+
+                {/* Promo */}
+                <button 
+                  onClick={() => {
+                    toast.info("Menampilkan produk Promo");
+                    close();
+                  }}
+                  className="flex items-center gap-4 w-full text-left group hover:opacity-90 transition-all"
+                >
+                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-blue-200 group-hover:bg-white/20 transition-all flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581a1.43 1.43 0 0 0 2.022 0l4.72-4.72a1.43 1.43 0 0 0 0-2.022l-9.58-9.581A2.25 2.25 0 0 0 9.568 3Z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 6h.008v.008H6V6Z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[15px] leading-tight">Promo</p>
+                    <p className="text-[11px] text-white/60 mt-0.5">Penawaran harga terbaik</p>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </Drawer>
 
           {/* GRID PRODUCT */}
           {filteredData.length > 0 ? (
             <>
-              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3 px-[20px]">
+              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-5">
                 {filteredData.map((item, index) => (
                   <MerchandiseCard
                     key={`merch-${item.id}-${index}`}
@@ -1021,13 +1278,13 @@ const Merchandise = () => {
                     creatorImage={item.creator?.image_url}
                     redirect={`/merchandise/${item.slug}`}
                     image={item.product_image?.[0]?.image_url}
+                    hoverImage={item.product_image?.[1]?.image_url || item.product_image?.[0]?.image_url}
                     location={item.has_store_location?.store_name}
                     isBookmarked={bookmarkedIds.has(item.id)}
                     onBookmarkToggle={toggleBookmark}
                     showBookmark={isLoggedIn}
                     productVariants={item.product_varian as any[]}
                     isVerified={cacheRef.current[item.creator?.id] || item.creator?.is_verified === 1 || item.creator?.is_verified === true}
-                    // ✅ TAMBAHKAN INI!
                     isPreorder={item.is_preorder}
                   />
                 ))}

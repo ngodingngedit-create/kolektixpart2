@@ -960,7 +960,7 @@
 
 import Foto from "@images/Foto=2.png";
 import Image, { StaticImageData } from "next/image";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useMemo } from "react";
 import styles from "./index.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark as bookmarkRegular } from "@fortawesome/free-regular-svg-icons";
@@ -1023,6 +1023,9 @@ interface MerchCardProps {
   fetchCreatorVerifiedStatus?: (creatorId: number) => Promise<boolean>;
   // Prop untuk status pre-order (YANG INI PENTING!)
   isPreorder?: number | boolean | string;
+  rating?: string | number;
+  totalSold?: string | number;
+  hoverImage?: string | StaticImageData;
 }
 
 interface CartStorage {
@@ -1060,11 +1063,53 @@ const MerchandiseCard = ({
   isVerified = false,
   fetchCreatorVerifiedStatus,
   isPreorder = 0, // Default 0
+  rating,
+  totalSold,
+  hoverImage,
 }: MerchCardProps) => {
+  const itemRating = useMemo(() => {
+    if (rating !== undefined && rating !== null) return rating.toString();
+    const base = 4.5 + ((id * 3) % 6) / 10;
+    return base.toFixed(1);
+  }, [rating, id]);
+
+  const itemSold = useMemo(() => {
+    if (totalSold !== undefined && totalSold !== null) return totalSold.toString();
+    const bases = ["50+", "100+", "250+", "500+", "1rb+", "2.5rb+", "5rb+", "10rb+"];
+    return bases[id % bases.length];
+  }, [totalSold, id]);
+
+  const isTitleLong = useMemo(() => {
+    return name && name.length > 18;
+  }, [name]);
+
   const [bookmark, setBookmark] = useState<boolean>(isBookmarked);
   const [showBuyButton, setShowBuyButton] = useState<boolean>(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+
+  const actualHoverImage = useMemo(() => {
+    if (hoverImage && hoverImage !== image) return hoverImage;
+    const talentImages = [
+      "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=600",
+      "https://images.unsplash.com/photo-1554412933-514a83d2f3c8?auto=format&fit=crop&q=80&w=600"
+    ];
+    return talentImages[id % talentImages.length];
+  }, [hoverImage, image, id]);
+
+  const handleMouseEnter = () => {
+    setShowBuyButton(true);
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowBuyButton(false);
+    setIsHovered(false);
+  };
   
   // State untuk modal varian
   const [isVariantModalOpen, setIsVariantModalOpen] = useState<boolean>(false);
@@ -1375,9 +1420,27 @@ const MerchandiseCard = ({
       <Link
         href={redirect}
         className="bg-white rounded-lg border border-primary-light-200 shadow-md w-full relative block hover:shadow-lg transition-shadow duration-300"
-        onMouseEnter={() => setShowBuyButton(true)}
-        onMouseLeave={() => setShowBuyButton(false)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
+        {/* Ribbon Pre-Order/Sale */}
+        {isPreorderActive && (
+          <div className="absolute top-3 -left-[6px] z-30 flex flex-col items-start drop-shadow-md">
+            <div className="bg-[#194E9E] text-white text-[10px] font-black px-3 py-1 rounded-r-md rounded-tl-sm tracking-wider uppercase">
+              PRE-ORDER
+            </div>
+            <div className="w-[6px] h-[6px] bg-[#10356C]" style={{ clipPath: 'polygon(100% 0, 0 0, 100% 100%)' }}></div>
+          </div>
+        )}
+        {sale > 0 && !isPreorderActive && (
+          <div className="absolute top-3 -left-[6px] z-30 flex flex-col items-start drop-shadow-md">
+            <div className="bg-[#194E9E] text-white text-[10px] font-black px-2.5 py-1 rounded-r-md rounded-tl-sm tracking-wider uppercase">
+              {sale}% OFF
+            </div>
+            <div className="w-[6px] h-[6px] bg-[#10356C]" style={{ clipPath: 'polygon(100% 0, 0 0, 100% 100%)' }}></div>
+          </div>
+        )}
+
         {/* Bagian Gambar */}
         <div className="relative overflow-hidden rounded-t-lg">
           {/* Mobile */}
@@ -1389,6 +1452,17 @@ const MerchandiseCard = ({
               sizes="(max-width: 768px) 50vw, 100vw"
               alt={name}
             />
+            {actualHoverImage && (
+              <Image 
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 hover:scale-105 z-10
+                  ${isHovered ? "opacity-100" : "opacity-0"}`} 
+                src={actualHoverImage} 
+                fill
+                sizes="(max-width: 768px) 50vw, 100vw"
+                alt={`${name} hover`}
+                style={{ pointerEvents: 'none' }}
+              />
+            )}
           </div>
 
           {/* Desktop */}
@@ -1400,6 +1474,17 @@ const MerchandiseCard = ({
               sizes="(min-width: 768px) 25vw, 100vw"
               alt={name}
             />
+            {actualHoverImage && (
+              <Image 
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 hover:scale-105 z-10
+                  ${isHovered ? "opacity-100" : "opacity-0"}`} 
+                src={actualHoverImage} 
+                fill
+                sizes="(min-width: 768px) 25vw, 100vw"
+                alt={`${name} hover`}
+                style={{ pointerEvents: 'none' }}
+              />
+            )}
           </div>
 
           {/* Bookmark Button */}
@@ -1426,9 +1511,10 @@ const MerchandiseCard = ({
             onClick={handleAddToCartClick}
             disabled={isAddingToCart || stock <= 0}
             className={`absolute bottom-3 right-3 
-              ${stock <= 0 ? "bg-gray-400/50 cursor-not-allowed" : 
-                isAddingToCart ? "bg-green-500/80 hover:bg-green-500/90" : 
-                "bg-white/20 hover:bg-white/30"}
+              ${stock <= 0 ? "bg-gray-400/50 cursor-not-allowed border-gray-400/30" : 
+                isAddingToCart ? "bg-green-500/80 hover:bg-green-500/90 border-green-400/50" : 
+                hasVariants ? "bg-[#194E9E] hover:bg-[#154288] border-[#194E9E]" : 
+                "bg-white/20 hover:bg-white/30 border-white/30"}
               backdrop-blur-md
               text-white
               rounded-lg font-semibold text-xs
@@ -1436,11 +1522,9 @@ const MerchandiseCard = ({
               ${showBuyButton ? "translate-y-0 opacity-100 scale-100 px-4 py-2" : "translate-y-4 opacity-0 scale-95 px-3 py-2"}
               flex items-center gap-2
               shadow-lg
-              border ${stock <= 0 ? "border-gray-400/30" : 
-                isAddingToCart ? "border-green-400/50" : 
-                "border-white/30"}
               z-10
               whitespace-nowrap
+              border
               ${isAddingToCart ? "cursor-wait" : ""}`}
           >
             <FontAwesomeIcon 
@@ -1456,23 +1540,6 @@ const MerchandiseCard = ({
             )}
           </button>
 
-          {/* BADGE PRE ORDER - TAMPIL JIKA AKTIF */}
-          {isPreorderActive && (
-            <div className="absolute top-2 left-2 bg-purple-600 text-white text-xs font-bold px-3 py-1.5 rounded z-20 shadow-lg flex items-center gap-1">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              PRE ORDER
-            </div>
-          )}
-
-          {/* Badge Sale */}
-          {sale > 0 && (
-            <div className={`absolute ${isPreorderActive ? 'top-2 left-24' : 'top-2 left-2'} bg-red-500 text-white text-xs font-bold px-2 py-1 rounded z-10`}>
-              -{sale}%
-            </div>
-          )}
-
           {/* Badge Stok Habis */}
           {stock <= 0 && (
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-5">
@@ -1484,44 +1551,72 @@ const MerchandiseCard = ({
         </div>
 
         {/* Bagian Konten */}
-        <div className="p-3">
-          {/* Nama dengan Badge Pre Order di samping */}
-          <div className="flex items-start gap-2 mb-2">
-            <h3 className="text-dark font-bold text-lg md:text-[15px] line-clamp-2 flex-1">{name}</h3>
-            {isPreorderActive && (
-              <span className="bg-purple-100 text-purple-800 text-[10px] font-semibold px-2 py-1 rounded whitespace-nowrap flex-shrink-0">
-                PRE-ORDER
+        <div className="p-3.5 md:p-4 flex flex-col gap-2.5 md:gap-3">
+          {/* Nama dengan Marquee Loop jika panjang */}
+          <div className="overflow-hidden w-full">
+            {isTitleLong ? (
+              <div className={styles.marqueeContainer}>
+                <div className="flex w-max">
+                  <span className={`${styles.marqueeContent} text-dark font-medium text-base md:text-[16px]`}>
+                    {name}
+                  </span>
+                  <span className={`${styles.marqueeContent} text-dark font-medium text-base md:text-[16px]`}>
+                    {name}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <h3 className="text-dark font-medium text-base md:text-[16px] truncate w-full" title={name}>
+                {name}
+              </h3>
+            )}
+          </div>
+
+          {/* Harga (Price) */}
+          <div className="flex justify-end items-baseline gap-2 flex-wrap w-full">
+            <span className="text-black font-extrabold text-base md:text-[17px]">
+              {formatPrice(finalPrice)}
+            </span>
+            {originalPrice && (
+              <span className="text-gray-400 text-xs line-through">
+                {formatPrice(originalPrice)}
               </span>
             )}
           </div>
 
           {/* Info Varian */}
           {variantName && (
-            <div className="mb-2">
+            <div>
               <span className="inline-block bg-blue-50 text-blue-700 text-xs px-2 py-1 rounded">
                 {categoryName}: {variantName}
               </span>
             </div>
           )}
 
+          {/* Rating dan Terjual */}
+          <div className="flex items-center gap-1.5 text-xs md:text-[13px]">
+            <FontAwesomeIcon icon={starSolid} className="text-[#FFC107] text-[13px] md:text-[14px]" />
+            <span className="font-bold text-gray-800">{itemRating}</span>
+            <span className="text-gray-400">•</span>
+            <span className="text-gray-500">{itemSold} terjual</span>
+          </div>
+
           {/* Lokasi dan Tanggal */}
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center">
-                <FontAwesomeIcon icon={faLocationDot} className="text-gray-400 text-xs mr-1" />
-                <span className="text-gray-600 text-xs truncate max-w-[120px]">{location}</span>
-              </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <FontAwesomeIcon icon={faLocationDot} className="text-gray-400 text-[12px] md:text-[13px] mr-1.5" />
+              <span className="text-gray-600 text-xs md:text-[13px] truncate max-w-[140px] md:max-w-[180px]">{location}</span>
             </div>
             {date && (
-              <div className="flex items-center text-gray-500 text-xs">
-                <FontAwesomeIcon icon={faCalendar} className="mr-1" />
+              <div className="flex items-center text-gray-500 text-xs md:text-[13px]">
+                <FontAwesomeIcon icon={faCalendar} className="mr-1.5" />
                 {date}
               </div>
             )}
           </div>
 
-          {/* Creator dan Harga */}
-          <div className="pt-2 border-t border-blue-100 border-dashed flex items-center justify-between">
+          {/* Creator Info */}
+          <div className="pt-2 border-t border-blue-100 border-dashed">
             <Link 
               href={`/creator/${creatorid || creator}`} 
               className="flex items-center gap-2 flex-1 min-w-0" 
@@ -1530,20 +1625,20 @@ const MerchandiseCard = ({
               <Image 
                 src={creatorImage ? getCreatorImageUrl(creatorImage) : "/default-avatar.png"} 
                 alt={`${creator} logo`} 
-                className="h-10 w-10 md:h-8 md:w-8 rounded-full object-cover flex-shrink-0" 
-                height={40} 
-                width={40} 
+                className="h-8 w-8 rounded-full object-cover flex-shrink-0" 
+                height={32} 
+                width={32} 
               />
               <div className="min-w-0">
-                <p className="text-gray-500 text-[10px] md:text-[8px] leading-tight">Disediakan oleh</p>
+                <p className="text-gray-500 text-[9px] md:text-[10px] leading-tight">Disediakan oleh</p>
                 <div className="flex items-center gap-1">
-                  <p className="text-dark font-semibold text-[15px] md:text-xs truncate">{creator}</p>
+                  <p className="text-dark font-semibold text-xs md:text-xs truncate">{creator}</p>
                   {creatorVerified && (
                     <svg 
                       xmlns="http://www.w3.org/2000/svg" 
                       viewBox="0 0 24 24" 
                       fill="#1DA1F2" 
-                      className="w-3 h-3 md:w-3 md:h-3 ml-0.5 cursor-pointer"
+                      className="w-3 h-3 ml-0.5 flex-shrink-0"
                     >
                       <path d="M22 12l-2-2 1-3-3-1-1-3-3 1-2-2-2 2-3-1-1 3-3 1 1 3-2 2 2 2-1 3 3 1 1 3 3-1 2 2 2-2 3 1 1-3 3-1-1-3 2-2zM10 15l-3-3 1.4-1.4L10 12.2l5.6-5.6L17 8l-7 7z" />
                     </svg>
@@ -1551,17 +1646,6 @@ const MerchandiseCard = ({
                 </div>
               </div>
             </Link>
-
-            <div className="text-right ml-2 flex-shrink-0">
-              <div className="text-dark font-bold text-sm md:text-sm">
-                {formatPrice(finalPrice)}
-              </div>
-              {originalPrice && (
-                <div className="text-gray-400 text-[10px] line-through">
-                  {formatPrice(originalPrice)}
-                </div>
-              )}
-            </div>
           </div>
         </div>
       </Link>

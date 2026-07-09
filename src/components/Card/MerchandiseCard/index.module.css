@@ -3,3 +3,25 @@
   height: 150px;
   object-fit: cover;
 }
+
+.marqueeContainer {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  position: relative;
+}
+
+.marqueeContent {
+  display: inline-block;
+  animation: marqueeAnimation 15s linear infinite;
+  padding-right: 2rem;
+}
+
+@keyframes marqueeAnimation {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}

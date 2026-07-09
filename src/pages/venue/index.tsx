@@ -5,7 +5,7 @@ import { Get } from '@/utils/REST';
 import { VenueProps } from '@/utils/globalInterface';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { Button, Card, Container, Divider, Flex, SimpleGrid, Stack, Text, Title, UnstyledButton, Input, Collapse } from '@mantine/core';
+import { Button, Card, Container, Divider, Flex, SimpleGrid, Stack, Text, UnstyledButton, Input, Collapse } from '@mantine/core';
 import _ from 'lodash';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import Link from 'next/link';
@@ -185,18 +185,11 @@ const Venue = () => {
   }, [_data, selectedCategory, selectedCities, selectedPrice, searchQuery, sortBy]);
 
   return (
-    <Container mih="90vh" mt={{ base: 10, md: 60 }} size="xl" className="px-4 md:px-8 pb-10">
+    <Container mih="90vh" mt={{ base: 25, md: 80 }} size={1360} className="px-5 md:px-10 pb-10">
       <Stack className="gap-4 md:gap-8">
 
         <Stack className="gap-3 md:gap-4">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-0 md:mt-12 relative z-20">
-            <Stack gap={1}>
-              <Title size="h2" fw={800} className="text-gray-900 tracking-tight text-xl md:text-3xl">Pilihan Venue</Title>
-              <Text size="sm" c="dimmed" fw={500} className="md:text-md">Temukan ruang acara, convention hall, meeting room, auditorium, dan lainnya.</Text>
-            </Stack>
-          </div>
-
-          <Flex align="center" gap={16} className={`overflow-x-auto pb-4 scrollbar-hide px-1`}>
+          <div className="max-w-full flex gap-2.5 pb-2 px-1 mt-0 overflow-x-auto [scrollbar-width:thin] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-thumb]:bg-grey/40 [&::-webkit-scrollbar-thumb]:rounded-full">
             {[
               { name: 'Semua', icon_menu: 'solar:widget-3-bold-duotone' },
               { name: 'Convention Hall', icon_menu: 'solar:buildings-bold-duotone' },
@@ -208,27 +201,27 @@ const Venue = () => {
                 key={index}
                 onClick={() => setSelectedCategory(item.name as string)}
                 className={`
-                flex items-center justify-center gap-2.5 px-4 py-2.5 md:px-6 md:py-3.5 rounded-full transition-all duration-300 min-w-max outline-none
+                flex items-center justify-center gap-1.5 px-3 py-1 rounded-2xl transition-all duration-300 min-w-max outline-none border font-semibold
                 ${item.name === selectedCategory
-                    ? 'bg-[#194e9e] text-white shadow-[0_10px_20px_-5px_rgba(25,78,158,0.4)]'
-                    : 'bg-white text-gray-800 hover:bg-slate-50 font-bold border border-transparent'
+                    ? 'bg-primary-base border-primary-base text-white shadow-md'
+                    : 'bg-white border-light-grey text-dark-grey hover:bg-primary-light hover:text-primary-base'
                   }
               `}
               >
                 <Icon
                   icon={item.icon_menu ?? ''}
-                  className={`text-[18px] md:text-[20px] ${item.name === selectedCategory ? 'text-white' : 'text-gray-900'}`}
+                  className={`text-[14px] md:text-[16px] ${item.name === selectedCategory ? 'text-white' : 'text-grey'}`}
                 />
-                <span className={`text-[12px] md:text-[13px] tracking-wide ${item.name === selectedCategory ? 'font-bold' : 'font-bold'}`}>
+                <span className={`text-xs md:text-sm tracking-wide`}>
                   {item.name}
                 </span>
               </button>
             ))}
-          </Flex>
+          </div>
         </Stack>
 
         {data.length > 0 ? (
-          <SimpleGrid className={`!grid-cols-2 sm:!grid-cols-3 md:!grid-cols-4`} spacing={{ base: 'xs', md: 'lg' }} verticalSpacing={{ base: 'md', md: 'xl' }}>
+          <SimpleGrid className={`!grid-cols-1 sm:!grid-cols-3 md:!grid-cols-4`} spacing={{ base: 8, md: 16 }} verticalSpacing={{ base: 12, md: 20 }}>
             {data.map((item) => (
               <VenueCard
                 id={item.id}
