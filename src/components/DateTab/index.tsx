@@ -46,6 +46,8 @@ export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, se
   const [expandedId, setExpandedId] = React.useState<number | null>(null);
   const [internalBaseDate, setInternalBaseDate] = React.useState<Date | null>(null);
   const [collapsedCategories, setCollapsedCategories] = React.useState<{ [key: string]: boolean }>({});
+  const [popoverOpened, setPopoverOpened] = React.useState(false);
+  const [viewDate, setViewDate] = React.useState<Date>(new Date());
 
   const toggleCategory = (category: string) => {
     setCollapsedCategories(prev => ({
@@ -155,6 +157,10 @@ export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, se
     return new Date();
   }, [groupedTickets, selected]);
 
+  useEffect(() => {
+    setViewDate(selectedDateObj);
+  }, [selectedDateObj]);
+
   return (
     <div className={`flex flex-col overflow-hidden ${hideDateStrip && hideTicketList ? 'hidden' : ''} font-inter`}>
       <TabGroup manual selectedIndex={selected} onChange={setSelected}>
@@ -194,16 +200,29 @@ export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, se
                 })}
               </TabList>
 
-              <div className="shrink-0 pl-3 md:pl-4 border-l border-[#6c6c6c]">
-                <Popover position="bottom-end" shadow="xl" radius="xl" withArrow offset={10}>
+              <div className="shrink-0 pl-3 md:pl-4 border-l border-[#e4e4e7]">
+                <Popover
+                  position="bottom-end"
+                  shadow="xl"
+                  radius="md"
+                  withArrow
+                  offset={10}
+                  onOpen={() => setPopoverOpened(true)}
+                  onClose={() => setPopoverOpened(false)}
+                >
                   <Popover.Target>
-                    <div className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center rounded-lg bg-white shadow-sm hover:shadow-md transition-all cursor-pointer">
-                      <Icon icon="solar:calendar-minimalistic-linear" className="text-[18px] md:text-[22px] text-[#6c6c6c]" />
+                    <div className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center bg-transparent transition-all cursor-pointer">
+                      <Icon
+                        icon="solar:calendar-minimalistic-linear"
+                        className={`text-[18px] md:text-[22px] transition-colors ${popoverOpened ? "text-[#194E9E]" : "text-[#6c6c6c]"}`}
+                      />
                     </div>
                   </Popover.Target>
-                  <Popover.Dropdown p={10}>
+                  <Popover.Dropdown p={10} className="bg-white border border-gray-200/80 [&_.mantine-DatePicker-calendarHeaderLevel]:!text-black [&_.mantine-DatePicker-calendarHeaderLevel]:!font-semibold [&_.mantine-DatePicker-calendarHeaderControl]:!text-black hover:[&_button]:!bg-gray-100 rounded-[8px]">
                     <DatePicker
                       value={selectedDateObj}
+                      date={viewDate}
+                      onDateChange={setViewDate}
                       onChange={(date) => {
                         if (date) {
                           setBaseDate(date);
@@ -234,9 +253,9 @@ export default function DateTab({ maxOrder, counts, setCounts, data, isLogin, se
             )}
 
             {groupedTickets[selected] && (
-              <Stack gap={24}>
+              <Stack gap={16}>
                 {Object.entries(groupByCategory(sortedTicket(groupedTickets[selected].tickets))).map(([category, catTickets]) => (
-                  <div key={category} className="bg-[#F3F4F6] rounded-[8px] p-6 md:p-8 mb-6 ml-1 md:ml-2 shadow-[0px_8px_30px_rgba(0,0,0,0.05)]">
+                  <div key={category} className="bg-[#F3F4F6] rounded-[8px] p-6 md:p-8 ml-1 md:ml-2 mr-1 md:mr-0 shadow-[0px_8px_30px_rgba(0,0,0,0.05)]">
                     {/* Category Title - Shown for all categories */}
                     <div className="flex items-center justify-between px-1 py-2 mb-4">
                       <Text fw={900} size="md" className="tracking-[0.15em] text-[#194E9E] uppercase md:text-lg">

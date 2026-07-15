@@ -221,7 +221,7 @@ const Venue = () => {
         </Stack>
 
         {data.length > 0 ? (
-          <SimpleGrid className={`!grid-cols-1 sm:!grid-cols-3 md:!grid-cols-4`} spacing={{ base: 8, md: 16 }} verticalSpacing={{ base: 12, md: 20 }}>
+          <SimpleGrid className={`!grid-cols-1 sm:!grid-cols-3 md:!grid-cols-4 -mt-2 md:-mt-4`} spacing={{ base: 8, md: 16 }} verticalSpacing={{ base: 12, md: 20 }}>
             {data.map((item) => (
               <VenueCard
                 id={item.id}

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState, Fragment } from "react";
 import DateTab from "@/components/DateTab";
 import { TicketProps } from "@/utils/globalInterface";
 import Cookies from "js-cookie";
@@ -97,21 +97,18 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
     <div className="flex flex-col h-full max-h-[70vh] md:max-h-none">
       {/* 1. Header (Fixed) */}
       <div className="flex justify-between items-center w-full mb-4 shrink-0 px-1">
-        <Text size="sm" fw={800} className="text-gray-900 tracking-widest">
+        <Text size="sm" fw={800} className="text-black tracking-widest">
           {t("selectedTicket")}
         </Text>
         <UnstyledButton onClick={() => setEdit(!edit)}>
-          <Flex align="center" className={`${edit ? "[&_*]:!text-grey" : "[&_*]:!text-[#194E9E]"}`} gap={8}>
-            <Text fw={700} size="xs" className="tracking-wider">
-              {edit ? t("selectedTicketEndEdit") : "Ubah"}
-            </Text>
-            {!edit && <Icon icon="solar:pen-bold-duotone" className="text-lg" />}
-          </Flex>
+          <Text fw={700} size="xs" className={`tracking-wider ${edit ? "text-grey" : "text-[#194E9E]"}`}>
+            {edit ? t("selectedTicketEndEdit") : "Ubah"}
+          </Text>
         </UnstyledButton>
       </div>
 
       {/* 2. Scrollable Ticket List */}
-      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent -mx-2 px-2 flex flex-col gap-3">
+      <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent -mx-2 px-2 flex flex-col gap-0">
         {ticket?.map((e, i) => {
           const originalTicket = data.find((item) => item.id === e.event_ticket_id);
           const isBundling = Number(originalTicket?.is_bundling ?? 0) === 1;
@@ -120,37 +117,40 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
           const displayPrice = isBundling && bundlingQty >= 2 && bundlingQty <= 99 ? e.price : e.subtotal_price;
 
           return (
-            <div key={i} className="flex items-center justify-between gap-4 bg-white p-4 rounded-[8px] shadow-[0px_4px_12px_rgba(0,0,0,0.03)] transition-all duration-500 group cursor-default">
-              <Flex gap={12} align="center">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1C41D6]/10 to-[#1C41D6]/5 flex items-center justify-center group-hover:from-[#1C41D6]/20 group-hover:to-[#1C41D6]/10 transition-all duration-500">
-                  <Icon icon={originalTicket?.icon || "solar:ticket-bold-duotone"} className="text-[#1C41D6] text-xl" />
-                </div>
-                <Stack gap={0}>
-                  <Text size="sm" fw={700} className="text-gray-900 line-clamp-1">
-                    {e.name}
-                    <Badge ml={8} variant="light" color="blue" size="xs" className="font-bold">
-                      {displayQty}x
-                    </Badge>
-                  </Text>
-                  {e.seat_number && (
-                    <Text size="xs" fw={500} className="text-gray-400 mt-0.5">
-                      Seat: {e.seat_number.join(", ")}
+            <Fragment key={i}>
+              <div className="flex items-center justify-between gap-4 py-2 transition-all duration-500 group cursor-default">
+                <Flex gap={12} align="center">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#1C41D6]/10 to-[#1C41D6]/5 flex items-center justify-center group-hover:from-[#1C41D6]/20 group-hover:to-[#1C41D6]/10 transition-all duration-500">
+                    <Icon icon={originalTicket?.icon || "solar:ticket-bold-duotone"} className="text-[#1C41D6] text-xl" />
+                  </div>
+                  <Stack gap={0}>
+                    <Text size="sm" fw={700} className="text-black line-clamp-1">
+                      {e.name}
+                      <Badge ml={8} variant="light" color="blue" size="xs" className="font-bold">
+                        {displayQty}x
+                      </Badge>
                     </Text>
-                  )}
-                </Stack>
-              </Flex>
+                    {e.seat_number && (
+                      <Text size="xs" fw={500} className="text-gray-400 mt-0.5">
+                        Seat: {e.seat_number.join(", ")}
+                      </Text>
+                    )}
+                  </Stack>
+                </Flex>
 
-              <div className="flex items-center gap-3">
-                <Text fw={700} size="sm" className="text-[#1C41D6]">
-                  <NumberFormatter prefix="Rp " thousandSeparator="." value={displayPrice} />
-                </Text>
-                {edit && (
-                  <ActionIcon onClick={() => handleDelete(i)} variant="subtle" color="red" radius="md" size="sm">
-                    <Icon icon="solar:trash-bin-minimalistic-bold-duotone" className="text-lg" />
-                  </ActionIcon>
-                )}
+                <div className="flex items-center gap-3">
+                  <Text fw={600} size="sm" className="text-black">
+                    <NumberFormatter prefix="Rp " thousandSeparator="." value={displayPrice} />
+                  </Text>
+                  {edit && (
+                    <ActionIcon onClick={() => handleDelete(i)} variant="subtle" color="red" radius="md" size="sm">
+                      <Icon icon="solar:trash-bin-minimalistic-bold-duotone" className="text-lg" />
+                    </ActionIcon>
+                  )}
+                </div>
               </div>
-            </div>
+              <Divider my={6} color="gray.3" />
+            </Fragment>
           );
         })}
 
@@ -163,18 +163,6 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
           </div>
         )}
       </div>
-
-      {/* 3. Footer (Fixed) */}
-      {(ticket?.length ?? 0) > 0 && (
-        <div className="mt-4 mb-0 shrink-0 border-t border-[#e4e4e7] pt-4">
-          <div className="flex items-center justify-between gap-4 px-1">
-            <span className="text-[12px] font-bold text-gray-400 tracking-tight">Total ({totalCount}) Tiket</span>
-            <div className="text-[18px] font-bold text-gray-900 tracking-tight">
-              <NumberFormatter prefix="Rp " thousandSeparator="." value={displayTotalSubtotalPrice} />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 
@@ -185,7 +173,7 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
         onClose={() => setOpenDetail(!openDetail)}
         withCloseButton={false}
         position="bottom"
-        radius="24px 24px 0 0"
+        radius="8px 8px 0 0"
         size="75vh"
         className="[&_.mantine-Drawer-content]:bg-white [&_.mantine-Drawer-body]:p-0 [&_.mantine-Drawer-body]:h-full"
       >
@@ -204,7 +192,7 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
           <div className="p-5 pt-0 shrink-0">
             <Button
               size="lg"
-              radius="xl"
+              radius="md"
               fullWidth
               className="bg-[#194E9E] hover:bg-[#0b387c] transition-all h-14 shadow-lg shadow-blue-900/10 font-black text-sm active:scale-[0.98]"
               disabled={totalCount === 0}
@@ -216,7 +204,7 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
                 } else storeLocalStorage();
               }}
             >
-              Lanjutkan ke Pembayaran
+              Beli Tiket
             </Button>
           </div>
         </div>
@@ -224,12 +212,12 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
 
       <div className="flex-1 flex flex-col md:flex-row bg-transparent">
         {/* MAIN CONTENT AREA: RESPONSIVE LAYOUT */}
-        <div className="flex-1 flex flex-col md:flex-row min-w-0 gap-2 md:gap-4">
+        <div className="flex-1 flex flex-col md:flex-row min-w-0 gap-2 md:gap-2">
           {/* LEFT COLUMN: DATE + TICKET TYPES (Full width on mobile) */}
           <div className="flex-1 flex flex-col bg-transparent z-10 min-w-0">
             {/* TOP: DATE STRIP (STICKY below sub-navbar) */}
             {hasSchedule && (
-              <div id="date-strip" className="w-full z-30 shrink-0 transition-all duration-500 sticky top-[85px] pt-4 md:pt-5 pb-2 bg-[#F3F4F6] rounded-[8px] px-4 md:px-6 mb-2 ml-1 md:ml-2">
+              <div id="date-strip" className="z-30 shrink-0 transition-all duration-500 sticky top-[110px] pt-2 md:pt-3 pb-2 bg-[#F3F4F6] rounded-[8px] px-4 md:px-6 mb-2 ml-1 md:ml-2 mr-1 md:mr-0">
                 <div className="bg-white rounded-[8px] shadow-[0px_8px_24px_-4px_rgba(0,0,0,0.04)] transition-all duration-500 p-2">
                   <DateTab
                     maxOrder={maxOrder}
@@ -253,7 +241,7 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
 
             {/* BOTTOM: TICKET LIST */}
             <div className="flex-1">
-              <div className="pt-2 md:pt-4 pb-24 md:pb-32">
+              <div className="pt-0 md:pt-0 pb-24 md:pb-32">
                 <DateTab
                   maxOrder={maxOrder}
                   counts={counts}
@@ -275,25 +263,24 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
           </div>
 
           {/* RIGHT COLUMN: SUMMARY (Sticky Sidebar) */}
-          <div className="hidden md:flex md:w-[340px] lg:w-[380px] flex-col bg-[#F3F4F6] rounded-[8px] px-2 md:px-3 pt-4 md:pt-6 pb-0 min-w-0 ml-1 md:ml-2">
-            <div className="sticky top-[100px] self-start w-full bg-white rounded-[8px] shadow-[0px_8px_32px_-4px_rgba(0,0,0,0.04)] p-6 pb-4 transition-all duration-700 ease-out">
+          <div className="hidden md:flex md:w-[340px] lg:w-[380px] flex-col bg-[#F3F4F6] rounded-[8px] px-2 md:px-3 pt-2 md:pt-3 pb-0 min-w-0 ml-1 md:ml-0">
+            <div className="sticky top-[125px] self-start w-full bg-white rounded-[8px] shadow-[0px_8px_32px_-4px_rgba(0,0,0,0.04)] p-6 pb-4 transition-all duration-700 ease-out">
               <SummaryBody />
             </div>
           </div>
         </div>
 
-        {/* GLOBAL BOTTOM BAR (MOBILE REDESIGN - COMFORTABLE) */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-[0_-20px_60px_-10px_rgba(0,0,0,0.1)] z-50 font-inter md:hidden pb-safe">
-          <div className="w-full px-6 py-3.5 flex flex-col gap-3">
+        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl shadow-[0_-4px_20px_rgba(0,0,0,0.08)] z-50 font-inter md:hidden pb-safe">
+          <div className="w-full px-6 py-2 flex flex-col gap-2">
             {/* Row 1: Price & Detail Toggle */}
             <div className="flex items-center justify-between">
               <div className="flex flex-col">
-                <span className="text-[10px] font-bold text-[#94a3b8] tracking-wider uppercase leading-none mb-1">Total Harga</span>
+                <span className="text-[10px] font-bold text-[#94a3b8] tracking-wider leading-none mb-1">Total Harga</span>
                 <span className="text-[18px] font-black text-[#1e293b] leading-none">Rp {displayTotalSubtotalPrice.toLocaleString("id-ID")}</span>
               </div>
               <button
                 onClick={() => setOpenDetail(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100/50 rounded-xl active:scale-95 transition-all"
+                className="flex items-center gap-1.5 px-2.5 py-1 bg-gray-100/50 rounded-xl active:scale-95 transition-all"
               >
                 <span className="text-[11px] font-black text-[#194E9E]">({totalCount}) Detail</span>
                 <Icon icon="solar:alt-arrow-up-bold" className="text-[#194E9E] text-[11px]" />
@@ -303,7 +290,7 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
             {/* Row 2: Main Action & Chat */}
             <div className="flex items-center gap-3">
               <button
-                className={`flex-1 bg-[#194E9E] active:scale-[0.98] text-white h-12 font-black text-[14px] rounded-xl transition-all shadow-lg shadow-blue-900/5 flex items-center justify-center`}
+                className={`flex-1 bg-[#194E9E] active:scale-[0.98] text-white h-10 font-black text-[13px] rounded-xl transition-all shadow-lg shadow-blue-900/5 flex items-center justify-center`}
                 onClick={() => {
                   if (totalCount === 0) {
                     return; // Do nothing if 0, or let it pass? Let's let it trigger whatever error happens normally, or just open the detail
@@ -318,7 +305,7 @@ const TicketViewBlock = ({ maxOrder, isGratis, counts, setCounts, data, isLogin,
                 {isGratis ? "Registrasi Sekarang" : "Beli Tiket Sekarang"}
               </button>
 
-              <button className="w-12 h-12 bg-[#194E9E] rounded-xl flex items-center justify-center active:scale-90 transition-all shadow-lg shadow-blue-900/5">
+              <button className="w-10 h-10 bg-[#194E9E] rounded-xl flex items-center justify-center active:scale-90 transition-all shadow-lg shadow-blue-900/5 shrink-0">
                 <Icon icon="solar:chat-round-dots-bold" className="text-white text-xl" />
               </button>
             </div>

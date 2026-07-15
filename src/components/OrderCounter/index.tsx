@@ -211,7 +211,7 @@ const OrderCounter = ({
   const isCurrentlySoldOut = status.status === 'soldout' || status.status === 'ended' || isSoldOut || isFullbook || (ticketData.is_fullbook === 1);
 
   return (
-    <div className={`relative rounded-[8px] overflow-hidden mb-5 group transition-all duration-500 font-inter ${isCurrentlySoldOut ? 'bg-[#F9FAFB]' : 'bg-white shadow-[0px_8px_24px_rgba(0,0,0,0.04)]'}`}>
+    <div className={`relative rounded-[8px] overflow-hidden mb-1 group transition-all duration-500 font-inter ${isCurrentlySoldOut ? 'bg-[#F9FAFB]' : 'bg-white shadow-[0px_8px_24px_rgba(0,0,0,0.04)]'}`}>
       {/* Side Notches - Left & Right (Enhanced with inset shadow for depth) */}
       <div className="absolute left-[-12px] top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-[#F3F4F6] z-10 shadow-[inset_-4px_0_6px_rgba(0,0,0,0.06)]" />
       <div className="absolute right-[-12px] top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-[#F3F4F6] z-10 shadow-[inset_4px_0_6px_rgba(0,0,0,0.06)]" />
@@ -526,21 +526,21 @@ const OrderCounter = ({
             </div>
 
             {/* Total Section with Berakhir Pada */}
-            <div className="flex justify-between items-end gap-4">
+             <div className="flex justify-between items-end gap-4">
               <div className="flex flex-col gap-1">
-                <span className={`text-[8px] font-bold tracking-[0.15em] ${isCurrentlySoldOut ? 'text-gray-400' : 'text-[#94a3b8]'}`}>
+                <span className={`text-[7px] font-bold tracking-[0.15em] ${isCurrentlySoldOut ? 'text-gray-400' : 'text-[#94a3b8]'}`}>
                   {status.status === 'upcoming' ? 'Dimulai Pada' : status.status === 'finished' ? 'Penjualan Berakhir' : 'Berakhir Pada'}
                 </span>
-                <span className={`text-xs md:text-sm font-black ${isCurrentlySoldOut ? 'text-[#cbd5e1]' : 'text-[#1e293b]'}`}>
+                <span className={`text-[10px] md:text-sm font-black ${isCurrentlySoldOut ? 'text-[#cbd5e1]' : 'text-[#1e293b]'}`}>
                   {status.countdown}
                 </span>
               </div>
 
               <div className="flex flex-col items-end gap-1">
-                <span className="text-[9px] font-bold text-[#94a3b8] tracking-[0.15em] text-right">
+                <span className="text-[7px] font-bold text-[#94a3b8] tracking-[0.15em] text-right">
                   Total ({count} pax)
                 </span>
-                <span className={`text-xl md:text-2xl font-black leading-none ${isCurrentlySoldOut ? 'text-[#cbd5e1]' : 'text-[#1e293b]'}`}>
+                <span className={`text-xs md:text-2xl font-black leading-none ${isCurrentlySoldOut ? 'text-[#cbd5e1]' : 'text-[#1e293b]'}`}>
                   {formatIDR(ticketData.price * 1.15 * count)}
                 </span>
               </div>

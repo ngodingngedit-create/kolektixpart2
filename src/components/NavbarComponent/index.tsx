@@ -1443,7 +1443,7 @@ export default function NavbarComponent({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <div className="bg-primary-dark transition-colors duration-300 sticky top-0 w-full z-40 border-b border-white/5">
+      <div className="bg-primary-dark transition-colors duration-300 sticky top-0 w-full z-40 border-b border-white/5 shadow-[0_4px_12px_rgba(0,0,0,0.18)]">
         <div className="max-w-[1440px] mx-auto px-5 md:px-10">
           <div className="flex h-16 items-center justify-between gap-4">
             <div className="flex items-center flex-1">
