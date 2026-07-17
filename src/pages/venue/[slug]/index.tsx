@@ -421,7 +421,7 @@ const VenueDetail = () => {
                     <React.Fragment>
                         {/* ── DESKTOP HERO SECTION ── */}
                         <div className="pt-24 pb-16 bg-primary-dark transition-all duration-500">
-                            <div className="w-full mx-auto max-w-[1550px] px-2 md:px-3">
+                            <div className="w-full mx-auto max-w-[1250px] px-4 md:px-6">
                                 <Flex justify="space-between" align="end" className="px-4 md:px-6">
                                     <div>
                                         <p className="text-white/70 mb-[-10px] text-xs uppercase tracking-widest">
