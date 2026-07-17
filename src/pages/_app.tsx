@@ -693,11 +693,12 @@ function App({ Component, pageProps }: AppProps) {
     
     // Halaman event detail & venue booking juga tidak tampilkan navbar bottom
     const isEventDetailPage = pathname.startsWith('/event/') && pathname !== '/event';
+    const isVenueDetailPage = pathname.startsWith('/venue/') && pathname !== '/venue' && !pathname.includes('/venue-order');
     const isVenueBookingPage = pathname.includes('/pilih-jadwal');
     
     const shouldHide = hideNavbarBottomPaths.some(path => 
       pathname.startsWith(path)
-    ) || isEventDetailPage || isVenueBookingPage;
+    ) || isEventDetailPage || isVenueDetailPage || isVenueBookingPage;
     
     const isDashboard = pathname.includes('/dashboard/');
     

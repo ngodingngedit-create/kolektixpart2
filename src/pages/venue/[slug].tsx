@@ -1010,7 +1010,6 @@ const VenueDetail = () => {
                                     <Icon icon="solar:notes-linear" className="text-[#0b387c] text-[16px] shrink-0" />
                                     <h3 className="text-[14px] font-black text-[#0b387c] tracking-tight">Deskripsi Venue</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2.5" />
                                 <div className="w-full bg-transparent pl-0 pr-0 text-gray-600 leading-normal text-[12px] font-medium">
                                     <p className="whitespace-pre-line leading-relaxed">{data?.description}</p>
                                 </div>
@@ -1032,16 +1031,12 @@ const VenueDetail = () => {
                                 )}
                             </div>
 
-                            {/* Divider */}
-                            <div className="mx-5 h-[1px] bg-gray-200/40 my-0.5" />
 
-                            {/* MOBILE SECTION FASILITAS */}
                             <div className="mx-5 mb-2">
                                 <div className="flex items-center gap-1.5 mb-2">
                                     <Icon icon="solar:tea-cup-linear" className="text-[#0b387c] text-[16px] shrink-0" />
                                     <h3 className="text-[14px] font-black text-[#0b387c] tracking-tight">Fasilitas Venue</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2" />
                                 <div
                                     className="overflow-hidden transition-all duration-500 ease-in-out"
                                     style={{ maxHeight: expandedSections['fasilitas'] ? '2000px' : '120px' }}
@@ -1078,16 +1073,12 @@ const VenueDetail = () => {
                                 </button>
                             </div>
 
-                            {/* Divider */}
-                            <div className="mx-5 h-[1px] bg-gray-200/40 my-0.5" />
 
-                            {/* MOBILE SECTION ULASAN */}
                             <div ref={sectionRefs.ulasan} className="mx-5 mb-2">
                                 <div className="flex items-center gap-1.5 mb-2">
                                     <Icon icon="solar:star-linear" className="text-[#0b387c] text-[16px] shrink-0" />
                                     <h3 className="text-[14px] font-black text-[#0b387c] tracking-tight">Ulasan Pengunjung</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2" />
                                 <div className="flex items-center justify-start gap-2 mb-4">
                                     <button onClick={() => setShowReviewModal(true)} className="px-3 py-1.5 bg-[#194e9e] text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-[#123e80]">Tulis Ulasan</button>
                                 </div>
@@ -1119,16 +1110,12 @@ const VenueDetail = () => {
                                 </div>
                             </div>
 
-                            {/* Divider */}
-                            <div className="mx-5 h-[1px] bg-gray-200/40 my-0.5" />
 
-                            {/* MOBILE SECTION LOKASI */}
                             <div ref={sectionRefs.lokasi} className="w-full">
                                 <div className="flex items-center gap-1.5 mb-1 mx-5">
                                     <Icon icon="solar:map-point-linear" className="text-[#0b387c] text-[16px] shrink-0" />
                                     <h3 className="text-[14px] font-black text-[#0b387c] tracking-tight">Lokasi Venue</h3>
                                 </div>
-                                <div className="mx-5 h-[1px] bg-gray-200 mb-2" />
                                 <div className="mx-5 bg-white rounded-2xl p-5 shadow-sm flex flex-col gap-3 border border-light-grey">
                                     <div className="flex flex-col gap-1 min-w-0">
                                         <h4 className="text-[13px] font-bold text-black tracking-tight">{data?.name}</h4>
@@ -1144,16 +1131,12 @@ const VenueDetail = () => {
                                 </div>
                             </div>
 
-                            {/* Divider */}
-                            <div className="mx-5 h-[1px] bg-gray-200/40 my-0.5" />
 
-                            {/* MOBILE SECTION FAQ */}
                             <div ref={sectionRefs.faq} className="mx-5 mb-10">
                                 <div className="flex items-center gap-1.5 mb-2">
                                     <Icon icon="solar:info-circle-linear" className="text-[#0b387c] text-[16px] shrink-0" />
                                     <h3 className="text-[14px] font-black text-[#0b387c] tracking-tight">Pertanyaan Umum</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2" />
                                 <div className="flex flex-col gap-4">
                                     {[
                                         { q: 'Apakah bisa menyewa raket atau bola di lokasi?', a: 'Ya, kami menyediakan penyewaan alat dengan harga terjangkau.' },
@@ -1185,7 +1168,7 @@ const VenueDetail = () => {
                 )}
 
                 {/* ── BOTTOM BOOKING BAR – Mobile ── */}
-                <div className="md:hidden w-full fixed bottom-0 bg-white z-50 border-t border-[#d1d1d1] shadow-[0_-8px_30px_rgba(0,0,0,0.08)]">
+                <div className="md:hidden w-full fixed bottom-0 bg-white z-30 border-t border-[#d1d1d1]">
                     <div className="flex flex-col gap-2 px-4 py-2.5 max-w-lg mx-auto">
                         {/* Top: Price */}
                         <div className="flex flex-col">

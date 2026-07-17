@@ -411,7 +411,7 @@ const VenueDetail = () => {
 
     return (
         <>
-            <div className="min-h-screen bg-[#F7F8FA] text-dark w-full font-inter">
+            <div className="min-h-screen bg-white text-dark w-full font-inter">
                 <div ref={clickOutsideChat} className={`${openChat ? '' : 'hidden'}`}>
                     <Chat toggleOpenTab={() => setOpenChat(!openChat)} openTab={openChat} creatorIdOpen={data?.creator_id} />
                     <AuthModal visible={openChat && !user?.id} onClose={() => setOpenChat(false)} />
@@ -421,7 +421,7 @@ const VenueDetail = () => {
                     <React.Fragment>
                         {/* ── DESKTOP HERO SECTION ── */}
                         <div className="pt-24 pb-16 bg-primary-dark transition-all duration-500">
-                            <div className="w-full mx-auto max-w-[1250px]">
+                            <div className="w-full mx-auto max-w-[1550px] px-2 md:px-3">
                                 <Flex justify="space-between" align="end" className="px-4 md:px-6">
                                     <div>
                                         <p className="text-white/70 mb-[-10px] text-xs uppercase tracking-widest">
@@ -566,7 +566,7 @@ const VenueDetail = () => {
 
                         {/* DESKTOP STICKY NAV TAB BAR */}
                         <div className="w-full bg-white border-b border-light-grey sticky top-[64px] z-30">
-                            <div className="w-full mx-auto max-w-[1250px] px-4 md:px-6">
+                            <div className="w-full mx-auto max-w-[1550px] px-2 md:px-3">
                                 <div className="flex items-center gap-3 md:gap-8 overflow-x-auto scrollbar-hide">
                                     {[
                                         { id: "info", label: "Deskripsi" },
@@ -599,7 +599,7 @@ const VenueDetail = () => {
 
                         {/* DESKTOP BODY CONTENT */}
                         <div className="w-full bg-white">
-                        <div className="max-w-[1250px] mx-auto w-full flex flex-col gap-10 px-4 md:px-6 pt-8 pb-40">
+                        <div className="max-w-[1550px] mx-auto w-full flex flex-col gap-10 px-2 md:px-3 pt-8 pb-40">
 
                             {/* SECTION DESKRIPSI */}
                             <div ref={sectionRefs.info} className="w-full">
@@ -631,13 +631,13 @@ const VenueDetail = () => {
                                     <div className="mt-4 flex flex-col gap-2 p-4 bg-blue-50 rounded-xl border border-blue-100">
                                         <span className="text-[11px] text-[#194e9e] font-bold uppercase tracking-wider">Contact Person</span>
                                         <div className="flex items-center gap-4 flex-wrap">
-                                            <a href={`tel:${data?.contact_person_phone || ''}`} className="flex items-center gap-1.5 text-[12px] text-gray-600 hover:text-[#194e9e] transition-colors whitespace-nowrap">
+                                            <a href={`tel:${data?.contact_person_phone || ''}`} className="flex items-center gap-1.5 text-[12px] text-black hover:text-[#194e9e] transition-colors whitespace-nowrap">
                                                 <Icon icon="solar:phone-linear" className="text-[#194e9e] text-[13px] shrink-0" />
-                                                <span>{data?.contact_person_phone || '-'}</span>
+                                                <span className="font-semibold">{data?.contact_person_phone || '-'}</span>
                                             </a>
-                                            <a href={`mailto:${data?.contact_person_email || ''}`} className="flex items-center gap-1.5 text-[12px] text-gray-600 hover:text-[#194e9e] transition-colors whitespace-nowrap">
+                                            <a href={`mailto:${data?.contact_person_email || ''}`} className="flex items-center gap-1.5 text-[12px] text-black hover:text-[#194e9e] transition-colors whitespace-nowrap">
                                                 <Icon icon="solar:letter-linear" className="text-[#194e9e] text-[13px] shrink-0" />
-                                                <span>{data?.contact_person_email || '-'}</span>
+                                                <span className="font-semibold">{data?.contact_person_email || '-'}</span>
                                             </a>
                                         </div>
                                     </div>
@@ -869,7 +869,7 @@ const VenueDetail = () => {
                     <React.Fragment>
                         {/* ── MOBILE HERO SECTION ── */}
                         <Box className="!relative px-5 pb-4 pt-4 mt-16">
-                            <div className="relative group rounded-[12px] overflow-hidden shadow-2xl border border-[#d1d1d1] bg-white/5 h-[165px]">
+                            <div className="relative group rounded-[12px] overflow-hidden border border-[#d1d1d1] bg-white/5 h-[165px]">
                                 <div className="flex gap-1 h-[165px]">
                                     {/* Main large image */}
                                     <div className="relative flex-[1.6] overflow-hidden">
@@ -921,7 +921,7 @@ const VenueDetail = () => {
                         </Box>
 
                         {/* Mobile Details */}
-                        <div className="px-5 pb-5 pt-3 border-b border-[#d1d1d1]/20">
+                        <div className="px-5 pb-5 pt-3">
                             <Flex gap={8} justify="space-between" mb={3} align="center">
                                 <p className="opacity-70 text-xs uppercase tracking-widest">{data?.has_venue_category?.name || 'Sewa Venue'}</p>
                             </Flex>
@@ -939,7 +939,7 @@ const VenueDetail = () => {
                         </div>
 
                         {/* Mobile Host Row */}
-                        <div className="px-5 py-3 flex items-center gap-3 border-t border-[#d1d1d1]/30">
+                        <div className="px-5 py-3 flex items-center gap-3">
                             {data?.creator?.image_url ? (
                                 <img src={data.creator.image_url} alt="image" className="w-10 h-10 border border-grey rounded-full object-contain" />
                             ) : (
@@ -1003,7 +1003,7 @@ const VenueDetail = () => {
                         </div>
 
                         {/* Mobile Body Content */}
-                        <div className="w-full text-dark flex flex-col gap-1 pt-2 pb-32 bg-white">
+                        <div className="w-full text-dark flex flex-col gap-16 pt-2 pb-32 bg-white">
                             {/* MOBILE SECTION DESKRIPSI */}
                             <div ref={sectionRefs.info} className="mx-5 mb-2">
                                 <div className="flex items-center gap-1.5 mb-2">
@@ -1033,7 +1033,7 @@ const VenueDetail = () => {
                             </div>
 
                             {/* Divider */}
-                            <div className="mx-5 h-[1px] bg-gray-200/40 my-0.5" />
+                            <div className="mx-5 h-[1px] bg-gray-200/40 my-8" />
 
                             {/* MOBILE SECTION FASILITAS */}
                             <div className="mx-5 mb-2">
@@ -1079,7 +1079,7 @@ const VenueDetail = () => {
                             </div>
 
                             {/* Divider */}
-                            <div className="mx-5 h-[1px] bg-gray-200/40 my-0.5" />
+                            <div className="mx-5 h-[1px] bg-gray-200/40 my-8" />
 
                             {/* MOBILE SECTION ULASAN */}
                             <div ref={sectionRefs.ulasan} className="mx-5 mb-2">
@@ -1120,7 +1120,7 @@ const VenueDetail = () => {
                             </div>
 
                             {/* Divider */}
-                            <div className="mx-5 h-[1px] bg-gray-200/40 my-0.5" />
+                            <div className="mx-5 h-[1px] bg-gray-200/40 my-8" />
 
                             {/* MOBILE SECTION LOKASI */}
                             <div ref={sectionRefs.lokasi} className="w-full">
@@ -1145,10 +1145,10 @@ const VenueDetail = () => {
                             </div>
 
                             {/* Divider */}
-                            <div className="mx-5 h-[1px] bg-gray-200/40 my-0.5" />
+                            <div className="mx-5 h-[1px] bg-gray-200/40 my-8" />
 
                             {/* MOBILE SECTION FAQ */}
-                            <div ref={sectionRefs.faq} className="mx-5 mb-10">
+                            <div ref={sectionRefs.faq} className="mx-5 mb-10 pt-4">
                                 <div className="flex items-center gap-1.5 mb-2">
                                     <Icon icon="solar:info-circle-linear" className="text-[#0b387c] text-[16px] shrink-0" />
                                     <h3 className="text-[14px] font-black text-[#0b387c] tracking-tight">Pertanyaan Umum</h3>

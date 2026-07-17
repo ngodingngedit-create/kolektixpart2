@@ -146,15 +146,50 @@ const TransactionWithoutAuth = () => {
   const [step, setStep] = useState<number>(0);
   const router = useRouter();
 
-  const renderer: CountdownRendererFn = ({ minutes, seconds, completed }) => {
+  const renderer: CountdownRendererFn = ({ minutes, seconds, completed, total }) => {
     if (completed) {
       router.back();
-      // return <p>Time Out</p>;
+      return null;
     } else {
+      const maxTime = 15 * 60 * 1000;
+      const fraction = Math.max(0, Math.min(1, total / maxTime));
+      const radius = 16;
+      const circumference = 2 * Math.PI * radius;
+      const strokeDashoffset = circumference * (1 - fraction);
+
       return (
-        <p className="font-semibold">
-          {String(minutes).padStart(2, "0")} : {String(seconds).padStart(2, "0")}
-        </p>
+        <div className="flex items-center gap-2.5 bg-white border border-gray-200/80 shadow-sm rounded-full py-1 pl-1.5 pr-3.5 select-none text-gray-900">
+          {/* Circular timer indicator */}
+          <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
+            <svg className="w-10 h-10 transform -rotate-90">
+              {/* Background track circle */}
+              <circle
+                cx="20"
+                cy="20"
+                r={radius}
+                className="stroke-gray-100 fill-none"
+                strokeWidth="2.5"
+              />
+              {/* Foreground active blue countdown circle */}
+              <circle
+                cx="20"
+                cy="20"
+                r={radius}
+                className="stroke-[#194e9e] fill-none transition-all duration-300"
+                strokeWidth="2.5"
+                strokeDasharray={circumference}
+                strokeDashoffset={strokeDashoffset}
+                strokeLinecap="round"
+              />
+            </svg>
+            {/* The countdown text inside the circle */}
+            <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-gray-900 leading-none tracking-tighter">
+              {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+            </div>
+          </div>
+          {/* Label text */}
+          <p className="text-[11px] font-bold text-gray-600 leading-none whitespace-nowrap">Segera selesaikan pesananmu</p>
+        </div>
       );
     }
   };
@@ -192,13 +227,7 @@ const TransactionWithoutAuth = () => {
       {step === 0 && (
         <div className="w-full fixed bottom-0 bg-white border-t border-[#e4e4e7] z-50 py-4 px-4 md:px-8 lg:px-12 shadow-smooth-low">
           <div className="w-full max-w-[1600px] mx-auto flex justify-between items-center">
-            <div className="flex items-center gap-2 bg-[#EA4D3E] text-white px-4 py-1.5 rounded-full shadow-sm">
-              <div className="text-sm font-bold">
-                {data?.countdowns && <Countdown date={new Date(data.countdowns)} renderer={renderer} />}
-              </div>
-              <div className="w-[1px] h-3 bg-white/30"></div>
-              <p className="text-[11px] font-medium tracking-wide">Segera selesaikan pesananmu</p>
-            </div>
+            {data?.countdowns && <Countdown date={new Date(data.countdowns)} renderer={renderer} />}
             <Button 
               label="Selanjutnya" 
               color="primary" 

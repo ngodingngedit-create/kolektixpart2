@@ -2484,14 +2484,50 @@ const EventDetails = () => {
       });
   };
 
-  const renderer: CountdownRendererFn = ({ minutes, seconds, completed }) => {
+  const renderer: CountdownRendererFn = ({ minutes, seconds, completed, total }) => {
     if (completed) {
       router.back();
+      return null;
     } else {
+      const maxTime = 15 * 60 * 1000;
+      const fraction = Math.max(0, Math.min(1, total / maxTime));
+      const radius = 16;
+      const circumference = 2 * Math.PI * radius;
+      const strokeDashoffset = circumference * (1 - fraction);
+
       return (
-        <p className="font-semibold">
-          {String(minutes).padStart(2, "0")} : {String(seconds).padStart(2, "0")}
-        </p>
+        <div className="flex items-center gap-2.5 bg-white border border-gray-200/80 shadow-sm rounded-full py-1 pl-1.5 pr-3.5 select-none text-gray-900">
+          {/* Circular timer indicator */}
+          <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
+            <svg className="w-10 h-10 transform -rotate-90">
+              {/* Background track circle */}
+              <circle
+                cx="20"
+                cy="20"
+                r={radius}
+                className="stroke-gray-100 fill-none"
+                strokeWidth="2.5"
+              />
+              {/* Foreground active blue countdown circle */}
+              <circle
+                cx="20"
+                cy="20"
+                r={radius}
+                className="stroke-[#194e9e] fill-none transition-all duration-300"
+                strokeWidth="2.5"
+                strokeDasharray={circumference}
+                strokeDashoffset={strokeDashoffset}
+                strokeLinecap="round"
+              />
+            </svg>
+            {/* The countdown text inside the circle */}
+            <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-gray-900 leading-none tracking-tighter">
+              {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+            </div>
+          </div>
+          {/* Label text */}
+          <p className="text-[11px] font-bold text-gray-600 leading-none whitespace-nowrap">{t("completeYourOrder")}</p>
+        </div>
       );
     }
   };
@@ -2677,10 +2713,8 @@ const EventDetails = () => {
                 <Progress size="sm" color="success" aria-label="Loading..." value={step} />
               </div>
               <div className="w-full fixed flex justify-between gap-3 bottom-0 bg-white border-t-2 border-t-primary-light-200 z-50 p-5">
-                <div className="hidden lg:flex items-center gap-0 md:gap-3 bg-[#EA4D3E] text-white px-3 py-2 rounded-md">
+                <div className="hidden lg:block">
                   <Countdown date={countdownTime} renderer={renderer} />
-                  <div className="w-[1px] mx-1 md:mx-0 h-5 bg-primary-light-200"></div>
-                  <p className="text-xs">{t("completeYourOrder")}</p>
                 </div>
                 <Flex align="center" gap={10}>
                   <Button color="secondary" label={t("previous")} onClick={() => (step === 100 ? setStep(66) : step === 33 ? (ticketCount ? window.location.reload() : setStep(0)) : setStep(33))} />
@@ -2724,10 +2758,8 @@ const EventDetails = () => {
 
           {isInPaymentFlow && step !== 2 && stepParams !== null && width && width >= 768 && (
             <div className="w-full fixed flex justify-between gap-3 bottom-0 bg-white border-t-2 border-t-primary-light-200 z-50 p-5">
-              <div className="hidden lg:flex items-center gap-0 md:gap-3 bg-[#EA4D3E] text-white px-3 py-2 rounded-md">
+              <div className="hidden lg:block">
                 <Countdown date={countdownTime} renderer={renderer} />
-                <div className="w-[1px] mx-1 md:mx-0 h-5 bg-primary-light-200"></div>
-                <p className="text-xs">{t("completeYourOrder")}</p>
               </div>
               <Flex align="center" gap={10}>
                 <Button color="secondary" label={t("previous")} onClick={() => (step === 100 ? setStep(66) : step === 33 ? (ticketCount ? window.location.reload() : setStep(0)) : setStep(33))} />
@@ -2968,7 +3000,6 @@ const EventDetails = () => {
                                   <Icon icon="solar:notes-linear" className="text-[#0b387c] text-[22px] md:text-[25px] shrink-0" />
                                   <h3 className="text-[18px] md:text-[22px] font-black text-[#0b387c] tracking-tight">{t("description")}</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2" />
                                 <div className="w-full bg-transparent pl-8 pr-0 text-gray-600 leading-normal text-sm md:text-base prose prose-blue max-w-none">
                                    {!isReadMore && (detail?.description && detail.description.length > 20 ? detail.description : dummyDescription).replace(/<[^>]*>/g, "").length > 350 ? (
                                      <div className="inline-children">
@@ -3004,14 +3035,12 @@ const EventDetails = () => {
                                 </div>
                               </div>
 
-                              {/* Gray thin divider */}
-                              <div className="w-full h-[1px] bg-gray-200/60 my-1" />                               {/* SECTION LOKASI */}
+                              {/* SECTION LOKASI */}
                               <div ref={sectionRefs.lokasi} className="w-full">
                                 <div className="flex items-center gap-2 mb-2 px-1">
                                   <Icon icon="solar:map-point-linear" className="text-[#0b387c] text-[22px] md:text-[25px] shrink-0" />
                                   <h3 className="text-[18px] md:text-[22px] font-black text-[#0b387c] tracking-tight">Lokasi Venue</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2" />
                                 <div className="w-full pl-8">
                                   <div className="w-full bg-white rounded-2xl p-5 md:p-6 shadow-[0_0_15px_rgba(0,0,0,0.1)] flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
                                     <div className="flex flex-col gap-1.5">
@@ -3033,16 +3062,12 @@ const EventDetails = () => {
                                 </div>
                               </div>
 
-                              {/* Gray thin divider */}
-                              <div className="w-full h-[1px] bg-gray-200/60 my-1" />
-
                               {/* SECTION FAQ DESKTOP */}
                               <div ref={sectionRefs.faq} className="w-full mb-2">
                                 <div className="flex items-center gap-2 mb-2 px-1">
                                   <Icon icon="solar:info-circle-linear" className="text-[#0b387c] text-[22px] md:text-[25px] shrink-0" />
                                   <h3 className="text-[18px] md:text-[22px] font-black text-[#0b387c] tracking-tight">{t("termAndCondition")}</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2" />
  
                                 <div className="w-full bg-transparent pl-8 pr-0 text-gray-600 leading-normal text-sm md:text-base prose prose-blue max-w-none"
                                   dangerouslySetInnerHTML={{ __html: detail?.term_condition && detail.term_condition.length > 20 ? detail.term_condition : dummyFaq }}></div>
@@ -3211,7 +3236,6 @@ const EventDetails = () => {
                                   <Icon icon="solar:notes-linear" className="text-[#0b387c] text-[20px] shrink-0" />
                                   <h3 className="text-[16px] md:text-[18px] font-black text-[#0b387c] tracking-tight">{t("description")}</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2" />
                                 <div className="w-full bg-transparent pl-0 pr-0 text-gray-600 leading-normal text-[11px] font-medium prose prose-sm max-w-none [&_p]:text-[11px] [&_div]:text-[11px] [&_span]:text-[11px] [&_strong]:text-[11px] [&_em]:text-[11px] [&_a]:text-[11px]">
                                    {!isReadMore && (detail?.description && detail.description.length > 20 ? detail.description : dummyDescription).replace(/<[^>]*>/g, "").length > 300 ? (
                                      <div className="inline-children">
@@ -3247,16 +3271,12 @@ const EventDetails = () => {
                                  </div>
                               </div>
 
-                              {/* Gray thin divider */}
-                              <div className="mx-5 h-[1px] bg-gray-200/60 my-1" />
-
                               {/* MOBILE SECTION LOKASI */}
                               <div ref={sectionRefs.lokasi} className="w-full">
                                 <div className="flex items-center gap-1.5 mb-1 px-5">
                                   <Icon icon="solar:map-point-linear" className="text-[#0b387c] text-[20px] shrink-0" />
                                   <h3 className="text-[16px] md:text-[18px] font-black text-[#0b387c] tracking-tight">Lokasi Venue</h3>
                                 </div>
-                                <div className="mx-5 h-[1px] bg-gray-200 mb-2" />
                                 <div className="mx-5 bg-white rounded-2xl p-5 shadow-[0_0_15px_rgba(0,0,0,0.1)] flex flex-row justify-between items-center gap-3 mb-2">
                                   <div className="flex flex-col gap-1 min-w-0 flex-1">
                                     <h4 className="text-[13px] font-bold text-black tracking-tight">
@@ -3276,16 +3296,12 @@ const EventDetails = () => {
                                 </div>
                               </div>
 
-                              {/* Gray thin divider */}
-                              <div className="mx-5 h-[1px] bg-gray-200/60 my-1" />
-
                               {/* MOBILE SECTION FAQ */}
                               <div ref={sectionRefs.faq} className="mx-5 mb-10">
                                 <div className="flex items-center gap-1.5 mb-2">
                                   <Icon icon="solar:info-circle-linear" className="text-[#0b387c] text-[20px] shrink-0" />
                                   <h3 className="text-[16px] md:text-[18px] font-black text-[#0b387c] tracking-tight">{t("termAndCondition")}</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2" />
                                 <div className="w-full bg-transparent pl-0 pr-0 text-gray-600 leading-normal text-[11px] prose prose-sm max-w-none [&_p]:text-[11px] [&_div]:text-[11px] [&_span]:text-[11px] [&_strong]:text-[11px] [&_em]:text-[11px] [&_a]:text-[11px] [&_li]:text-[11px] [&_ul]:text-[11px] [&_ol]:text-[11px]"
                                   dangerouslySetInnerHTML={{ __html: detail?.term_condition && detail.term_condition.length > 20 ? detail.term_condition : dummyFaq }}
                                 />

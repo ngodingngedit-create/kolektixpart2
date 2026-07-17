@@ -25,31 +25,31 @@ const config: Config = {
       },
       boxShadow: {
         'smooth-low': '0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04)',
-      }
+      },
+      colors: {
+        "primary-base": "#194E9E",
+        "primary-disabled": "#5e83b9",
+        "primary-light": "#F5FAFF",
+        "primary-dark": "#0b387c",
+        "primary-darker": "#02255a",
+        "primary-light-200": "#E2EEFE",
+
+        // 🎨 tambahan baru:
+        "primary-light-700": "#1453b6",
+        "primary-light-800": "#0d3e91",
+
+        white: "#FFFFFF",
+        dark: "#000000",
+        grey: "#8f8f8f",
+        "dark-grey": "#666666",
+        "light-grey": "#e4e4e7",
+      },
     },
     screens: {
       xs: "320px",
       sm: "640px",
       md: "768px",
       lg: "1024px",
-    },
-    colors: {
-      "primary-base": "#194E9E",
-      "primary-disabled": "#5e83b9",
-      "primary-light": "#F5FAFF",
-      "primary-dark": "#0b387c",
-      "primary-darker": "#02255a",
-      "primary-light-200": "#E2EEFE",
-
-      // 🎨 tambahan baru:
-      "primary-light-700": "#1453b6",
-      "primary-light-800": "#0d3e91",
-
-      white: "#FFFFFF",
-      dark: "#000000",
-      grey: "#8f8f8f",
-      "dark-grey": "#666666",
-      "light-grey": "#e4e4e7",
     },
   },
   plugins: [

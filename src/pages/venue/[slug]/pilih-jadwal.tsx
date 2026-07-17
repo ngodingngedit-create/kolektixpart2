@@ -98,7 +98,7 @@ const TimePickerDropdown: React.FC<{
     const [opened, setOpened] = useState(false);
     return (
         <div className="flex-1 flex flex-col gap-1.5">
-            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 pl-1">{label}</span>
+            <span className="text-[10px] font-medium tracking-widest text-gray-400 pl-1">{label}</span>
             <div className="relative">
                 <button
                     onClick={() => setOpened(o => !o)}
@@ -108,7 +108,7 @@ const TimePickerDropdown: React.FC<{
                 >
                     <div className="flex items-center gap-2.5">
                         <Icon icon={icon} className={`text-[18px] ${opened ? 'text-[#194e9e]' : 'text-gray-400'}`} />
-                        <span className="text-[14px] font-black text-gray-900 tracking-tight">{value}</span>
+                        <span className="text-[14px] font-semibold text-gray-900 tracking-tight">{value}</span>
                     </div>
                     <Icon icon="solar:alt-arrow-down-bold" className={`text-[14px] transition-transform duration-300 ${opened ? 'rotate-180 text-[#194e9e]' : 'text-gray-300'}`} />
                 </button>
@@ -136,7 +136,7 @@ const TimePickerDropdown: React.FC<{
                                         >
                                             <div className="flex flex-col">
                                                 <span>{time}</span>
-                                                {isDisabled && <span className="text-[9px] text-red-300 font-bold uppercase leading-none">Booked</span>}
+                                                {isDisabled && <span className="text-[9px] text-red-300 font-medium leading-none">Sudah dibooking</span>}
                                             </div>
                                             {isActive && <Icon icon="solar:check-circle-bold" className="text-[16px] text-[#194e9e]" />}
                                         </button>
@@ -160,17 +160,17 @@ const AvailabilityTimeline: React.FC<{ bookedHours: string[] }> = ({ bookedHours
         <div className="flex flex-col gap-5 mb-8">
             <div className="flex items-center justify-between px-1">
                 <div className="flex flex-col gap-1">
-                    <span className="text-[11px] font-black uppercase tracking-[0.15em] text-gray-900 leading-none">Availability Overview</span>
+                    <span className="text-[11px] font-semibold tracking-[0.15em] text-gray-900 leading-none">Ikhtisar Ketersediaan</span>
                     <span className="text-[10px] font-medium text-gray-400">Pengecekan slot waktu yang tersedia hari ini.</span>
                 </div>
                 <div className="flex gap-4">
                     <div className="flex items-center gap-2">
                         <div className="w-2.5 h-2.5 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.3)]"></div>
-                        <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Available</span>
+                        <span className="text-[9px] font-medium text-gray-500 tracking-widest">Tersedia</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.3)]"></div>
-                        <span className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Booked</span>
+                        <span className="text-[9px] font-medium text-gray-500 tracking-widest">Sudah dibooking</span>
                     </div>
                 </div>
             </div>
@@ -256,8 +256,8 @@ const DayDetailContent: React.FC<DayDetailProps> = ({
         <div className="flex flex-col gap-0 px-2 md:px-10 pt-4 md:pt-6 pb-6">
             {/* 2. Time Selection Section */}
             <div className="mb-5 md:mb-6 px-1">
-                <h3 className="text-[15px] md:text-[17px] font-bold text-gray-900 tracking-tight leading-none uppercase">Pilih Waktu Penggunaan</h3>
-                <p className="text-[10px] md:text-[11px] font-bold text-gray-400 uppercase tracking-widest mt-2">Sesuaikan durasi dengan rencana acara Anda.</p>
+                <h3 className="text-[15px] md:text-[17px] font-semibold text-gray-900 tracking-tight leading-none">Pilih waktu penggunaan</h3>
+                <p className="text-[10px] md:text-[11px] font-medium text-gray-400 tracking-widest mt-2">Sesuaikan durasi dengan rencana acara Anda.</p>
             </div>
 
             <div className="flex flex-col gap-3 md:gap-4 mb-8 md:mb-10">
@@ -281,13 +281,13 @@ const DayDetailContent: React.FC<DayDetailProps> = ({
                                     </div>
                                     <div className="flex flex-col min-w-0 pr-2">
                                         <div className="flex flex-wrap items-center gap-2 mb-1">
-                                            <span className={`text-[15px] md:text-[17px] font-bold tracking-tight leading-none ${selectedDuration === dur.key ? 'text-gray-900' : 'text-gray-700'}`}>{dur.label}</span>
+                                            <span className={`text-[15px] md:text-[17px] font-semibold tracking-tight leading-none ${selectedDuration === dur.key ? 'text-gray-900' : 'text-gray-700'}`}>{dur.label}</span>
                                             <div className="flex items-center gap-1.5 shrink-0">
                                                 {!dur.available && (
-                                                    <span className="px-1.5 py-0.5 rounded bg-red-50 border border-red-100 text-red-500 text-[8px] font-black uppercase tracking-widest leading-none">Terbatas</span>
+                                                    <span className="px-1.5 py-0.5 rounded bg-red-50 border border-red-100 text-red-500 text-[8px] font-semibold tracking-widest leading-none">Terbatas</span>
                                                 )}
                                                 {dur.available && dur.key !== 'custom' && (
-                                                    <span className="px-1.5 py-0.5 rounded bg-green-50 border border-green-100 text-green-600 text-[8px] font-black uppercase tracking-widest leading-none">Available</span>
+                                                    <span className="px-1.5 py-0.5 rounded bg-green-50 border border-green-100 text-green-600 text-[8px] font-semibold tracking-widest leading-none">Tersedia</span>
                                                 )}
                                             </div>
                                         </div>
@@ -298,13 +298,13 @@ const DayDetailContent: React.FC<DayDetailProps> = ({
                                 {/* Slot Info - Vertical Divider only on Desktop */}
                                 <div className="flex items-center md:items-end justify-between md:justify-center md:flex-col md:shrink-0 md:pl-5 md:border-l border-gray-100 md:ml-4 pt-3 md:pt-0 border-t md:border-t-0 mt-1 md:mt-0">
                                     <div className="flex flex-col items-start md:items-end md:mb-1">
-                                        <span className={`text-[13px] md:text-[16px] font-black tracking-tight ${selectedDuration === dur.key ? (dur.available ? 'text-[#194e9e]' : 'text-red-500') : 'text-gray-900'}`}>
+                                        <span className={`text-[13px] md:text-[16px] font-semibold tracking-tight ${selectedDuration === dur.key ? (dur.available ? 'text-[#194e9e]' : 'text-red-500') : 'text-gray-900'}`}>
                                             {dur.range}
                                         </span>
                                     </div>
                                     {dur.key !== 'custom' && (
                                         <div className="flex items-center gap-1.5">
-                                            <span className="text-[12px] md:text-[14px] font-bold text-gray-900 whitespace-nowrap">Rp{durationPricing[dur.key].toLocaleString('id-ID')}</span>
+                                            <span className="text-[12px] md:text-[14px] font-medium text-gray-900 whitespace-nowrap">Rp{durationPricing[dur.key].toLocaleString('id-ID')}</span>
                                         </div>
                                     )}
                                 </div>
@@ -349,16 +349,16 @@ const DayDetailContent: React.FC<DayDetailProps> = ({
                     {/* 1. Durasi & Tanggal (Top on mobile) */}
                     <div className="flex items-center justify-between md:justify-end gap-3 pb-4 md:pb-0">
                         <div className="flex flex-col items-start md:items-end md:pr-5">
-                            <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-gray-400 leading-none mb-1.5">Durasi</span>
-                            <span className="text-[14px] md:text-[15px] font-bold text-gray-900 leading-none">
+                            <span className="text-[9px] md:text-[10px] font-medium tracking-widest text-gray-400 leading-none mb-1.5">Durasi</span>
+                            <span className="text-[14px] md:text-[15px] font-semibold text-gray-900 leading-none">
                                 {selectedDuration === 'half' ? '4 Jam' : selectedDuration === 'full' ? '8 Jam' : `${customHours} Jam`}
                             </span>
                         </div>
                         {/* Summary Divider */}
                         <div className="w-px h-8 bg-[rgb(214,214,214)] mx-2" />
                         <div className="flex flex-col items-end md:pl-5">
-                            <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-gray-400 leading-none mb-1.5">Tanggal</span>
-                            <span className="text-[14px] md:text-[15px] font-bold text-[#194e9e] leading-none whitespace-nowrap">
+                            <span className="text-[9px] md:text-[10px] font-medium tracking-widest text-gray-400 leading-none mb-1.5">Tanggal</span>
+                            <span className="text-[14px] md:text-[15px] font-semibold text-[#194e9e] leading-none whitespace-nowrap">
                                 {selectedCalDate ? moment(selectedCalDate).format('DD MMM YYYY') : '-'}
                             </span>
                         </div>
@@ -366,28 +366,142 @@ const DayDetailContent: React.FC<DayDetailProps> = ({
 
                     {/* 2. Ringkasan Estimasi (Bottom on mobile) */}
                     <div className="flex flex-col gap-1 border-t md:border-t-0 border-[rgb(214,214,214)] pt-5 md:pt-0">
-                        <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-[#194e9e] leading-none">Ringkasan Estimasi</span>
+                        <span className="text-[9px] md:text-[10px] font-semibold tracking-widest text-black leading-none">Ringkasan estimasi</span>
                         <div className="flex items-baseline gap-2">
-                            <span className="text-[24px] md:text-[28px] font-bold text-gray-900 tracking-tighter leading-none">
+                            <span className="text-[18px] md:text-[22px] font-bold text-gray-900 tracking-tighter leading-none">
                                 Rp{totalPrice.toLocaleString('id-ID')}
                             </span>
-                            <span className="text-[11px] md:text-[12px] font-bold text-gray-400">Total Biaya</span>
+                            <span className="text-[11px] md:text-[12px] font-medium text-gray-400">Total biaya</span>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    );
+};
 
-                <button
-                    disabled={!isCurrentAvailable}
-                    onClick={onConfirm}
-                    className={`w-full py-4 md:py-5 rounded-2xl font-bold text-[13px] md:text-[14px] uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-3
-                        ${isCurrentAvailable
-                            ? 'bg-[#194e9e] hover:bg-[#123e80] text-white shadow-[0_15px_35px_rgba(25,78,158,0.25)] hover:-translate-y-0.5 active:scale-[0.98]'
-                            : 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-70'}
-                    `}
+interface CustomCalendarProps {
+    value: Date;
+    onChange: (d: Date) => void;
+}
+
+const CustomCalendar: React.FC<CustomCalendarProps> = ({ value, onChange }) => {
+    const [viewDate, setViewDate] = useState<Date>(new Date(value));
+    const monthNames = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+
+    useEffect(() => {
+        setViewDate(new Date(value));
+    }, [value]);
+
+    const days = useMemo(() => {
+        const year = viewDate.getFullYear();
+        const month = viewDate.getMonth();
+        const firstDay = new Date(year, month, 1);
+        let startDay = firstDay.getDay(); // 0 = Sun, 1 = Mon, ..., 6 = Sat
+        startDay = startDay === 0 ? 6 : startDay - 1; // Mon = 0, ..., Sun = 6
+
+        const cells = [];
+        const prevMonthLast = new Date(year, month, 0).getDate();
+        for (let i = startDay - 1; i >= 0; i--) {
+            cells.push({
+                date: new Date(year, month - 1, prevMonthLast - i),
+                isCurrent: false,
+            });
+        }
+
+        const currentMonthLast = new Date(year, month + 1, 0).getDate();
+        for (let i = 1; i <= currentMonthLast; i++) {
+            cells.push({
+                date: new Date(year, month, i),
+                isCurrent: true,
+            });
+        }
+
+        const remaining = 42 - cells.length;
+        for (let i = 1; i <= remaining; i++) {
+            cells.push({
+                date: new Date(year, month + 1, i),
+                isCurrent: false,
+            });
+        }
+        return cells;
+    }, [viewDate]);
+
+    const handlePrevMonth = () => {
+        setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1));
+    };
+
+    const handleNextMonth = () => {
+        setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1));
+    };
+
+    return (
+        <div className="w-[280px] bg-white p-3 flex flex-col font-sans select-none">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4 px-2">
+                <button 
+                    onClick={handlePrevMonth} 
+                    className="p-1 hover:bg-gray-100 rounded text-gray-600 transition-colors flex items-center justify-center border-0 bg-transparent cursor-pointer"
                 >
-                    Tambahkan Jadwal
-                    <Icon icon="" className="text-[18px] md:text-[20px]" />
+                    <Icon icon="solar:alt-arrow-left-outline" className="text-[16px]" />
                 </button>
+                <span className="font-semibold text-[15px] text-gray-800">
+                    {monthNames[viewDate.getMonth()]} {viewDate.getFullYear()}
+                </span>
+                <button 
+                    onClick={handleNextMonth} 
+                    className="p-1 hover:bg-gray-100 rounded text-gray-600 transition-colors flex items-center justify-center border-0 bg-transparent cursor-pointer"
+                >
+                    <Icon icon="solar:alt-arrow-right-outline" className="text-[16px]" />
+                </button>
+            </div>
+
+            {/* Weekday headers */}
+            <div className="grid grid-cols-7 gap-y-1 mb-2 text-center text-[12px] font-semibold text-gray-400">
+                <span>Mo</span>
+                <span>Tu</span>
+                <span>We</span>
+                <span>Th</span>
+                <span>Fr</span>
+                <span className="text-red-400">Sa</span>
+                <span className="text-red-400">Su</span>
+            </div>
+
+            {/* Calendar Grid */}
+            <div className="grid grid-cols-7 gap-y-1 text-center">
+                {days.map((cell, idx) => {
+                    const isSelected = cell.date.getDate() === value.getDate() &&
+                        cell.date.getMonth() === value.getMonth() &&
+                        cell.date.getFullYear() === value.getFullYear();
+                    const isWeekend = (idx % 7 === 5) || (idx % 7 === 6);
+
+                    let textColor = "text-gray-800";
+                    if (!cell.isCurrent) {
+                        textColor = "text-gray-300";
+                    } else if (isWeekend) {
+                        textColor = "text-red-500";
+                    }
+
+                    return (
+                        <button
+                            key={idx}
+                            onClick={() => onChange(cell.date)}
+                            className={`w-9 h-9 mx-auto rounded-lg flex items-center justify-center text-[13px] font-medium transition-all border-0 outline-none
+                                ${isSelected
+                                    ? 'bg-[#194e9e] text-white font-bold'
+                                    : cell.isCurrent
+                                        ? 'hover:bg-gray-100 cursor-pointer'
+                                        : 'cursor-pointer'
+                                } ${isSelected ? '' : textColor}
+                            `}
+                        >
+                            {cell.date.getDate()}
+                        </button>
+                    );
+                })}
             </div>
         </div>
     );
@@ -400,6 +514,7 @@ const PilihJadwal = () => {
     const { slug } = router.query;
     const [galleryIndex, setGalleryIndex] = useState(0);
     const sidebarRef = useRef<HTMLDivElement | null>(null);
+    const sidebarScrollRef = useRef<HTMLDivElement | null>(null);
     const [showMonthPicker, setShowMonthPicker] = useState(false);
     const [pickerYear, setPickerYear] = useState(new Date().getFullYear());
     const [data, setData] = useState<VenueListResponse>();
@@ -446,6 +561,7 @@ const PilihJadwal = () => {
     const [customStartTime, setCustomStartTime] = useState('09:00');
     const [customEndTime, setCustomEndTime] = useState('13:00');
     const [isEditingSidebar, setIsEditingSidebar] = useState(false);
+    const [popoverOpened, setPopoverOpened] = useState(false);
 
     // Detect mobile on mount and resize
     useEffect(() => {
@@ -482,6 +598,55 @@ const PilihJadwal = () => {
     const [selectedCourt, setSelectedCourt] = useState<number | null>(null);
     // selectedSlots persists across dates/months — key format: "YYYY-MM-DD-courtNum-HH:MM"
     const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
+
+    const currentSelectionSlots = useMemo(() => {
+        if (!selectedCalDate) return [];
+        const dateKey = moment(selectedCalDate).format('YYYY-MM-DD');
+        const slots: string[] = [];
+        if (selectedDuration === 'custom') {
+            const startH = parseInt(customStartTime.split(':')[0]);
+            const endH = parseInt(customEndTime.split(':')[0]);
+            for (let h = startH; h < endH; h++) {
+                slots.push(`${dateKey}-1-${String(h).padStart(2, '0')}:00`);
+            }
+        } else {
+            const hours = selectedDuration === 'half' ? 4 : 8;
+            for (let h = 9; h < 9 + hours; h++) {
+                slots.push(`${dateKey}-1-${String(h).padStart(2, '0')}:00`);
+            }
+        }
+        return slots;
+    }, [selectedCalDate, selectedDuration, customStartTime, customEndTime]);
+
+    const isCurrentSelectionAdded = useMemo(() => {
+        if (currentSelectionSlots.length === 0) return false;
+        return currentSelectionSlots.every(slot => selectedSlots.includes(slot));
+    }, [currentSelectionSlots, selectedSlots]);
+
+    const isCurrentAvailable = useMemo(() => {
+        if (!selectedCalDate || !data) return false;
+        const dateKey = moment(selectedCalDate).format('YYYY-MM-DD');
+        const bookedHours = data?.has_booked_venue
+            ?.filter((e: any) => e?.start_date?.startsWith(dateKey))
+            ?.map((e: any) => e.start_date.split('T')[1]?.substring(0, 5) || e.start_date.split(' ')[1]?.substring(0, 5)) || [];
+
+        const checkAvailability = (startH: number, endH: number) => {
+            for (let h = startH; h < endH; h++) {
+                if (bookedHours.includes(`${String(h).padStart(2, '0')}:00`)) return false;
+            }
+            return true;
+        };
+
+        if (selectedDuration === 'half') {
+            return checkAvailability(8, 12);
+        } else if (selectedDuration === 'full') {
+            return checkAvailability(8, 16);
+        } else {
+            const startH = parseInt(customStartTime.split(':')[0]);
+            const endH = parseInt(customEndTime.split(':')[0]);
+            return checkAvailability(startH, endH);
+        }
+    }, [selectedCalDate, selectedDuration, customStartTime, customEndTime, data]);
     const [expandedCourts, setExpandedCourts] = useState<number[]>([1, 2, 3]);
     const carouselApi = React.useRef<any>(null);
 
@@ -589,6 +754,12 @@ const PilihJadwal = () => {
         // Scroll to the right sidebar (VENUE & JADWAL TERPILIH)
         setTimeout(() => {
             sidebarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Auto-scroll the slot list to the bottom to show latest selection
+            setTimeout(() => {
+                if (sidebarScrollRef.current) {
+                    sidebarScrollRef.current.scrollTo({ top: sidebarScrollRef.current.scrollHeight, behavior: 'smooth' });
+                }
+            }, 350);
         }, 200);
     };
 
@@ -768,7 +939,7 @@ const PilihJadwal = () => {
             `}</style>
 
             {/* PAGE BODY – Dark Blue Hero like Screenshot */}
-            <div className="min-h-screen bg-[#F7F8FA] overflow-x-hidden">
+            <div className="min-h-screen bg-white">
                 <div ref={clickOutsideChat} className={`${openChat ? '' : 'hidden'}`}>
                     <Chat toggleOpenTab={() => setOpenChat(!openChat)} openTab={openChat} creatorIdOpen={data?.creator_id} />
                     <AuthModal visible={openChat && !user?.id} onClose={() => setOpenChat(false)} />
@@ -787,9 +958,9 @@ const PilihJadwal = () => {
                                 <Link
                                     key={tab.id}
                                     href={tab.href as string}
-                                    className={`py-4 md:py-4 px-4 md:px-0 text-[10px] md:text-[13px] font-black uppercase tracking-[0.15em] transition-all relative whitespace-nowrap shrink-0 group ${tab.id === 'booking'
-                                        ? 'text-[#194e9e]'
-                                        : 'text-gray-400 hover:text-gray-600'
+                                    className={`pb-4 pt-4 text-[13px] md:text-[14px] transition-all relative whitespace-nowrap shrink-0 ${tab.id === 'booking'
+                                        ? 'text-[#194e9e] font-semibold'
+                                        : 'text-gray-400 hover:text-gray-600 font-medium'
                                         }`}
                                 >
                                     {tab.label}
@@ -803,126 +974,91 @@ const PilihJadwal = () => {
                 </div>
 
                 {/* ── MAIN BOOKING INTERFACE ── */}
-                <div className="max-w-7xl mx-auto px-4 md:px-6 pt-24 md:pt-32 pb-20 mt-[48px] md:mt-0">
-                    <div ref={sectionRefs.booking} className="flex flex-col md:flex-row items-start gap-6">
-                        {/* LEFT COLUMN: Date Strip & Booking UI (Consolidated Section Card) */}
-                        <div className="flex-[1.8] w-full bg-white rounded-2xl border border-[rgb(224,224,224)] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
-                            {/* Date Strip Section */}
-                            <div className="p-5 sm:p-7">
-                                {/* Header with Title, Month Badge, and Legends */}
-                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-6 relative px-1">
-                                    <div className="flex items-center gap-3">
-                                        <h2 className="text-[16px] sm:text-[18px] font-bold text-gray-900 tracking-tight leading-none uppercase">
-                                            Pilih Jadwal Veneu
-                                        </h2>
-                                        <div className="px-2.5 py-1.5 rounded-lg bg-blue-50 border border-blue-100 flex items-center gap-1.5 shrink-0 translate-y-[-1px]">
-                                            <span className="text-[9px] font-bold text-[#194e9e] uppercase tracking-widest leading-none">
-                                                {monthsIdShort[selectedDate.getMonth()]} {selectedDate.getFullYear()}
-                                            </span>
-                                        </div>
-                                    </div>
+                <div className="w-full max-w-[1550px] mx-auto px-2 md:px-3 pt-24 md:pt-32 pb-20 mt-[48px] md:mt-0">
+                    <div ref={sectionRefs.booking} className="flex flex-col md:flex-row items-start gap-2 md:gap-2 w-full">
+                        {/* LEFT COLUMN: Date Strip & Booking UI (Separate Section Cards) */}
+                        <div className="flex-[1.8] w-full flex flex-col gap-2.5 md:gap-3 min-w-0">
+                            <div className="w-full bg-[#F3F4F6] rounded-[8px] p-2 md:p-3 sticky top-[115px] z-20">
+                                <div className="w-full bg-white rounded-[8px] shadow-sm px-4 py-2 sm:px-6 sm:py-3.5 flex flex-col justify-center">
+                                    <div className="flex items-center w-full">
+                                        {/* Scrollable Date Strip */}
+                                        <div className="flex-1 flex items-center gap-4 sm:gap-6 overflow-x-auto py-1 px-1 thin-scrollbar">
+                                            {dateStrip.map((d, i) => {
+                                                const isSelected = selectedCalDate && d.toDateString() === selectedCalDate.toDateString();
+                                                const status = getDateStatus(d);
+                                                const isPast = status === 'past';
 
-                                    {/* Legends - Now aligned top right */}
-                                    <div className="flex items-center gap-3 md:pt-0 pt-1">
-                                        <div className="flex items-center gap-1.5">
-                                            <div className="w-1.5 h-1.5 rounded-full border border-[rgb(224,224,224)] bg-white"></div>
-                                            <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Tersedia</span>
+                                                return (
+                                                    <button
+                                                        key={i}
+                                                        id={`date-item-${d.getDate()}-${d.getMonth()}`}
+                                                        disabled={isPast}
+                                                        onClick={() => {
+                                                            setSelectedCalDate(d);
+                                                            setSelectedDate(d);
+                                                            setSelectedDuration('full');
+                                                            setShowDayDetail(true);
+                                                        }}
+                                                        className={`flex flex-col items-center justify-center transition-all bg-transparent border-0 outline-none p-1
+                                                            ${isPast ? 'opacity-35 cursor-not-allowed' : 'cursor-pointer hover:opacity-80'}
+                                                        `}
+                                                    >
+                                                        {/* Inner pill — gets blue bg when selected */}
+                                                        <div className={`flex flex-col items-center justify-center px-3 py-2 rounded-[10px] transition-all
+                                                            ${isSelected
+                                                                ? 'bg-[#194e9e] shadow-[0_6px_16px_-4px_rgba(25,78,158,0.4)]'
+                                                                : 'bg-transparent'
+                                                            }
+                                                        `}>
+                                                            <span className={`text-[9px] sm:text-[10px] font-semibold tracking-wider mb-1 ${isSelected ? 'text-white/80' : 'text-gray-400'}`}>
+                                                                {daysIdShort[d.getDay()]}
+                                                            </span>
+                                                            <span className={`text-[13px] sm:text-[14px] font-bold leading-none whitespace-nowrap ${isSelected ? 'text-white' : isPast ? 'text-gray-300' : 'text-gray-700'}`}>
+                                                                {d.getDate()} {monthsIdShort[d.getMonth()]}
+                                                            </span>
+                                                        </div>
+                                                    </button>
+                                                );
+                                            })}
                                         </div>
-                                        <div className="flex items-center gap-1.5">
-                                            <div className="w-1.5 h-1.5 rounded-full border border-red-300 bg-red-600"></div>
-                                            <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Terbatas</span>
-                                        </div>
-                                        <div className="flex items-center gap-1.5">
-                                            <div className="w-1.5 h-1.5 rounded-full border border-[#194e9e] bg-[#194e9e]"></div>
-                                            <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Pilihanmu</span>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div className="flex items-center gap-2.5 w-full">
-                                    {/* Scrollable Date Strip */}
-                                    <div className="flex-1 flex items-center gap-2.5 overflow-x-auto pb-3 pt-1 px-1 thin-scrollbar">
-                                        {dateStrip.map((d, i) => {
-                                            const isSelected = selectedCalDate && d.toDateString() === selectedCalDate.toDateString();
-                                            const status = getDateStatus(d);
-                                            const isPast = status === 'past';
-                                            const isFull = status === 'full';
+                                        {/* Thin gray vertical divider line */}
+                                        <div className="h-10 w-px bg-gray-200 self-center mx-3 md:mx-4 shrink-0" />
 
-                                            return (
-                                                <button
-                                                    key={i}
-                                                    id={`date-item-${d.getDate()}-${d.getMonth()}`}
-                                                    disabled={isPast}
-                                                    onClick={() => {
-                                                        setSelectedCalDate(d);
-                                                        setSelectedDuration('full');
-                                                        setShowDayDetail(true);
-                                                    }}
-                                                    className={`min-w-[58px] sm:min-w-[65px] py-1.5 sm:py-2.5 rounded-xl border flex flex-col items-center justify-center transition-all duration-300
-                                                        ${isSelected
-                                                            ? 'bg-[#194e9e] border-[#194e9e] shadow-[0_10px_20px_-8px_rgba(25,78,158,0.4)] -translate-y-1'
-                                                            : isPast
-                                                                ? 'bg-gray-50 border-[rgb(214,214,214)] opacity-40 cursor-not-allowed'
-                                                                : isFull
-                                                                    ? 'bg-red-50 border-red-200 hover:border-red-300'
-                                                                    : 'bg-white border-[rgb(214,214,214)] hover:border-blue-100 hover:bg-blue-50/20'
-                                                        }
-                                                    `}
-                                                >
-                                                    <span className={`text-[8px] font-bold uppercase tracking-widest leading-none mb-1.5 ${isSelected ? 'text-white/70' : 'text-gray-400'}`}>
-                                                        {daysIdShort[d.getDay()]}
-                                                    </span>
-                                                    <span className={`text-[15px] sm:text-[17px] font-bold leading-none ${isSelected ? 'text-white' : 'text-gray-900'}`}>
-                                                        {d.getDate()}
-                                                    </span>
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-
-                                    {/* Fixed Calendar Icon Button */}
-                                    <div className="shrink-0 mb-3 ml-2">
-                                        <Popover position={isMobile ? "bottom" : "bottom-end"} shadow="xl" radius="24px" width={isMobile ? 260 : 320} offset={10}>
-                                            <Popover.Target>
-                                                <button className="w-[50px] sm:w-[58px] h-[58px] sm:h-[68px] rounded-xl border border-[rgb(214,214,214)] hover:border-[#194e9e]/30 hover:bg-blue-50/30 transition-all flex items-center justify-center group bg-white shadow-none">
-                                                    <Icon icon="solar:calendar-bold" className="text-[20px] text-gray-400 group-hover:text-[#194e9e] transition-colors" />
-                                                </button>
-                                            </Popover.Target>
-                                            <Popover.Dropdown p={isMobile ? 6 : 16}>
-                                                <div className="flex flex-col gap-2 md:gap-4">
-                                                    <div className={`flex items-center justify-between pb-1.5 border-b border-gray-100 ${isMobile ? 'px-1' : ''}`}>
-                                                        <span className={`${isMobile ? 'text-[9px]' : 'text-[12px]'} font-black text-gray-900 uppercase tracking-widest`}>Pilih Tanggal</span>
-                                                        <Icon icon="solar:calendar-date-bold" className="text-[#194e9e]" />
-                                                    </div>
-                                                    <DatePicker
-                                                        size={isMobile ? "xs" : "sm"}
+                                        {/* Fixed Calendar Icon Button */}
+                                        <div className="shrink-0 flex items-center justify-center">
+                                            <Popover opened={popoverOpened} onChange={setPopoverOpened} position={isMobile ? "bottom" : "bottom-end"} shadow="xl" radius="24px" width={isMobile ? 260 : 320} offset={10}>
+                                                <Popover.Target>
+                                                    <button
+                                                        onClick={() => setPopoverOpened(o => !o)}
+                                                        className="w-[44px] sm:w-[50px] h-[44px] sm:h-[50px] rounded-xl transition-all flex items-center justify-center bg-transparent border-0 outline-none shadow-none hover:bg-gray-50/50"
+                                                    >
+                                                        <Icon icon="solar:calendar-bold" className={`text-[22px] sm:text-[24px] transition-colors ${popoverOpened ? 'text-[#194e9e]' : 'text-gray-400 hover:text-[#194e9e]'}`} />
+                                                    </button>
+                                                </Popover.Target>
+                                                <Popover.Dropdown p={0} className="border-0 shadow-xl rounded-[16px] overflow-hidden">
+                                                    <CustomCalendar
                                                         value={selectedCalDate}
                                                         onChange={(val) => {
-                                                            if (val) {
-                                                                setSelectedCalDate(val);
-                                                                setSelectedDate(val);
-                                                                setSelectedDuration('full');
-                                                                setShowDayDetail(true);
-                                                            }
+                                                            setSelectedCalDate(val);
+                                                            setSelectedDate(val);
+                                                            setSelectedDuration('full');
+                                                            setShowDayDetail(true);
+                                                            setPopoverOpened(false);
                                                         }}
-                                                        minDate={new Date()}
                                                     />
-                                                </div>
-                                            </Popover.Dropdown>
-                                        </Popover>
+                                                </Popover.Dropdown>
+                                            </Popover>
+                                        </div>
                                     </div>
                                 </div>
-
-                                <p className="text-[10px] font-bold text-gray-400 mt-3 pl-1 tracking-wide">Pilih tanggal dan slot waktu yang tersedia untuk booking.</p>
                             </div>
 
-                            {/* Divider Between Sections */}
-                            <div className="h-px w-full bg-[rgb(224,224,224)]" />
-
-                            {/* Venue & Jadwal Accordion Section (Merged Look) */}
+                            {/* Venue & Jadwal Accordion Section (Separate Card) */}
                             {selectedCalDate && (
-                                <div className="w-full animate-in backdrop-blur-sm fade-in slide-in-from-top-2 duration-500">
-                                    {/* Accordion Header - Simplified for Merged Card */}
+                                <div className="w-full bg-[#F3F4F6] rounded-[8px] p-2 md:p-3 flex flex-col">
+                                    <div className="w-full bg-white rounded-[8px] shadow-sm overflow-hidden flex flex-col">
+                                        <div className="w-full animate-in backdrop-blur-sm fade-in slide-in-from-top-2 duration-500">
                                     <button
                                         onClick={() => setShowDayDetail(v => !v)}
                                         className="w-full px-5 sm:px-8 py-5 sm:py-6 flex flex-col md:flex-row md:items-center justify-between hover:bg-[#fcfdff] transition-all group gap-4 md:gap-0"
@@ -933,15 +1069,15 @@ const PilihJadwal = () => {
                                             </div>
                                             <div className="flex items-center md:items-center gap-2.5 md:gap-2.0 w-full min-w-0">
                                                 <div className="flex flex-col items-start min-w-0">
-                                                    <h3 className="text-[13px] sm:text-[18px] font-bold text-gray-900 tracking-tight leading-tight md:leading-none mb-1 group-hover:text-[#194e9e] transition-colors truncate w-full max-w-[150px] sm:max-w-none">{data?.name || 'Jakarta Convention Center'}</h3>
+                                                    <h3 className="text-[13px] sm:text-[18px] font-semibold text-gray-900 tracking-tight leading-tight md:leading-none mb-1 group-hover:text-[#194e9e] transition-colors truncate w-full max-w-[150px] sm:max-w-none">{data?.name || 'Jakarta Convention Center'}</h3>
                                                     <div className="flex flex-wrap items-center gap-1.5 md:gap-2.5">
                                                         <div className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-green-50 border border-green-100/50">
                                                             <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse"></div>
-                                                            <span className="text-[7px] md:text-[9px] font-bold text-green-700 uppercase tracking-widest leading-none">
-                                                                Available
+                                                            <span className="text-[7px] md:text-[9px] font-medium text-green-700 tracking-widest leading-none">
+                                                                Tersedia
                                                             </span>
                                                         </div>
-                                                        <span className="text-[7px] md:text-[9px] font-bold text-gray-400 uppercase tracking-widest translate-y-[0.5px]">
+                                                        <span className="text-[7px] md:text-[9px] font-medium text-gray-400 tracking-widest translate-y-[0.5px]">
                                                             {(() => {
                                                                 if (!selectedCalDate || !data) return 0;
                                                                 const dateKey = moment(selectedCalDate).format('YYYY-MM-DD');
@@ -958,9 +1094,7 @@ const PilihJadwal = () => {
 
                                                 {/* Inline Arrow Button for Mobile */}
                                                 <div className="flex md:hidden items-center justify-center ml-auto">
-                                                    <div className={`w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:text-[#194e9e] group-hover:bg-blue-50 transition-all duration-500 ${showDayDetail ? 'rotate-180 bg-blue-50 text-[#194e9e]' : ''}`}>
-                                                        <Icon icon="solar:alt-arrow-down-bold" className="text-[14px]" />
-                                                    </div>
+                                                    <Icon icon="solar:alt-arrow-down-bold" className={`text-[16px] text-gray-400 transition-all duration-300 ${showDayDetail ? 'rotate-180' : ''}`} />
                                                 </div>
                                             </div>
                                         </div>
@@ -1002,18 +1136,20 @@ const PilihJadwal = () => {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            </div>
                             )}
                         </div> {/* End Left Column Parent Card */}
 
                         {/* RIGHT COLUMN: Summary Card */}
-                        <div className="hidden md:block flex-1 sticky top-[8px]">
-                            <div ref={sidebarRef} className="bg-white rounded-2xl border border-[rgb(224,224,224)] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+                        <div className="hidden md:flex md:w-[340px] lg:w-[380px] shrink-0 flex-col bg-[#F3F4F6] rounded-[8px] p-2 md:p-3 min-w-0 sticky top-[115px] self-start">
+                            <div ref={sidebarRef} className="w-full bg-white rounded-[8px] shadow-sm overflow-hidden flex flex-col">
                                 <div className="px-6 py-5 border-b border-[rgb(224,224,224)] flex items-center justify-between bg-[#fcfdff]">
-                                    <h3 className="text-[11px] font-bold text-[#000000] uppercase tracking-widest">Jadwal Veneu Terpilih</h3>
+                                    <h3 className="text-[11px] font-bold text-[#000000] tracking-widest">Jadwal Venue Terpilih</h3>
                                     {selectedSlots.length > 0 && (
                                         <button
                                             onClick={() => setIsEditingSidebar(!isEditingSidebar)}
-                                            className="text-[11px] font-bold text-[#194e9e] uppercase tracking-wider hover:text-[#123e80] transition-colors"
+                                            className="text-[11px] font-bold text-[#194e9e] tracking-wider hover:text-[#123e80] transition-colors"
                                         >
                                             {isEditingSidebar ? 'Selesai Edit' : 'Edit'}
                                         </button>
@@ -1031,7 +1167,7 @@ const PilihJadwal = () => {
                                             </p>
                                         </div>
                                     ) : (
-                                        <div className="flex flex-col gap-8 max-h-[500px] overflow-y-auto stylish-scrollbar pr-1">
+                                        <div ref={sidebarScrollRef} className="flex flex-col gap-8 max-h-[calc(100vh-340px)] overflow-y-auto stylish-scrollbar pr-1 scroll-smooth">
                                             {Object.keys(groupedSlotsByDate).sort().map((dateStr) => {
                                                 const dateObj = new Date(dateStr);
                                                 const courtGroups = groupedSlotsByDate[dateStr];
@@ -1040,7 +1176,7 @@ const PilihJadwal = () => {
                                                         <div className="flex items-center justify-between">
                                                             <div className="flex items-center gap-3">
                                                                 <div className="w-1.5 h-6 rounded-full bg-[#194e9e]"></div>
-                                                                <span className="text-[14px] font-black text-gray-900 tracking-tight">
+                                                                <span className="text-[14px] font-semibold text-gray-900 tracking-tight">
                                                                     {daysIdShort[dateObj.getDay()]}, {dateObj.getDate()} {monthsIdShort[dateObj.getMonth()]} {dateObj.getFullYear()}
                                                                 </span>
                                                             </div>
@@ -1060,16 +1196,23 @@ const PilihJadwal = () => {
                                                         {Object.keys(courtGroups).map((courtStr) => {
                                                             const courtNum = parseInt(courtStr);
                                                             const slots = courtGroups[courtNum];
+                                                            // Derive duration label from number of hourly slots
+                                                            const slotCount = slots.length;
+                                                            const durationLabel = slotCount <= 4
+                                                                ? 'Setengah Hari'
+                                                                : slotCount <= 8
+                                                                    ? 'Satu Hari Penuh'
+                                                                    : 'Custom';
                                                             return (
-                                                                <div key={courtNum} className="flex flex-col gap-4 pl-4.5">
-                                                                    <div className="flex items-center gap-3">
-                                                                        <div className="w-8 h-8 rounded-xl bg-blue-50 flex items-center justify-center text-[#194e9e]">
-                                                                            <Icon icon="solar:buildings-bold" className="text-[18px]" />
+                                                                <div key={courtNum} className="flex flex-col gap-3 pl-3">
+                                                                    <div className="flex items-center gap-2.5">
+                                                                        <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-[#194e9e] shrink-0">
+                                                                            <Icon icon="solar:buildings-bold" className="text-[15px]" />
                                                                         </div>
-                                                                        <span className="text-[12px] font-black text-gray-800 uppercase tracking-widest">Venue Selected</span>
+                                                                        <span className="text-[11px] font-bold text-gray-700 tracking-widest uppercase">{durationLabel}</span>
                                                                     </div>
 
-                                                                    <div className="flex flex-col gap-2.5">
+                                                                    <div className="flex flex-col gap-2">
                                                                         {slots.map(slotKey => {
                                                                             const parts = slotKey.split('-');
                                                                             const time = parts[4];
@@ -1077,22 +1220,24 @@ const PilihJadwal = () => {
                                                                             const eHour = hour + 1;
                                                                             const eTime = `${eHour.toString().padStart(2, '0')}:00`;
                                                                             return (
-                                                                                <div key={slotKey} className="group relative flex items-center justify-between p-4 rounded-2xl bg-gray-50/50 border border-[rgb(224,224,224)] hover:border-[#194e9e]/30 hover:bg-blue-50/20 transition-all">
-                                                                                    <div className="flex items-center gap-3">
-                                                                                        <Icon icon="solar:clock-circle-bold" className="text-gray-400 text-[16px]" />
-                                                                                        <span className="text-[13px] font-bold text-gray-600">{time} - {eTime} WIB</span>
+                                                                                <div key={slotKey} className="group relative flex items-center justify-between py-2.5 px-3 rounded-lg bg-gray-50/60 border border-[rgb(228,228,228)] hover:border-[#194e9e]/30 hover:bg-blue-50/20 transition-all">
+                                                                                    {/* Left: time stacked above price */}
+                                                                                    <div className="flex flex-col gap-0.5">
+                                                                                        <div className="flex items-center gap-1.5">
+                                                                                            <Icon icon="solar:clock-circle-bold" className="text-gray-400 text-[13px]" />
+                                                                                            <span className="text-[12px] font-medium text-gray-600">{time} - {eTime} WIB</span>
+                                                                                        </div>
+                                                                                        <span className="text-[13px] font-bold text-gray-900 pl-[19px]">Rp{(data?.starting_price ?? 95000).toLocaleString('id')}</span>
                                                                                     </div>
-                                                                                    <div className="flex items-center gap-3">
-                                                                                        <span className="text-[14px] font-black text-[#194e9e]">Rp{(data?.starting_price ?? 95000).toLocaleString('id')}</span>
-                                                                                        {isEditingSidebar && (
-                                                                                            <button
-                                                                                                onClick={() => toggleSlot(slotKey)}
-                                                                                                className="w-8 h-8 rounded-full bg-white text-gray-300 hover:text-red-500 hover:bg-red-50 border border-gray-100 flex items-center justify-center transition-all shadow-sm"
-                                                                                            >
-                                                                                                <Icon icon="solar:trash-bin-trash-bold" className="text-[16px]" />
-                                                                                            </button>
-                                                                                        )}
-                                                                                    </div>
+                                                                                    {/* Right: delete button */}
+                                                                                    {isEditingSidebar && (
+                                                                                        <button
+                                                                                            onClick={() => toggleSlot(slotKey)}
+                                                                                            className="w-7 h-7 rounded-full bg-white text-red-500 hover:bg-red-50 border border-red-100 flex items-center justify-center transition-all shadow-sm shrink-0"
+                                                                                        >
+                                                                                            <Icon icon="solar:trash-bin-trash-bold" className="text-[14px] text-red-500" />
+                                                                                        </button>
+                                                                                    )}
                                                                                 </div>
                                                                             );
                                                                         })}
@@ -1106,17 +1251,7 @@ const PilihJadwal = () => {
                                         </div>
                                     )}
 
-                                    {/* Summary Footer inside card */}
-                                    {selectedSlots.length > 0 && (
-                                        <div className="mt-4 pt-4 flex flex-col gap-6">
-                                            <div className="flex flex-col">
-                                                <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400 leading-none mb-2">Total ({selectedSlots.length} Jadwal)</span>
-                                                <span className="text-[28px] font-bold text-gray-900 tracking-tighter">
-                                                    Rp{(selectedSlots.length * (data?.starting_price ?? 95000)).toLocaleString('id-ID')}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    )}
+                                    {/* Summary Footer inside card removed */}
                                 </div>
                             </div>
                         </div>
@@ -1126,65 +1261,131 @@ const PilihJadwal = () => {
                 <div ref={sectionRefs.lokasi} className="pb-2 bg-[#F7F8FA]"></div>
             </div>{/* end min-h-screen */}
             {/* ── BOTTOM BOOKING BAR ── */}
-            <div className="w-full fixed flex items-center justify-between gap-3 sm:gap-4 bottom-0 bg-white z-50 py-3 sm:py-4 px-4 sm:px-6 md:px-12 shadow-[0_-15px_40px_rgba(0,0,0,0.08)] border-t border-[#d1d1d1] transition-all duration-500 translate-y-0 opacity-100">
-                {/* Left: price info */}
-                <div className="flex items-center gap-3 min-w-0 pr-2">
-                    {selectedSlots.length > 0 ? (
-                        <div className="flex flex-col leading-tight min-w-0">
-                            <span className="text-[9px] sm:text-[11px] font-bold text-[#ABABAB] uppercase tracking-widest mb-0.5 sm:mb-1">Total {selectedSlots.length} Jadwal</span>
-                            <span className="text-[13px] sm:text-2xl font-bold text-gray-900 leading-none block whitespace-nowrap">
-                                Rp{(selectedSlots.length * (data?.starting_price ?? 95000)).toLocaleString('id')}
+            {/* MOBILE layout: stacked rows  |  DESKTOP: horizontal row */}
+            <div className="w-full fixed bottom-0 bg-white z-50 border-t border-[#d1d1d1] transition-all duration-500">
+
+                {/* ── MOBILE ── */}
+                <div className="flex flex-col sm:hidden px-4 pt-3 pb-4 gap-2.5">
+                    {/* Row 1: Total Harga (left) + Detail button (right) */}
+                    <div className="flex items-center justify-between">
+                        <div className="flex flex-col leading-tight">
+                            <span className="text-[10px] font-medium text-gray-400 tracking-widest">Total Harga</span>
+                            <span className="text-[16px] font-bold text-gray-900 leading-none mt-0.5">
+                                {selectedSlots.length > 0
+                                    ? `Rp${(selectedSlots.length * (data?.starting_price ?? 95000)).toLocaleString('id')}`
+                                    : `Rp${(data?.starting_price ?? 95000).toLocaleString('id')}`
+                                }
                             </span>
                         </div>
-                    ) : (
-                        <div className="flex flex-col leading-tight">
-                            <Text fw={700} size="xs" c="dimmed" className="uppercase tracking-widest text-[9px] sm:text-[11px]">Mulai dari</Text>
-                            <div className="flex items-baseline gap-1 mt-0.5 sm:mt-1">
-                                <span className="text-[16px] xl:text-[20px] font-bold text-gray-900 leading-none flex items-center truncate">
-                                    {(data?.starting_price ?? 95000) >= 10000000 ? (
-                                        <>
-                                            Rp{((data?.starting_price ?? 95000) / 1000).toLocaleString('id')}
-                                            <span className="ml-[3px] mt-[1px] text-[8px] sm:text-[9px] font-bold tracking-widest uppercase bg-green-50 text-green-600 px-[6px] py-[3px] rounded-md border border-green-200/50 shadow-sm leading-none flex items-center gap-1">
-                                                <Icon icon="solar:wallet-bold-duotone" className="text-[10px] hidden sm:block" /> MILLION
-                                            </span>
-                                        </>
-                                    ) : (
-                                        `Rp${(data?.starting_price ?? 95000).toLocaleString('id')}`
-                                    )}
-                                </span>
-                                <span className="text-[10px] sm:text-[12px] font-bold text-gray-400 self-end">/sesi</span>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* Right: CTA */}
-                <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                    {selectedSlots.length > 0 && (
                         <button
                             onClick={() => setShowMobileDetail(true)}
-                            className="flex sm:hidden items-center gap-1.5 px-1 py-1 transition-all active:scale-95"
+                            className="flex items-center gap-1 py-1 active:scale-95 transition-all"
                         >
-                            <span className="text-[14px] font-bold text-[#194e9e]">Detail</span>
-                            <div className="px-2 py-0.5 rounded-full bg-red-500 text-white flex items-center justify-center text-[10px] font-bold shadow-sm">
-                                {selectedSlots.length}
-                            </div>
-                            <Icon icon="solar:alt-arrow-up-bold" className="text-[14px] text-[#194e9e]" />
+                            <span className="text-[11px] font-semibold text-[#194e9e]">
+                                {selectedSlots.length > 0 ? `(${selectedSlots.length}) Detail` : 'Detail'}
+                            </span>
+                            <Icon icon="solar:alt-arrow-up-bold" className="text-[11px] text-[#194e9e]" />
                         </button>
-                    )}
-                    <button
-                        disabled={selectedSlots.length === 0}
-                        onClick={() => {
-                            if (selectedSlots.length > 0) handleOrder();
-                            else sectionRefs.booking.current?.scrollIntoView({ behavior: 'smooth' });
-                        }}
-                        className={`h-[38px] sm:h-[48px] px-5 sm:px-8 rounded-[12px] sm:rounded-xl font-bold text-[11px] sm:text-[13px] uppercase tracking-widest transition-all shrink-0 ${selectedSlots.length > 0
-                            ? 'bg-[#194e9e] text-white shadow-xl shadow-[#194e9e]/30 hover:bg-[#123e80] active:scale-95'
-                            : 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'
-                            }`}
-                    >
-                        Booking
-                    </button>
+                    </div>
+
+                    {/* Row 2: Booking button (flex-1) + Chat button (square) */}
+                    <div className="flex items-center gap-2">
+                        {!isCurrentSelectionAdded ? (
+                            <button
+                                disabled={!isCurrentAvailable}
+                                onClick={handleCalendarOrder}
+                                className={`flex-1 h-[38px] rounded-[10px] font-bold text-[13px] tracking-wide transition-all active:scale-[0.98] ${
+                                    isCurrentAvailable
+                                        ? 'bg-[#194e9e] text-white hover:bg-[#123e80]'
+                                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                }`}
+                            >
+                                Pilih Jadwal
+                            </button>
+                        ) : (
+                            <button
+                                disabled={selectedSlots.length === 0}
+                                onClick={handleOrder}
+                                className={`flex-1 h-[38px] rounded-[10px] font-bold text-[13px] tracking-wide transition-all active:scale-[0.98] ${
+                                    selectedSlots.length > 0
+                                        ? 'bg-[#194e9e] text-white hover:bg-[#123e80]'
+                                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                }`}
+                            >
+                                Booking
+                            </button>
+                        )}
+                        {/* Chat button */}
+                        <button
+                            onClick={() => setOpenChat(true)}
+                            className="w-[40px] h-[40px] flex items-center justify-center shrink-0 rounded-xl bg-[#194e9e] text-white border border-[#194e9e] hover:bg-[#123e80] active:scale-95 transition-all"
+                        >
+                            <Icon icon="solar:chat-round-dots-bold" className="text-[18px]" />
+                        </button>
+                    </div>
+                </div>
+
+                {/* ── DESKTOP (sm+): original horizontal layout ── */}
+                <div className="hidden sm:flex items-center justify-between gap-3 md:gap-4 py-4 px-6 md:px-12">
+                    {/* Left: price info */}
+                    <div className="flex items-center gap-3 min-w-0 pr-2">
+                        {selectedSlots.length > 0 ? (
+                            <div className="flex flex-col leading-tight min-w-0">
+                                <span className="text-[11px] font-medium text-[#ABABAB] tracking-widest mb-1">Total {selectedSlots.length} jadwal</span>
+                                <span className="text-[18px] font-bold text-gray-900 leading-none block whitespace-nowrap">
+                                    Rp{(selectedSlots.length * (data?.starting_price ?? 95000)).toLocaleString('id')}
+                                </span>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col leading-tight">
+                                <span className="text-[11px] font-medium text-[#ABABAB] tracking-widest mb-1">Mulai dari</span>
+                                <div className="flex items-baseline gap-1">
+                                    <span className="text-[20px] font-bold text-gray-900 leading-none">
+                                        {`Rp${(data?.starting_price ?? 95000).toLocaleString('id')}`}
+                                    </span>
+                                    <span className="text-[12px] font-medium text-gray-400 self-end">/sesi</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Right: Detail + CTA */}
+                    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+                        {selectedSlots.length > 0 && (
+                            <button
+                                onClick={() => setShowMobileDetail(true)}
+                                className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[#194e9e]/30 bg-blue-50/60 transition-all hover:bg-blue-50 active:scale-95"
+                            >
+                                <span className="text-[13px] font-bold text-[#194e9e]">({selectedSlots.length}) Detail</span>
+                                <Icon icon="solar:alt-arrow-up-bold" className="text-[13px] text-[#194e9e]" />
+                            </button>
+                        )}
+                        {!isCurrentSelectionAdded ? (
+                            <button
+                                disabled={!isCurrentAvailable}
+                                onClick={handleCalendarOrder}
+                                className={`h-[48px] px-8 rounded-xl font-semibold text-[13px] tracking-wide transition-all shrink-0 ${
+                                    isCurrentAvailable
+                                        ? 'bg-[#194e9e] text-white shadow-xl shadow-[#194e9e]/30 hover:bg-[#123e80] active:scale-95'
+                                        : 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'
+                                }`}
+                            >
+                                Pilih Jadwal
+                            </button>
+                        ) : (
+                            <button
+                                disabled={selectedSlots.length === 0}
+                                onClick={handleOrder}
+                                className={`h-[48px] px-8 rounded-xl font-semibold text-[13px] tracking-wide transition-all shrink-0 ${
+                                    selectedSlots.length > 0
+                                        ? 'bg-[#194e9e] text-white shadow-xl shadow-[#194e9e]/30 hover:bg-[#123e80] active:scale-95'
+                                        : 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'
+                                }`}
+                            >
+                                Booking
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
 
@@ -1197,6 +1398,7 @@ const PilihJadwal = () => {
                 radius="24px 24px 0 0"
                 padding="xl"
                 withCloseButton={false}
+                zIndex={999}
                 styles={{
                     content: { maxHeight: '85vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' },
                     body: { flex: 1, display: 'flex', flexDirection: 'column', padding: '0px 24px 24px 24px', overflow: 'hidden' }
@@ -1204,12 +1406,12 @@ const PilihJadwal = () => {
             >
                 {/* Header with Title and Edit toggle */}
                 <div className="flex items-center justify-between pt-6 pb-4 mb-4 border-b border-[#D1D1D1]">
-                    <h3 className="text-[17px] font-bold text-gray-800 tracking-tight">Tiket Dipilih</h3>
+                    <h3 className="text-[17px] font-bold text-gray-800 tracking-tight">Jadwal dipilih</h3>
                     <div className="flex items-center gap-4">
                         {selectedSlots.length > 0 && (
                             <button
                                 onClick={() => setIsEditingSidebar(!isEditingSidebar)}
-                                className="text-[11px] font-bold text-[#194e9e] uppercase tracking-wider flex items-center gap-1.5"
+                                className="text-[11px] font-bold text-[#194e9e] tracking-wider flex items-center gap-1.5"
                             >
                                 {isEditingSidebar ? 'Selesai Edit' : 'Edit'}
                                 {!isEditingSidebar && <Icon icon="solar:pen-new-square-bold" className="text-[14px]" />}
@@ -1226,7 +1428,7 @@ const PilihJadwal = () => {
                         {selectedSlots.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-10 text-center gap-3">
                                 <Icon icon="solar:calendar-broken" className="text-5xl text-gray-300" />
-                                <p className="text-[13px] font-bold text-gray-400">Belum ada jadwal yang dipilih</p>
+                                <p className="text-[13px] font-medium text-gray-400">Belum ada jadwal yang dipilih</p>
                             </div>
                         ) : (
                             Object.keys(groupedSlotsByDate).sort().map((dateStr) => {
@@ -1237,7 +1439,7 @@ const PilihJadwal = () => {
                                         {/* DATE HEADER */}
                                         <div className="flex items-center gap-2.5 py-1.5 px-3 bg-gray-50/50 rounded-xl border border-[#d1d1d1]">
                                             <Icon icon="solar:calendar-bold" className="text-[14px] text-[#194e9e]" />
-                                            <span className="text-[12px] font-bold text-[#194e9e]">
+                                            <span className="text-[12px] font-semibold text-[#194e9e]">
                                                 {daysIdShort[dateObj.getDay()]}, {dateObj.getDate()} {monthsIdShort[dateObj.getMonth()]} {dateObj.getFullYear()}
                                             </span>
                                         </div>
@@ -1252,7 +1454,13 @@ const PilihJadwal = () => {
                                                             <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center text-[#194e9e]">
                                                                 <Icon icon="solar:buildings-bold" className="text-[18px]" />
                                                             </div>
-                                                            <span className="text-[13px] font-bold text-gray-800 uppercase tracking-wide">VENUE 0{courtNum}</span>
+                                                            {(() => {
+                                                                const slotCount = slots.length;
+                                                                const durationLabel = slotCount <= 4 ? 'Setengah Hari' : slotCount <= 8 ? 'Satu Hari Penuh' : 'Custom';
+                                                                return (
+                                                                    <span className="text-[13px] font-semibold text-gray-800 tracking-wide">{durationLabel}</span>
+                                                                );
+                                                            })()}
                                                             {isEditingSidebar && (
                                                                 <button
                                                                     onClick={() => {
@@ -1273,22 +1481,22 @@ const PilihJadwal = () => {
                                                                 const eHour = hour + 1;
                                                                 const eTime = `${eHour.toString().padStart(2, '0')}:00`;
                                                                 return (
-                                                                    <div key={slotKey} className="flex items-center justify-between border-b border-[#D1D1D1] pb-2 last:border-0">
-                                                                        <div className="flex items-center gap-3">
-                                                                            <Icon icon="solar:clock-circle-bold" className="text-gray-400 text-[16px]" />
-                                                                            <span className="text-[14px] font-bold text-gray-600">{time} - {eTime} WIB</span>
+                                                                    <div key={slotKey} className="flex items-center justify-between pb-3 border-b border-gray-200 last:border-b-0 last:pb-0">
+                                                                        <div className="flex flex-col gap-0.5">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <Icon icon="solar:clock-circle-bold" className="text-gray-400 text-[13px]" />
+                                                                                <span className="text-[13px] font-semibold text-gray-600">{time} - {eTime} WIB</span>
+                                                                            </div>
+                                                                            <span className="text-[13px] font-semibold text-gray-800 pl-[19px]">Rp{(data?.starting_price ?? 95000).toLocaleString('id')}</span>
                                                                         </div>
-                                                                        <div className="flex items-center gap-4">
-                                                                            <span className="text-[14px] font-bold text-gray-800 line-clamp-1">Rp{(data?.starting_price ?? 95000).toLocaleString('id')}</span>
-                                                                            {isEditingSidebar && (
-                                                                                <button
-                                                                                    onClick={() => toggleSlot(slotKey)}
-                                                                                    className="text-red-500 hover:text-red-600 transition-colors p-1 active:scale-90"
-                                                                                >
-                                                                                    <Icon icon="solar:trash-bin-trash-bold" className="text-[18px]" />
-                                                                                </button>
-                                                                            )}
-                                                                        </div>
+                                                                        {isEditingSidebar && (
+                                                                            <button
+                                                                                onClick={() => toggleSlot(slotKey)}
+                                                                                className="text-red-500 hover:text-red-600 transition-colors p-1 active:scale-90"
+                                                                            >
+                                                                                <Icon icon="solar:trash-bin-trash-bold" className="text-[18px]" />
+                                                                            </button>
+                                                                        )}
                                                                     </div>
                                                                 )
                                                             })}
@@ -1303,9 +1511,9 @@ const PilihJadwal = () => {
                         )}
                     </div>
 
-                    <div className="pt-6 border-t border-[#D1D1D1] bg-white">
+                    <div className="pt-8 border-t border-[#D1D1D1] bg-white">
                         <div className="flex items-center justify-between mb-5">
-                            <span className="text-[14px] font-bold text-gray-600 tracking-tight">Total ({selectedSlots.length} Jadwal)</span>
+                            <span className="text-[14px] font-medium text-gray-600 tracking-tight">Total ({selectedSlots.length} jadwal)</span>
                             <span className="text-[19px] font-bold text-gray-800 tracking-tighter">
                                 Rp{(selectedSlots.length * (data?.starting_price ?? 95000)).toLocaleString('id-ID')}
                             </span>
@@ -1315,7 +1523,7 @@ const PilihJadwal = () => {
                                 setShowMobileDetail(false);
                                 handleOrder();
                             }}
-                            className="w-full h-[58px] rounded-[22px] bg-[#194e9e] text-white font-bold text-[15px] uppercase tracking-[0.2em] shadow-[0_12px_30px_rgba(25,78,158,0.25)] active:scale-[0.98] transition-all flex items-center justify-center"
+                            className="w-full h-[48px] rounded-[12px] bg-[#194e9e] text-white font-semibold text-[15px] tracking-widest active:scale-[0.98] transition-all flex items-center justify-center"
                         >
                             Booking
                         </button>

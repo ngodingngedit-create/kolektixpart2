@@ -38,6 +38,7 @@ export default function VenueCheckout() {
     
     // Accordions state
     const [collapseDataPemesan, setCollapseDataPemesan] = useState(true);
+    const [collapseRingkasan, setCollapseRingkasan] = useState(true);
     
     // Confirmation modal state
     const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -200,11 +201,47 @@ export default function VenueCheckout() {
         }
     };
 
-    const renderer: CountdownRendererFn = ({ minutes, seconds }) => {
+    const renderer: CountdownRendererFn = ({ minutes, seconds, total }) => {
+        // Calculate circle stroke offset for visual feedback (15 minutes limit)
+        const maxTime = 15 * 60 * 1000;
+        const fraction = Math.max(0, Math.min(1, total / maxTime));
+        const radius = 16;
+        const circumference = 2 * Math.PI * radius;
+        const strokeDashoffset = circumference * (1 - fraction);
+
         return (
-            <span className="font-bold tracking-widest text-[13px]">
-                {String(minutes).padStart(2, "0")} : {String(seconds).padStart(2, "0")}
-            </span>
+            <div className="flex items-center gap-2.5 bg-white border border-gray-200/80 shadow-sm rounded-full py-1 pl-1.5 pr-3.5 select-none">
+                {/* Circular timer indicator */}
+                <div className="relative w-10 h-10 flex items-center justify-center shrink-0">
+                    <svg className="w-10 h-10 transform -rotate-90">
+                        {/* Background track circle */}
+                        <circle
+                            cx="20"
+                            cy="20"
+                            r={radius}
+                            className="stroke-gray-100 fill-none"
+                            strokeWidth="2.5"
+                        />
+                        {/* Foreground active blue countdown circle */}
+                        <circle
+                            cx="20"
+                            cy="20"
+                            r={radius}
+                            className="stroke-[#194e9e] fill-none transition-all duration-300"
+                            strokeWidth="2.5"
+                            strokeDasharray={circumference}
+                            strokeDashoffset={strokeDashoffset}
+                            strokeLinecap="round"
+                        />
+                    </svg>
+                    {/* The countdown text inside the circle */}
+                    <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-gray-900 leading-none tracking-tighter">
+                        {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
+                    </div>
+                </div>
+                {/* Label text */}
+                <p className="text-[11px] font-bold text-gray-600 leading-none whitespace-nowrap">Segera selesaikan pesananmu</p>
+            </div>
         );
     };
 
@@ -218,34 +255,61 @@ export default function VenueCheckout() {
                 .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
             `}</style>
 
-            {/* ── PAGE CONTENT ── */}
-            <div className="max-w-5xl mx-auto px-4 md:px-6 pt-[32px] md:pt-[48px]">
-                <h2 className="text-[20px] md:text-[26px] font-black text-gray-900 tracking-tight mb-4 md:mb-6">Informasi Pemesanan</h2>
+            <div className="max-w-5xl mx-auto px-4 md:px-6 pt-[64px] md:pt-[80px]">
+                <h2 className="text-[20px] md:text-[26px] font-semibold text-gray-900 tracking-tight mb-4 md:mb-6 mt-4 md:mt-6">Informasi Pemesanan</h2>
 
                 <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 items-start">
 
                     {/* ── MOBILE: Kreator + Voucher + Ringkasan (shown first on mobile, right col on desktop) ── */}
                     <div className="w-full lg:order-2 lg:flex-[2] flex flex-col gap-3">
 
-                        {/* Venue Info */}
-                        <div className="bg-white rounded-2xl border shadow-sm p-4 flex items-center gap-3" style={{ borderColor: 'rgb(219,219,219)' }}>
-                            <div className="rounded-xl border overflow-hidden shrink-0" style={{ borderColor: 'rgb(219,219,219)' }}>
-                                {venueDetail?.creator?.image_url || venueDetail?.creator?.image ? (
-                                    <img src={venueDetail?.creator?.image_url || venueDetail?.creator?.image} alt="Creator" className="w-[48px] h-[48px] object-cover" />
-                                ) : venueDetail?.venue_gallery?.[0]?.image_url ? (
-                                    <img src={venueDetail?.venue_gallery[0].image_url} alt="Venue" className="w-[48px] h-[48px] object-cover" />
+                        {/* Venue Info Banner Card */}
+                        <div className="w-full rounded-xl overflow-hidden border shadow-sm flex flex-col" style={{ borderColor: 'rgb(219,219,219)' }}>
+                            {/* Top Banner Image with Venue Name Overlay */}
+                            <div className="relative h-[160px] w-full bg-gray-100">
+                                {venueDetail?.venue_gallery?.[0]?.image_url ? (
+                                    <img 
+                                        src={venueDetail.venue_gallery[0].image_url} 
+                                        alt="Venue Banner" 
+                                        className="w-full h-full object-cover" 
+                                    />
                                 ) : (
-                                    <div className="w-[48px] h-[48px] bg-gray-100" />
+                                    <div className="w-full h-full bg-gradient-to-br from-[#194e9e]/20 to-[#194e9e]/40 flex items-center justify-center">
+                                        <Icon icon="solar:buildings-bold" className="text-4xl text-[#194e9e]/40" />
+                                    </div>
                                 )}
+                                {/* Gradient Overlay for text readability */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-4">
+                                    <h3 className="text-[18px] font-bold text-white tracking-tight leading-snug">
+                                        {venueDetail?.name || "Nama Venue"}
+                                    </h3>
+                                </div>
                             </div>
-                            <div className="flex-1 min-w-0">
-                                <p className="text-[13px] font-black text-gray-900 leading-tight truncate">{venueDetail?.creator?.name || venueDetail?.has_creator?.name || "Nama Kreator"}</p>
-                                <p className="text-[11px] text-gray-500 mt-0.5 leading-tight truncate">{venueDetail?.name || "Nama Venue"}</p>
+
+                            {/* Bottom Creator Info Section */}
+                            <div className="p-4 flex items-center gap-3 bg-white border-t text-gray-900" style={{ borderTopColor: 'rgb(224,224,224)' }}>
+                                {venueDetail?.creator?.image_url || venueDetail?.creator?.image ? (
+                                    <img 
+                                        src={venueDetail?.creator?.image_url || venueDetail?.creator?.image} 
+                                        alt="Creator" 
+                                        className="w-10 h-10 rounded-full object-cover border border-[#194e9e]" 
+                                    />
+                                ) : (
+                                    <div className="w-10 h-10 rounded-full bg-[#194e9e] text-white flex items-center justify-center font-bold text-[14px] uppercase border border-[#194e9e]">
+                                        {venueDetail?.creator?.name?.substring(0, 2) || venueDetail?.has_creator?.name?.substring(0, 2) || "KR"}
+                                    </div>
+                                )}
+                                <div className="flex flex-col min-w-0">
+                                    <span className="text-[10px] text-gray-500 font-medium leading-none mb-1">Penyelenggara</span>
+                                    <span className="text-[14px] font-bold text-gray-900 leading-tight truncate">
+                                        {venueDetail?.creator?.name || venueDetail?.has_creator?.name || "Nama Kreator"}
+                                    </span>
+                                </div>
                             </div>
                         </div>
 
                         {/* Voucher */}
-                        <div className="bg-white rounded-2xl border shadow-sm p-4 flex flex-col gap-3" style={{ borderColor: 'rgb(219,219,219)' }}>
+                        <div className="bg-white rounded-xl border shadow-sm p-4 flex flex-col gap-3" style={{ borderColor: 'rgb(219,219,219)' }}>
                             <div className="flex items-center gap-2">
                                 <div className="w-7 h-7 rounded-lg bg-[#194e9e]/10 flex items-center justify-center shrink-0">
                                     <Icon icon="mdi:ticket-percent-outline" className="text-[#194e9e] text-[14px]" />
@@ -267,43 +331,55 @@ export default function VenueCheckout() {
                         </div>
 
                         {/* Ringkasan Pesanan */}
-                        <div className="bg-white rounded-2xl border shadow-sm overflow-hidden" style={{ borderColor: 'rgb(219,219,219)' }}>
-                            <div className="px-4 py-3.5 border-b flex items-center gap-2" style={{ borderColor: 'rgb(219,219,219)' }}>
-                                <div className="w-7 h-7 rounded-lg bg-[#194e9e]/10 flex items-center justify-center shrink-0">
-                                    <Icon icon="solar:bill-list-bold" className="text-[#194e9e] text-[14px]" />
-                                </div>
-                                <p className="font-bold text-[14px] text-gray-900">Ringkasan Pesanan</p>
-                            </div>
-
-                            <div className={`${checkoutSlots.length > 3 ? 'max-h-[250px] overflow-y-auto custom-scrollbar' : ''}`}>
-                                {checkoutSlots.map((slot, idx) => (
-                                    <div key={idx} className="border-b last:border-b-0 px-4 py-3 flex gap-3 items-start" style={{ borderColor: 'rgb(219,219,219)' }}>
-                                        <div className="w-8 h-8 flex items-center justify-center border rounded-lg bg-gray-50 shrink-0 mt-0.5" style={{ borderColor: 'rgb(219,219,219)' }}>
-                                            <Icon icon="mdi:calendar-clock-outline" className="text-[#194e9e] text-[16px]" />
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <p className="text-[13px] font-bold text-gray-900 leading-tight truncate">{slot.date} · {venueDetail?.name} 0{slot.court}</p>
-                                            <p className="text-[11px] text-gray-500 mt-0.5 leading-tight">Pukul {slot.time} WIB · Rp {basePrice.toLocaleString('id-ID')}</p>
-                                        </div>
+                        <div className="bg-white rounded-xl border shadow-sm overflow-hidden" style={{ borderColor: 'rgb(219,219,219)' }}>
+                            <div 
+                                className="px-4 py-3.5 border-b flex items-center justify-between cursor-pointer select-none" 
+                                style={{ borderColor: 'rgb(219,219,219)' }}
+                                onClick={() => setCollapseRingkasan(!collapseRingkasan)}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <div className="w-7 h-7 rounded-lg bg-[#194e9e]/10 flex items-center justify-center shrink-0">
+                                        <Icon icon="solar:bill-list-bold" className="text-[#194e9e] text-[14px]" />
                                     </div>
-                                ))}
-                                {checkoutSlots.length === 0 && (
-                                    <div className="px-4 py-6 text-center text-[12px] text-gray-400">Belum ada jadwal</div>
-                                )}
+                                    <p className="font-bold text-[14px] text-gray-900">Ringkasan Pesanan</p>
+                                </div>
+                                <FontAwesomeIcon
+                                    icon={faChevronUp}
+                                    className={`text-gray-400 text-[12px] transition-transform duration-200 ${collapseRingkasan ? "rotate-0" : "rotate-180"}`}
+                                />
                             </div>
 
-                            <div className="border-t px-4 py-3 space-y-2" style={{ borderColor: 'rgb(219,219,219)' }}>
-                                <div className="flex justify-between items-center text-[13px]">
-                                    <span className="text-gray-500">Jumlah ({displayTotalCount} Slot)</span>
-                                    <span className="font-semibold text-gray-900">Rp {subtotal.toLocaleString('id-ID')}</span>
+                            <div className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${collapseRingkasan ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"}`}>
+                                <div className={`${checkoutSlots.length > 3 ? 'max-h-[250px] overflow-y-auto custom-scrollbar' : ''}`}>
+                                    {checkoutSlots.map((slot, idx) => (
+                                        <div key={idx} className="border-b last:border-b-0 px-4 py-3 flex gap-3 items-start" style={{ borderColor: 'rgb(219,219,219)' }}>
+                                            <div className="w-8 h-8 flex items-center justify-center border rounded-lg bg-gray-50 shrink-0 mt-0.5" style={{ borderColor: 'rgb(219,219,219)' }}>
+                                                <Icon icon="mdi:calendar-clock-outline" className="text-[#194e9e] text-[16px]" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-[13px] font-bold text-gray-900 leading-tight truncate">{slot.date} · {venueDetail?.name} 0{slot.court}</p>
+                                                <p className="text-[11px] text-gray-500 mt-0.5 leading-tight">Pukul {slot.time} WIB · Rp {basePrice.toLocaleString('id-ID')}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {checkoutSlots.length === 0 && (
+                                        <div className="px-4 py-6 text-center text-[12px] text-gray-400">Belum ada jadwal</div>
+                                    )}
                                 </div>
-                                <div className="flex justify-between items-center text-[13px]">
-                                    <span className="text-gray-500">Biaya Admin</span>
-                                    <span className="font-semibold text-gray-900">Rp {adminFee.toLocaleString('id-ID')}</span>
-                                </div>
-                                <div className="flex justify-between items-center pt-2 border-t" style={{ borderColor: 'rgb(219,219,219)' }}>
-                                    <span className="font-bold text-gray-900 text-[14px]">Total</span>
-                                    <span className="font-black text-[#194e9e] text-[16px]">Rp {grandtotal.toLocaleString('id-ID')}</span>
+
+                                <div className="border-t px-4 py-3 space-y-2" style={{ borderColor: 'rgb(219,219,219)' }}>
+                                    <div className="flex justify-between items-center text-[13px]">
+                                        <span className="text-gray-500">Jumlah ({displayTotalCount} Slot)</span>
+                                        <span className="font-semibold text-gray-900">Rp {subtotal.toLocaleString('id-ID')}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-[13px]">
+                                        <span className="text-gray-500">Biaya Admin</span>
+                                        <span className="font-semibold text-gray-900">Rp {adminFee.toLocaleString('id-ID')}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center pt-2 border-t" style={{ borderColor: 'rgb(219,219,219)' }}>
+                                        <span className="font-bold text-gray-900 text-[14px]">Total</span>
+                                        <span className="font-black text-[#194e9e] text-[16px]">Rp {grandtotal.toLocaleString('id-ID')}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -313,7 +389,7 @@ export default function VenueCheckout() {
                     <div className="w-full lg:order-1 lg:flex-[3] flex flex-col gap-3">
 
                         {/* Data Pemesan */}
-                        <div className="bg-white rounded-2xl border shadow-sm overflow-hidden" style={{ borderColor: 'rgb(219,219,219)' }}>
+                        <div className="bg-white rounded-xl border shadow-sm overflow-hidden" style={{ borderColor: 'rgb(219,219,219)' }}>
                             <div
                                 className="px-4 py-3.5 flex items-center justify-between cursor-pointer select-none"
                                 onClick={() => setCollapseDataPemesan(!collapseDataPemesan)}
@@ -378,7 +454,7 @@ export default function VenueCheckout() {
                         </div>
 
                         {/* Jadwal Dipilih */}
-                        <div className="bg-white rounded-2xl border shadow-sm overflow-hidden" style={{ borderColor: 'rgb(219,219,219)' }}>
+                        <div className="bg-white rounded-xl border shadow-sm overflow-hidden" style={{ borderColor: 'rgb(219,219,219)' }}>
                             <div className="px-4 py-3.5 flex items-center justify-between border-b" style={{ borderColor: 'rgb(219,219,219)' }}>
                                 <div className="flex items-center gap-2">
                                     <div className="w-7 h-7 rounded-lg bg-[#194e9e]/10 flex items-center justify-center shrink-0">
@@ -445,12 +521,8 @@ export default function VenueCheckout() {
             {/* ── STICKY BOTTOM CTA ── */}
             <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t shadow-[0_-4px_20px_rgba(0,0,0,0.08)] px-4 pt-3 pb-5 md:py-4" style={{ borderColor: 'rgb(219,219,219)' }}>
                 <div className="max-w-5xl mx-auto px-4 md:px-6 flex flex-row items-center justify-between gap-3">
-                    {/* Countdown Pill (Left) */}
-                    <div className="flex items-center bg-[#EA4D3E] text-white rounded-xl px-4 py-2.5 shadow-sm">
-                        <Countdown date={countdownTarget} renderer={renderer} />
-                        <div className="w-px h-4 bg-white/30 mx-3" />
-                        <p className="text-[11px] font-bold whitespace-nowrap">Segera selesaikan pesananmu</p>
-                    </div>
+                    {/* Countdown Indicator (Left) */}
+                    <Countdown date={countdownTarget} renderer={renderer} />
                     {/* Button */}
                     <button
                         disabled={loading}
