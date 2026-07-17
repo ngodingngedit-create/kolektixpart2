@@ -566,7 +566,7 @@ const VenueDetail = () => {
 
                         {/* DESKTOP STICKY NAV TAB BAR */}
                         <div className="w-full bg-white border-b border-light-grey sticky top-[64px] z-30">
-                            <div className="w-full mx-auto max-w-[1550px] px-2 md:px-3">
+                            <div className="w-full mx-auto max-w-[1250px] px-4 md:px-6">
                                 <div className="flex items-center gap-3 md:gap-8 overflow-x-auto scrollbar-hide">
                                     {[
                                         { id: "info", label: "Deskripsi" },
@@ -599,7 +599,7 @@ const VenueDetail = () => {
 
                         {/* DESKTOP BODY CONTENT */}
                         <div className="w-full bg-white">
-                        <div className="max-w-[1550px] mx-auto w-full flex flex-col gap-10 px-2 md:px-3 pt-8 pb-40">
+                        <div className="max-w-[1250px] mx-auto w-full flex flex-col gap-10 px-4 md:px-6 pt-8 pb-40">
 
                             {/* SECTION DESKRIPSI */}
                             <div ref={sectionRefs.info} className="w-full">
@@ -1193,13 +1193,20 @@ const VenueDetail = () => {
                                 <span className="text-[11px] font-bold text-gray-400">/sesi</span>
                             </div>
                         </div>
-                        {/* Right: Button */}
+                        {/* Right: Button + Chat */}
                         <div className="flex items-center gap-2">
                             <button
                                 onClick={() => router.push(`/venue/${slug}/pilih-jadwal`)}
                                 className="flex-1 h-[40px] rounded-xl font-black text-[11px] uppercase tracking-widest bg-[#194e9e] text-white hover:bg-[#123e80] active:scale-95 transition-all shadow-lg shadow-[#194e9e]/20"
                             >
                                 Pilih Jadwal
+                            </button>
+                            {/* Chat button */}
+                            <button
+                                onClick={() => setOpenChat(true)}
+                                className="w-[40px] h-[40px] flex items-center justify-center shrink-0 rounded-xl bg-[#194e9e] text-white border border-[#194e9e] hover:bg-[#123e80] active:scale-95 transition-all"
+                            >
+                                <Icon icon="solar:chat-round-dots-bold" className="text-[18px]" />
                             </button>
                         </div>
                     </div>
