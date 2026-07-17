@@ -994,7 +994,7 @@ const VenueDetail = () => {
                                                 ref?.current?.scrollIntoView({ behavior: "smooth", block: "start" });
                                             }
                                         }}
-                                        className={`py-3 cursor-pointer whitespace-nowrap text-[12px] ${activeSection === tab.id ? "font-semibold text-dark border-b-2 border-primary-base py-3" : "text-grey"}`}
+                                        className={`py-3 cursor-pointer whitespace-nowrap text-[12px] ${activeSection === tab.id ? "font-semibold text-[#194e9e] border-b-2 border-primary-base py-3" : "text-grey"}`}
                                     >
                                         {tab.label}
                                     </button>
@@ -1003,14 +1003,13 @@ const VenueDetail = () => {
                         </div>
 
                         {/* Mobile Body Content */}
-                        <div className="w-full text-dark flex flex-col gap-16 pt-2 pb-32 bg-white">
+                        <div className="w-full text-dark flex flex-col gap-8 pt-2 pb-32 bg-white">
                             {/* MOBILE SECTION DESKRIPSI */}
                             <div ref={sectionRefs.info} className="mx-5 mb-2">
                                 <div className="flex items-center gap-1.5 mb-2">
                                     <Icon icon="solar:notes-linear" className="text-[#0b387c] text-[16px] shrink-0" />
                                     <h3 className="text-[14px] font-black text-[#0b387c] tracking-tight">Deskripsi Venue</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2.5" />
                                 <div className="w-full bg-transparent pl-0 pr-0 text-gray-600 leading-normal text-[12px] font-medium">
                                     <p className="whitespace-pre-line leading-relaxed">{data?.description}</p>
                                 </div>
@@ -1032,8 +1031,6 @@ const VenueDetail = () => {
                                 )}
                             </div>
 
-                            {/* Divider */}
-                            <div className="mx-5 h-[1px] bg-gray-200/40 my-8" />
 
                             {/* MOBILE SECTION FASILITAS */}
                             <div className="mx-5 mb-2">
@@ -1041,7 +1038,6 @@ const VenueDetail = () => {
                                     <Icon icon="solar:tea-cup-linear" className="text-[#0b387c] text-[16px] shrink-0" />
                                     <h3 className="text-[14px] font-black text-[#0b387c] tracking-tight">Fasilitas Venue</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2" />
                                 <div
                                     className="overflow-hidden transition-all duration-500 ease-in-out"
                                     style={{ maxHeight: expandedSections['fasilitas'] ? '2000px' : '120px' }}
@@ -1078,8 +1074,6 @@ const VenueDetail = () => {
                                 </button>
                             </div>
 
-                            {/* Divider */}
-                            <div className="mx-5 h-[1px] bg-gray-200/40 my-8" />
 
                             {/* MOBILE SECTION ULASAN */}
                             <div ref={sectionRefs.ulasan} className="mx-5 mb-2">
@@ -1087,7 +1081,6 @@ const VenueDetail = () => {
                                     <Icon icon="solar:star-linear" className="text-[#0b387c] text-[16px] shrink-0" />
                                     <h3 className="text-[14px] font-black text-[#0b387c] tracking-tight">Ulasan Pengunjung</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2" />
                                 <div className="flex items-center justify-start gap-2 mb-4">
                                     <button onClick={() => setShowReviewModal(true)} className="px-3 py-1.5 bg-[#194e9e] text-white text-[9px] font-bold uppercase tracking-widest rounded-lg hover:bg-[#123e80]">Tulis Ulasan</button>
                                 </div>
@@ -1119,8 +1112,6 @@ const VenueDetail = () => {
                                 </div>
                             </div>
 
-                            {/* Divider */}
-                            <div className="mx-5 h-[1px] bg-gray-200/40 my-8" />
 
                             {/* MOBILE SECTION LOKASI */}
                             <div ref={sectionRefs.lokasi} className="w-full">
@@ -1128,7 +1119,6 @@ const VenueDetail = () => {
                                     <Icon icon="solar:map-point-linear" className="text-[#0b387c] text-[16px] shrink-0" />
                                     <h3 className="text-[14px] font-black text-[#0b387c] tracking-tight">Lokasi Venue</h3>
                                 </div>
-                                <div className="mx-5 h-[1px] bg-gray-200 mb-2" />
                                 <div className="mx-5 bg-white rounded-2xl p-5 shadow-sm flex flex-col gap-3 border border-light-grey">
                                     <div className="flex flex-col gap-1 min-w-0">
                                         <h4 className="text-[13px] font-bold text-black tracking-tight">{data?.name}</h4>
@@ -1144,8 +1134,6 @@ const VenueDetail = () => {
                                 </div>
                             </div>
 
-                            {/* Divider */}
-                            <div className="mx-5 h-[1px] bg-gray-200/40 my-8" />
 
                             {/* MOBILE SECTION FAQ */}
                             <div ref={sectionRefs.faq} className="mx-5 mb-10 pt-4">
@@ -1153,7 +1141,6 @@ const VenueDetail = () => {
                                     <Icon icon="solar:info-circle-linear" className="text-[#0b387c] text-[16px] shrink-0" />
                                     <h3 className="text-[14px] font-black text-[#0b387c] tracking-tight">Pertanyaan Umum</h3>
                                 </div>
-                                <div className="w-full h-[1px] bg-gray-200 mb-2" />
                                 <div className="flex flex-col gap-4">
                                     {[
                                         { q: 'Apakah bisa menyewa raket atau bola di lokasi?', a: 'Ya, kami menyediakan penyewaan alat dengan harga terjangkau.' },
