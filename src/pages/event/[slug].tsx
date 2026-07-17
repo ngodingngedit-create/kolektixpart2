@@ -2799,8 +2799,8 @@ const EventDetails = () => {
                             <div className="flex justify-between gap-5 h-full items-stretch px-4 md:px-6">
                               <Stack w="100%">
                                 <Box pos="relative">
-                                  {detail?.image ? (
-                                    <ImagesWithModal type="event" path={detail.image} width={1000} height={1000} alt="banner" className="w-full h-72 object-fill lg:rounded-3xl md:rounded-2xl rounded-full" />
+                                  {detail?.image_url ? (
+                                    <ImagesWithModal type="event" path={detail.image_url} width={1000} height={1000} alt="banner" className="w-full h-72 object-fill lg:rounded-3xl md:rounded-2xl rounded-full" />
                                   ) : (
                                     <div className="w-full h-72 bg-white lg:rounded-3xl md:rounded-2xl rounded-full"></div>
                                   )}
@@ -3077,7 +3077,7 @@ const EventDetails = () => {
                     ) : (
                       <React.Fragment>
                         <Box className={`!relative`}>
-                          {detail && detail.image && <Images type="event" path={detail?.image} width={1000} height={1000} alt="banner" className="w-full rounded-3xl p-4 mt-20 lg:mt-0" />}
+                          {detail && detail.image_url && <Images type="event" path={detail?.image_url} width={1000} height={1000} alt="banner" className="w-full rounded-3xl p-4 mt-20 lg:mt-0" />}
 
                           {isCurrentTimeBetween(`${detail?.start_date} ${detail?.start_time}:00`, `${detail?.end_date} ${detail?.end_time}:00`) && (
                             <Card className={`!absolute z-20 top-7 right-7 w-fit !rounded-full !border !border-white/50 backdrop-blur-sm`} p="4px 16px 4px 30px" bg="#00000030">

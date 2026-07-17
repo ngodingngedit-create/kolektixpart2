@@ -15,11 +15,24 @@ interface ImagesProps {
 
 const ImagesWithModal = ({ path, alt, width, height, className, type }: ImagesProps) => {
   const [open, setOpen] = useState(false);
+
+  const getSrc = () => {
+    if (path) {
+      if (path.startsWith('http://') || path.startsWith('https://')) {
+        return path;
+      }
+      return `${config.assetUrl}${type}/${path}`;
+    }
+    return kolektix;
+  };
+
+  const imageSrc = getSrc();
+
   return path ? (
     <>
       <div className='relative  text-white'>
         <Image
-          src={`${config.assetUrl}${type}/${path}`}
+          src={imageSrc}
           alt={alt ? alt : 'images'}
           className={
             className
@@ -46,7 +59,7 @@ const ImagesWithModal = ({ path, alt, width, height, className, type }: ImagesPr
           <ModalBody>
             <div className='flex items-center justify-center my-6 mx-2'>
               <Image
-                src={`${config.assetUrl}${type}/${path}`}
+                src={imageSrc}
                 alt={alt ? alt : 'images'}
                 className='w-full object-cover rounded-md'
                 width={width ? width : 200}

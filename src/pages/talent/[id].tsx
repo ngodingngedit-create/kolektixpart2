@@ -81,23 +81,6 @@ const TalentDetail = () => {
     open();
   };
 
-  // Breadcrumbs items
-  const breadcrumbItems = [
-    { title: 'Beranda', href: '/' },
-    { title: 'Talenta', href: '/talent' },
-    { title: 'Aldi Ramadhan', href: '#' },
-  ].map((item, index) => (
-    <Anchor
-      href={item.href}
-      key={index}
-      size="xs"
-      fw={500}
-      c={index === 2 ? 'dimmed' : '#194E9E'}
-      className="hover:underline"
-    >
-      {item.title}
-    </Anchor>
-  ));
 
   return (
     <div className="bg-[#F8F9FA] min-h-screen">
@@ -160,14 +143,6 @@ const TalentDetail = () => {
       </Box>
 
       <Container size={1380} px={{ base: 5, md: 40 }} py={40}>
-        <Breadcrumbs
-          separator={<Icon icon="tabler:chevron-right" width={14} />}
-          mb={24}
-          visibleFrom="md"
-        >
-          {breadcrumbItems}
-        </Breadcrumbs>
-
         <Stack gap={24}>
           {/* Profile Header Card */}
           <Card radius={12} p={0} withBorder className="shadow-sm overflow-hidden bg-white">

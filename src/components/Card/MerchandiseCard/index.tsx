@@ -1444,7 +1444,7 @@ const MerchandiseCard = ({
         {/* Bagian Gambar */}
         <div className="relative overflow-hidden rounded-t-lg">
           {/* Mobile */}
-          <div className="block md:hidden relative w-full pb-[100%]">
+          <div className="block md:hidden relative w-full pb-[80%]">
             <Image 
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105" 
               src={image ?? Foto} 
@@ -1466,7 +1466,7 @@ const MerchandiseCard = ({
           </div>
 
           {/* Desktop */}
-          <div className="hidden md:block relative w-full pb-[100%]">
+          <div className="hidden md:block relative w-full pb-[80%]">
             <Image 
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105" 
               src={image ?? Foto} 

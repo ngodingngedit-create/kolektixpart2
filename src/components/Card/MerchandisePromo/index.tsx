@@ -105,7 +105,7 @@ const MerchandisePromo = ({
       onMouseLeave={() => setShowBuyButton(false)}
     >
       <div className="relative overflow-hidden rounded-t-lg">
-        <div className={`${styles.cardImg} w-full h-48 object-cover transition-transform duration-300 ${showBuyButton ? "scale-105" : ""}`}>
+        <div className={`${styles.cardImg} w-full h-40 object-cover transition-transform duration-300 ${showBuyButton ? "scale-105" : ""}`}>
           <Image
             src={image || "/images/product-default.jpg"}
             alt={name}
